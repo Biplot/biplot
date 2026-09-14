@@ -14,7 +14,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230E2A47'/%3E%3Cpath d='M5 22 C10 22 10 10 16 10 C22 10 22 22 27 22' stroke='%2317C3B2' stroke-width='2.4' fill='none' stroke-linecap='round'/%3E%3Ccircle cx='16' cy='10' r='2.3' fill='%23FF6B4A'/%3E%3C/svg%3E">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230E2A47'/%3E%3Cpath d='M9 8 V24 H25' stroke='%233f6da0' stroke-width='1.7' fill='none' stroke-linecap='round'/%3E%3Ccircle cx='11.5' cy='20.5' r='2.2' fill='%2317C3B2'/%3E%3Ccircle cx='16' cy='17' r='2.2' fill='%2317C3B2'/%3E%3Ccircle cx='23' cy='11' r='2.8' fill='%23FF6B4A'/%3E%3C/svg%3E">
 <style>
 :root{
   --canvas:#0E2A47;
@@ -395,7 +395,7 @@ body.paused *, body.paused *::before, body.paused *::after{animation-play-state:
 
 <nav class="nav">
   <a href="#main" class="nav-mark" aria-label="BiPlot, inicio">
-    <svg viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="7" fill="#0E2A47"/><path d="M5 22 C10 22 10 10 16 10 C22 10 22 22 27 22" stroke="#17C3B2" stroke-width="2.4" fill="none" stroke-linecap="round"/><circle cx="16" cy="10" r="2.3" fill="#FF6B4A"/></svg>
+    <svg viewBox="0 0 32 32" aria-hidden="true"><defs><linearGradient id="hm" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#143a63"/><stop offset="1" stop-color="#0b1f39"/></linearGradient></defs><rect width="32" height="32" rx="8" fill="url(#hm)"/><path d="M9 8 V24 H25" fill="none" stroke="#3f6da0" stroke-width="1.7" stroke-linecap="round"/><polyline points="10.5,20.5 15,16.5 19,18 23,11" fill="none" stroke="#17C3B2" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" opacity=".55"/><circle cx="10.5" cy="20.5" r="1.8" fill="#17C3B2"/><circle cx="15" cy="16.5" r="1.8" fill="#17C3B2"/><circle cx="19" cy="18" r="1.8" fill="#17C3B2"/><circle cx="23" cy="11" r="2.3" fill="#FF6B4A"/></svg>
     BiPlot
   </a>
   <a href="#contacto" class="nav-cta">Agenda un diagnóstico</a>
@@ -763,26 +763,6 @@ body.paused *, body.paused *::before, body.paused *::after{animation-play-state:
     </div>
   </section>
 
-  <section id="momento" aria-labelledby="momento-h">
-    <div class="wrap">
-      <span class="eyebrow">Un gesto</span>
-      <h2 class="h-lg reveal" id="momento-h" style="max-width:none">Tu proceso es el próximo punto de esta curva</h2>
-      <p class="lede reveal">Mantén presionado para trazar tu propio punto en la línea de BiPlot.</p>
-      <div class="trace reveal" id="traceSection">
-        <div class="trace-hold" id="traceHold" role="button" tabindex="0" aria-label="Mantén presionado para trazar tu punto">
-          <svg class="ring" viewBox="0 0 180 180" aria-hidden="true"><circle cx="90" cy="90" r="88"/></svg>
-          <span id="traceLabel">Mantén<br>presionado</span>
-        </div>
-        <svg viewBox="0 0 600 200" aria-hidden="true">
-          <path class="trace-path" d="M20 160 C 150 160, 180 60, 300 60 S 480 160, 580 40"/>
-          <path class="trace-path-fill" id="tracePathFill" d="M20 160 C 150 160, 180 60, 300 60 S 480 160, 580 40"/>
-          <circle class="trace-dot" id="traceDot" cx="580" cy="40"/>
-        </svg>
-        <p class="trace-result" id="traceResult">&nbsp;</p>
-      </div>
-    </div>
-  </section>
-
   <section id="faq" aria-labelledby="faq-h">
     <div class="wrap">
       <span class="eyebrow">Preguntas frecuentes</span>
@@ -850,7 +830,7 @@ body.paused *, body.paused *::before, body.paused *::after{animation-play-state:
 <footer>
   <div class="footer-grid">
     <a href="#main" class="nav-mark" style="font-size:.95rem">
-      <svg viewBox="0 0 32 32" width="24" height="24" aria-hidden="true"><rect width="32" height="32" rx="7" fill="#0E2A47"/><path d="M5 22 C10 22 10 10 16 10 C22 10 22 22 27 22" stroke="#17C3B2" stroke-width="2.2" fill="none" stroke-linecap="round"/><circle cx="16" cy="10" r="2.2" fill="#FF6B4A"/></svg>
+      <svg viewBox="0 0 32 32" width="24" height="24" aria-hidden="true"><defs><linearGradient id="fm" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#143a63"/><stop offset="1" stop-color="#0b1f39"/></linearGradient></defs><rect width="32" height="32" rx="8" fill="url(#fm)"/><path d="M9 8 V24 H25" fill="none" stroke="#3f6da0" stroke-width="1.7" stroke-linecap="round"/><polyline points="10.5,20.5 15,16.5 19,18 23,11" fill="none" stroke="#17C3B2" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" opacity=".55"/><circle cx="10.5" cy="20.5" r="1.8" fill="#17C3B2"/><circle cx="15" cy="16.5" r="1.8" fill="#17C3B2"/><circle cx="19" cy="18" r="1.8" fill="#17C3B2"/><circle cx="23" cy="11" r="2.3" fill="#FF6B4A"/></svg>
       BiPlot
     </a>
     <div class="footer-links">

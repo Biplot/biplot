@@ -273,6 +273,7 @@
 
   /* ============ TRACE-YOUR-POINT INTERACTIVE MOMENT ============ */
   const traceHold = document.getElementById('traceHold');
+  if (traceHold) {
   const traceSection = document.getElementById('traceSection');
   const tracePathFill = document.getElementById('tracePathFill');
   const traceDot = document.getElementById('traceDot');
@@ -332,6 +333,7 @@
     traceLabel.textContent = 'Listo';
     traceResult.textContent = 'Ese es tu punto. Hablemos de cómo llegar a él.';
   }
+  } // end trace guard (sección removida)
 
   /* ============ PLOTLINE TEASER CAROUSEL ============ */
   (function initPlotlineCarousel() {

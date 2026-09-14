@@ -408,29 +408,22 @@
     goTo(0, false);
   })();
 
-  /* ============ CONTACT FORM (Formspree) ============ */
+  /* ============ CONTACT FORM (WhatsApp) ============ */
+  const WA_NUMBER = '56966275675';
   const form = document.getElementById('contactForm');
   const formSuccess = document.getElementById('formSuccess');
-  form.addEventListener('submit', async (e) => {
+  if (form) form.addEventListener('submit', (e) => {
     e.preventDefault();
-    const submitBtn = form.querySelector('button[type="submit"]');
-    submitBtn.disabled = true;
-    try {
-      const res = await fetch(form.action, {
-        method: 'POST',
-        body: new FormData(form),
-        headers: { Accept: 'application/json' }
-      });
-      if (res.ok) {
-        form.classList.add('hide');
-        formSuccess.classList.add('show');
-      } else {
-        throw new Error('submit failed');
-      }
-    } catch (err) {
-      submitBtn.disabled = false;
-      alert('No pudimos enviar el formulario. Escríbenos directo a hola@biplot.cl mientras lo revisamos.');
-    }
+    const val = (id) => { const el = form.querySelector('#' + id); return el && el.value ? el.value.trim() : ''; };
+    const name = val('name'), email = val('email'), message = val('message');
+    let text = 'Hola BiPlot 👋';
+    if (name) text += ', soy ' + name;
+    text += '. Quiero agendar un diagnóstico.';
+    if (message) text += '\n\nMi proceso: ' + message;
+    if (email) text += '\n\nMi correo: ' + email;
+    window.open('https://wa.me/' + WA_NUMBER + '?text=' + encodeURIComponent(text), '_blank', 'noopener');
+    form.classList.add('hide');
+    formSuccess.classList.add('show');
   });
 
   /* ============ AMBIENT SOUND TOGGLE ============ */

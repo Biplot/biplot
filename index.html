@@ -238,6 +238,9 @@ h2.h-lg{font-size:clamp(1.8rem,4vw,2.7rem);max-width:18ch}
 .hero-sound{position:absolute;bottom:14px;right:14px;width:40px;height:40px;border-radius:50%;background:rgba(8,20,36,.6);backdrop-filter:blur(8px);border:1px solid var(--line);color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:border-color .25s var(--ease),color .25s var(--ease);z-index:2}
 .hero-sound:hover{border-color:var(--accent);color:var(--accent)}
 .hero-sound svg{width:18px;height:18px}
+.hero-expand{position:absolute;bottom:14px;left:14px;width:40px;height:40px;border-radius:50%;background:rgba(8,20,36,.6);backdrop-filter:blur(8px);border:1px solid var(--line);color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:border-color .25s var(--ease),color .25s var(--ease);z-index:3}
+.hero-expand:hover{border-color:var(--accent);color:var(--accent)}
+.hero-expand svg{width:17px;height:17px}
 .hero-sound .on-ic{display:none}
 .hero-sound.on .on-ic{display:block}
 .hero-sound.on .off-ic{display:none}
@@ -534,6 +537,9 @@ body.paused *, body.paused *::before, body.paused *::after{animation-play-state:
         <svg class="off-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M11 5 6 9H3v6h3l5 4V5Z"/><line x1="16" y1="9" x2="21" y2="15"/><line x1="21" y1="9" x2="16" y2="15"/></svg>
         <svg class="on-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M11 5 6 9H3v6h3l5 4V5Z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M18 6a9 9 0 0 1 0 12"/></svg>
       </button>
+      <button type="button" class="hero-expand js-openvid" data-src="assets/casos/teaser-biplot-h.mp4" aria-label="Ver el video en grande">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>
+      </button>
     </div>
   </div>
 </header>
@@ -672,7 +678,7 @@ body.paused *, body.paused *::before, body.paused *::after{animation-play-state:
               <span><b>Por rol</b>datos financieros visibles solo a quien corresponde</span>
               <span><b>Multiproyecto</b>escala a Marchigüe y Malalcahuello</span>
             </div>
-            <button type="button" class="panel-play" data-src="assets/casos/fundos-360-h.mp4" aria-label="Ver video de Fundos 360"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>Ver video</button>
+            <button type="button" class="panel-play js-openvid" data-src="assets/casos/fundos-360-h.mp4" aria-label="Ver video de Fundos 360"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>Ver video</button>
           </div>
         </div>
 
@@ -690,7 +696,7 @@ body.paused *, body.paused *::before, body.paused *::after{animation-play-state:
               <span><b>Multicanal</b>local, delivery, apps y menús a empresas</span>
             </div>
             <span class="pi-status">Sistema diseñado a la medida · en implementación</span>
-            <button type="button" class="panel-play" data-src="assets/casos/haru-360-h.mp4" aria-label="Ver video de Haru 360"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>Ver video</button>
+            <button type="button" class="panel-play js-openvid" data-src="assets/casos/haru-360-h.mp4" aria-label="Ver video de Haru 360"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>Ver video</button>
           </div>
         </div>
 

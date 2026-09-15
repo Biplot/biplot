@@ -98,9 +98,36 @@
     panels.forEach((p, i) => {
       p.addEventListener('click', () => setActive(i));
       p.addEventListener('focus', () => setActive(i));
+      p.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setActive(i); } });
       if (fine) p.addEventListener('mouseenter', () => setActive(i));
     });
     setActive(0);
+
+    /* lightbox: watch a case video full-size, with sound + controls */
+    const lb = document.getElementById('vlightbox');
+    const lbVid = document.getElementById('vlightboxVideo');
+    const lbClose = document.getElementById('vlightboxClose');
+    function openLB(src) {
+      if (!lb || !lbVid || !src) return;
+      lbVid.src = src;
+      lb.classList.add('open');
+      lbVid.play().catch(() => {});
+      document.body.style.overflow = 'hidden';
+    }
+    function closeLB() {
+      if (!lb) return;
+      lb.classList.remove('open');
+      try { lbVid.pause(); } catch (e) {}
+      lbVid.removeAttribute('src');
+      lbVid.load();
+      document.body.style.overflow = '';
+    }
+    document.querySelectorAll('.panel-play').forEach((btn) => {
+      btn.addEventListener('click', (e) => { e.stopPropagation(); openLB(btn.dataset.src); });
+    });
+    if (lbClose) lbClose.addEventListener('click', closeLB);
+    if (lb) lb.addEventListener('click', (e) => { if (e.target === lb) closeLB(); });
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeLB(); });
   })();
 
   /* pause offscreen/hidden-tab animation loops */

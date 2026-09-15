@@ -337,7 +337,7 @@ body.motion-settled .reveal-group.in .part:nth-child(4){transition-delay:0ms}
 .panel-tab{position:absolute;left:50%;bottom:22px;transform:translateX(-50%) rotate(180deg);writing-mode:vertical-rl;font-family:var(--display);font-weight:700;font-size:1.12rem;letter-spacing:-.01em;white-space:nowrap;z-index:3;text-shadow:0 2px 10px rgba(0,0,0,.6);transition:opacity .3s var(--ease)}
 .panel.is-active .panel-tab{opacity:0;pointer-events:none}
 .panel-info{position:absolute;left:0;right:0;bottom:0;padding:26px 28px;z-index:3;opacity:0;transform:translateY(16px);transition:opacity .45s var(--ease) .12s,transform .45s var(--ease) .12s;pointer-events:none}
-.panel.is-active .panel-info{opacity:1;transform:none}
+.panel.is-active .panel-info{opacity:1;transform:none;pointer-events:auto}
 .pi-rubro{font-family:var(--mono);font-size:.66rem;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);display:block}
 .pi-title{margin-top:8px;font-family:var(--display);font-weight:700;font-size:clamp(1.5rem,2.6vw,2rem)}
 .pi-desc{margin-top:12px;color:var(--text-secondary);font-size:.96rem;line-height:1.55;max-width:60ch}
@@ -346,6 +346,15 @@ body.motion-settled .reveal-group.in .part:nth-child(4){transition-delay:0ms}
 .pi-stats b{color:var(--text-primary);font-family:var(--display);font-size:.98rem}
 .pi-status{margin-top:16px;display:inline-flex;align-items:center;gap:9px;font-family:var(--mono);font-size:.78rem;color:var(--text-secondary)}
 .pi-status::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--accent);box-shadow:0 0 0 4px var(--accent-muted);flex:none}
+.panel-play{margin-top:18px;display:inline-flex;align-items:center;gap:9px;background:var(--warm);color:#2b0f08;border:none;border-radius:999px;padding:11px 20px;font-family:var(--body);font-weight:600;font-size:.9rem;cursor:pointer;transition:transform .25s var(--ease),background .25s var(--ease)}
+.panel-play:hover{background:var(--warm-hover);transform:translateY(-2px)}
+.panel-play svg{width:15px;height:15px}
+.vlightbox{position:fixed;inset:0;z-index:200;background:rgba(4,10,20,.9);backdrop-filter:blur(6px);display:flex;align-items:center;justify-content:center;padding:24px;opacity:0;pointer-events:none;transition:opacity .3s var(--ease)}
+.vlightbox.open{opacity:1;pointer-events:auto}
+.vlightbox video{width:min(1000px,92vw);max-height:86vh;border-radius:14px;background:#000;box-shadow:0 30px 90px rgba(0,0,0,.6)}
+.vlightbox-close{position:absolute;top:20px;right:22px;width:46px;height:46px;border-radius:50%;background:rgba(255,255,255,.1);border:1px solid var(--line);color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .25s var(--ease)}
+.vlightbox-close:hover{background:rgba(255,255,255,.2)}
+.vlightbox-close svg{width:22px;height:22px}
 @media (max-width:860px){
   .case-panels{flex-direction:column;height:auto;gap:12px}
   .panel{flex:none;display:block}
@@ -650,7 +659,7 @@ body.paused *, body.paused *::before, body.paused *::after{animation-play-state:
 
       <div class="case-panels reveal" id="casePanels">
 
-        <button type="button" class="panel is-active" data-idx="0" aria-expanded="true" aria-label="Ver caso Fundos 360">
+        <div class="panel is-active" data-idx="0" role="button" tabindex="0" aria-expanded="true" aria-label="Caso Fundos 360">
           <video class="panel-vid" src="assets/casos/fundos-360-h.mp4" poster="assets/casos/fundos-360-h.jpg" muted loop playsinline preload="none" aria-hidden="true"></video>
           <span class="panel-shade"></span>
           <span class="panel-tab">Fundos 360</span>
@@ -663,10 +672,11 @@ body.paused *, body.paused *::before, body.paused *::after{animation-play-state:
               <span><b>Por rol</b>datos financieros visibles solo a quien corresponde</span>
               <span><b>Multiproyecto</b>escala a Marchigüe y Malalcahuello</span>
             </div>
+            <button type="button" class="panel-play" data-src="assets/casos/fundos-360-h.mp4" aria-label="Ver video de Fundos 360"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>Ver video</button>
           </div>
-        </button>
+        </div>
 
-        <button type="button" class="panel" data-idx="1" aria-expanded="false" aria-label="Ver caso Haru 360">
+        <div class="panel" data-idx="1" role="button" tabindex="0" aria-expanded="false" aria-label="Caso Haru 360">
           <video class="panel-vid" src="assets/casos/haru-360-h.mp4" poster="assets/casos/haru-360-h.jpg" muted loop playsinline preload="none" aria-hidden="true"></video>
           <span class="panel-shade"></span>
           <span class="panel-tab">Haru 360</span>
@@ -680,9 +690,15 @@ body.paused *, body.paused *::before, body.paused *::after{animation-play-state:
               <span><b>Multicanal</b>local, delivery, apps y menús a empresas</span>
             </div>
             <span class="pi-status">Sistema diseñado a la medida · en implementación</span>
+            <button type="button" class="panel-play" data-src="assets/casos/haru-360-h.mp4" aria-label="Ver video de Haru 360"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>Ver video</button>
           </div>
-        </button>
+        </div>
 
+      </div>
+
+      <div class="vlightbox" id="vlightbox" role="dialog" aria-modal="true" aria-label="Video del caso">
+        <button class="vlightbox-close" id="vlightboxClose" aria-label="Cerrar video"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+        <video id="vlightboxVideo" controls playsinline preload="none"></video>
       </div>
     </div>
   </section>

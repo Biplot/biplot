@@ -472,3 +472,14 @@
     document.body.classList.toggle('paused', document.hidden);
   });
 })();
+
+/* portfolio + teaser: load horizontal (desktop) or vertical (mobile) video per device */
+(function () {
+  var vertical = window.matchMedia('(max-width:700px)').matches;
+  document.querySelectorAll('.case-video').forEach(function (v) {
+    var src = vertical ? v.dataset.v : v.dataset.h;
+    var poster = vertical ? v.dataset.pv : v.dataset.ph;
+    if (poster) v.setAttribute('poster', poster);
+    if (src) v.setAttribute('src', src);
+  });
+})();

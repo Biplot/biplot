@@ -288,6 +288,23 @@ body.motion-settled .reveal-group.in .part:nth-child(4){transition-delay:0ms}
 .case-visual video{width:100%;height:100%;display:block;object-fit:cover}
 @media (max-width:860px){.case{grid-template-columns:1fr}}
 
+/* portfolio: alternating cases + responsive H/V video */
+.casos-intro{max-width:60ch;margin-top:18px;color:var(--text-secondary);font-size:1.05rem;line-height:1.6}
+.case-alt .case-visual{order:-1}
+@media (max-width:860px){.case-alt .case-visual{order:0}}
+.case-head{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.case-head h3{font-family:var(--display);font-size:clamp(1.5rem,3.2vw,2rem);line-height:1.1}
+.case-rubro{font-family:var(--mono);font-size:.66rem;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);border:1px solid var(--accent-muted);padding:4px 11px;border-radius:999px;white-space:nowrap}
+.case-status{margin-top:22px;display:inline-flex;align-items:center;gap:9px;font-size:.85rem;color:var(--text-secondary);font-family:var(--mono);letter-spacing:.03em}
+.case-status::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--accent);box-shadow:0 0 0 4px var(--accent-muted);flex:none}
+@media (max-width:700px){.case-visual.has-video{aspect-ratio:9/16;max-width:330px;margin-inline:auto}}
+
+/* brand teaser */
+.teaser-section .wrap{text-align:center}
+.teaser-frame{margin:38px auto 0;max-width:940px;border-radius:20px;overflow:hidden;background:#0a1220;aspect-ratio:16/9;box-shadow:0 30px 80px rgba(0,0,0,.35);border:1px solid var(--line)}
+.teaser-frame video{width:100%;height:100%;display:block;object-fit:cover}
+@media (max-width:700px){.teaser-frame{aspect-ratio:9/16;max-width:330px}}
+
 /* pricing */
 .pricing-grid{margin-top:56px;display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
 .price-card{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:32px 26px;display:flex;flex-direction:column}
@@ -495,6 +512,16 @@ body.paused *, body.paused *::before, body.paused *::after{animation-play-state:
 
 <main id="main" tabindex="-1">
 
+  <section id="teaser" class="teaser-section" aria-labelledby="teaser-h">
+    <div class="wrap">
+      <span class="eyebrow">Conoce BiPlot</span>
+      <h2 class="h-lg reveal" id="teaser-h" style="max-width:none">Automatización a la medida, en 30 segundos</h2>
+      <div class="teaser-frame reveal">
+        <video class="case-video" data-h="assets/casos/teaser-biplot-h.mp4" data-v="assets/casos/teaser-biplot-v.mp4" data-ph="assets/casos/teaser-biplot-h.jpg" data-pv="assets/casos/teaser-biplot-v.jpg" controls playsinline preload="metadata" aria-label="Teaser de BiPlot"></video>
+      </div>
+    </div>
+  </section>
+
   <section id="problema" aria-labelledby="problema-h">
     <div class="wrap">
       <span class="eyebrow">El problema</span>
@@ -631,21 +658,40 @@ body.paused *, body.paused *::before, body.paused *::after{animation-play-state:
     </div>
   </section>
 
-  <section id="caso" aria-labelledby="caso-h">
+  <section id="casos" aria-labelledby="casos-h">
     <div class="wrap">
-      <span class="eyebrow">Caso real</span>
-      <h2 class="h-lg reveal" id="caso-h" style="max-width:none">Fundos 360</h2>
+      <span class="eyebrow">Portafolio</span>
+      <h2 class="h-lg reveal" id="casos-h" style="max-width:none">Casos reales, hechos a la medida</h2>
+      <p class="casos-intro reveal">Cada proyecto parte del proceso real del negocio. Estos son algunos sistemas que diseñamos y construimos de punta a punta.</p>
+
       <div class="case reveal">
         <div>
-          <p style="color:var(--text-secondary);font-size:1.05rem;line-height:1.6;max-width:52ch">Fundos 360 operaba con reportes armados a mano, mes a mes, cruzando planillas de distintas fuentes. Diagnosticamos el proceso completo y construimos una automatización a su medida que conecta sus fuentes de datos y entrega el reporte listo, sin intervención manual.</p>
+          <div class="case-head"><h3>Fundos 360</h3><span class="case-rubro">Inmobiliaria · venta de parcelas</span></div>
+          <p style="color:var(--text-secondary);font-size:1.05rem;line-height:1.6;max-width:52ch;margin-top:18px">Fundos vende parcelas rurales en un ciclo largo —lead, reserva, escritura, facturación al inversionista, posventa y comisiones— que vivía disperso en planillas, WhatsApp y papel: sin una vista única del estado de cada venta, con escrituras y comisiones calculadas a mano y sin control de quién veía los datos financieros. Construimos Fundos OS, una plataforma a su medida que digitaliza el ciclo completo con permisos por rol.</p>
           <div class="case-stat">
-            <div><b>-80%</b><span>tiempo de armado de reportes</span></div>
-            <div><b>0</b><span>planillas cruzadas a mano</span></div>
-            <div><b>1</b><span>fuente de verdad, conectada</span></div>
+            <div><b>Ciclo completo</b><span>CRM, inventario, escrituras y comisiones conectados</span></div>
+            <div><b>Por rol</b><span>cada dato financiero visible solo para quien corresponde</span></div>
+            <div><b>Multiproyecto</b><span>escala a Marchigüe y Malalcahuello sin perder control</span></div>
           </div>
         </div>
         <div class="case-visual has-video">
-          <video src="assets/caso-fundos360.mp4" poster="assets/caso-fundos360-poster.jpg" controls playsinline preload="metadata" aria-label="Teaser del caso Fundos 360"></video>
+          <video class="case-video" data-h="assets/casos/fundos-360-h.mp4" data-v="assets/casos/fundos-360-v.mp4" data-ph="assets/casos/fundos-360-h.jpg" data-pv="assets/casos/fundos-360-v.jpg" controls playsinline preload="none" aria-label="Video del caso Fundos 360"></video>
+        </div>
+      </div>
+
+      <div class="case case-alt reveal">
+        <div>
+          <div class="case-head"><h3>Haru 360</h3><span class="case-rubro">Restaurante · cocina japonesa</span></div>
+          <p style="color:var(--text-secondary);font-size:1.05rem;line-height:1.6;max-width:52ch;margin-top:18px">Haru Isidora, restaurante de cocina japonesa en Arica, atiende en local, con delivery propio, apps de pedidos y menús para empresas y colegios. Toda la información vivía repartida —caja, máquinas de pago, apps y una planilla hecha a mano—, con fórmulas que se rompían y totales que no cuadraban entre una hoja y otra, sin costo real por plato ni ventas separadas por canal. Diseñamos Haru 360, un sistema a su medida que centraliza ventas, cocina, delivery, inventario y caja.</p>
+          <div class="case-stat">
+            <div><b>Todo en uno</b><span>ventas, cocina, delivery, inventario y caja</span></div>
+            <div><b>Costo por plato</b><span>margen real por producto y por canal</span></div>
+            <div><b>Multicanal</b><span>local, delivery, apps y menús a empresas</span></div>
+          </div>
+          <span class="case-status">Sistema diseñado a la medida · en implementación</span>
+        </div>
+        <div class="case-visual has-video">
+          <video class="case-video" data-h="assets/casos/haru-360-h.mp4" data-v="assets/casos/haru-360-v.mp4" data-ph="assets/casos/haru-360-h.jpg" data-pv="assets/casos/haru-360-v.jpg" controls playsinline preload="none" aria-label="Video del sistema Haru 360"></video>
         </div>
       </div>
     </div>
@@ -872,7 +918,7 @@ body.paused *, body.paused *::before, body.paused *::after{animation-play-state:
     </a>
     <div class="footer-links">
       <a href="#servicios">Servicios</a>
-      <a href="#caso">Casos</a>
+      <a href="#casos">Casos</a>
       <a href="#precios">Precios</a>
       <a href="#contacto">Contacto</a>
       <a href="plotline.html">Cómo pensamos la automatización</a>

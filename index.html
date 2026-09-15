@@ -219,6 +219,30 @@ section{padding:clamp(72px,10vw,140px) clamp(20px,6vw,64px);position:relative}
 h2.h-lg{font-size:clamp(1.8rem,4vw,2.7rem);max-width:18ch}
 .lede{margin-top:18px;color:var(--text-secondary);font-size:clamp(1rem,1.6vw,1.15rem);max-width:60ch}
 
+/* ===== HERO B (rediseño: texto + video enmarcado) ===== */
+.cta-row{margin-top:32px;display:flex;gap:14px;flex-wrap:wrap}
+.nav-links{display:flex;gap:26px;font-size:.9rem;font-family:var(--body)}
+.nav-links a{color:var(--text-secondary);text-decoration:none;transition:color .25s var(--ease);font-weight:500}
+.nav-links a:hover{color:var(--accent)}
+@media (max-width:820px){.nav-links{display:none}}
+.hero-b{padding-top:clamp(100px,13vh,156px);padding-bottom:clamp(48px,7vw,90px);min-height:100vh;display:flex;align-items:center;background:radial-gradient(ellipse 90% 80% at 85% 15%,rgba(23,195,178,.10),transparent 55%),radial-gradient(ellipse 80% 70% at 5% 95%,rgba(255,107,74,.07),transparent 55%),linear-gradient(180deg,var(--canvas),var(--canvas-deep))}
+.hero-b-grid{display:grid;grid-template-columns:1fr 1fr;gap:clamp(30px,5vw,64px);align-items:center;width:100%}
+.hero-copy{max-width:560px}
+.hero-copy h1{font-family:var(--display);font-weight:700;line-height:1.05;letter-spacing:-.02em;font-size:clamp(2rem,4.6vw,3.4rem)}
+.hero-sub{margin-top:18px;color:var(--text-secondary);font-size:clamp(1rem,1.6vw,1.12rem);line-height:1.55;max-width:46ch}
+.hero-trust{margin-top:30px;display:flex;gap:28px;flex-wrap:wrap;font-size:.82rem;color:var(--text-secondary)}
+.hero-trust span{display:flex;flex-direction:column;gap:2px}
+.hero-trust b{color:var(--text-primary);font-family:var(--display);font-size:1.05rem;letter-spacing:-.01em}
+.hero-frame{position:relative;border-radius:20px;overflow:hidden;aspect-ratio:16/9;background:#0a1220;box-shadow:0 40px 90px rgba(0,0,0,.5);border:1px solid var(--line)}
+.hero-frame video{width:100%;height:100%;object-fit:cover;display:block}
+.hero-sound{position:absolute;bottom:14px;right:14px;width:40px;height:40px;border-radius:50%;background:rgba(8,20,36,.6);backdrop-filter:blur(8px);border:1px solid var(--line);color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:border-color .25s var(--ease),color .25s var(--ease);z-index:2}
+.hero-sound:hover{border-color:var(--accent);color:var(--accent)}
+.hero-sound svg{width:18px;height:18px}
+.hero-sound .on-ic{display:none}
+.hero-sound.on .on-ic{display:block}
+.hero-sound.on .off-ic{display:none}
+@media (max-width:860px){.hero-b-grid{grid-template-columns:1fr}.hero-frame{order:-1}.hero-b{min-height:auto}}
+
 .reveal{opacity:0;transform:translateY(28px);transition:opacity .8s var(--ease), transform .8s var(--ease)}
 .reveal.in{opacity:1;transform:none}
 .reveal-group.in .part{opacity:1;transform:none}
@@ -435,113 +459,67 @@ body.paused *, body.paused *::before, body.paused *::after{animation-play-state:
     <svg viewBox="0 0 32 32" aria-hidden="true"><defs><linearGradient id="hm" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#143a63"/><stop offset="1" stop-color="#0b1f39"/></linearGradient></defs><rect width="32" height="32" rx="8" fill="url(#hm)"/><path d="M9 8 V24 H25" fill="none" stroke="#3f6da0" stroke-width="1.7" stroke-linecap="round"/><polyline points="10.5,20.5 15,16.5 19,18 23,11" fill="none" stroke="#17C3B2" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" opacity=".55"/><circle cx="10.5" cy="20.5" r="1.8" fill="#17C3B2"/><circle cx="15" cy="16.5" r="1.8" fill="#17C3B2"/><circle cx="19" cy="18" r="1.8" fill="#17C3B2"/><circle cx="23" cy="11" r="2.3" fill="#FF6B4A"/></svg>
     BiPlot
   </a>
+  <div class="nav-links">
+    <a href="#servicios">Servicios</a>
+    <a href="#casos">Casos</a>
+    <a href="#precios">Precios</a>
+  </div>
   <a href="https://wa.me/56966275675?text=Hola%20BiPlot%20%F0%9F%91%8B%2C%20quiero%20agendar%20un%20diagn%C3%B3stico." target="_blank" rel="noopener" class="nav-cta">Agenda un diagnóstico</a>
 </nav>
 
-<button class="sound-toggle" id="soundToggle" aria-pressed="false" aria-label="Activar sonido de ambiente">
-  <svg id="soundIconOff" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M11 5 6 9H3v6h3l5 4V5Z"/><line x1="16" y1="9" x2="21" y2="15"/><line x1="21" y1="9" x2="16" y2="15"/></svg>
-  <svg id="soundIconOn" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" style="display:none"><path d="M11 5 6 9H3v6h3l5 4V5Z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M18 6a9 9 0 0 1 0 12"/></svg>
-</button>
-
-<div class="hero-pin" id="heroPin">
-  <div class="hero-stage at-top" id="heroStage">
-    <div class="hero-media">
-      <div class="poster" id="heroPoster" aria-hidden="true"></div>
-      <video id="heroVideo" preload="none" muted playsinline aria-hidden="true" tabindex="-1"></video>
-    </div>
-    <div class="scrim" aria-hidden="true"></div>
-
-    <div class="hero-loading" id="heroRing" aria-hidden="true">
-      <svg viewBox="0 0 48 48"><circle cx="24" cy="24" r="20" fill="none" stroke="currentColor" stroke-width="3" stroke-dasharray="126" style="stroke-dashoffset:var(--ld,126)"/></svg>
-    </div>
-
-    <div class="band" id="band-1" data-range="0.00,0.22">
-      <div class="band-inner">
-        <span class="kicker">Diagnóstico</span>
-        <h2><span class="hero-sr">Datos sueltos. Procesos enredados.</span><span class="split" aria-hidden="true" data-split></span></h2>
+<header class="hero-b" id="hero">
+  <div class="wrap hero-b-grid">
+    <div class="hero-copy">
+      <span class="eyebrow">BiPlot</span>
+      <h1>Automatización hecha a la medida de tu negocio.</h1>
+      <p class="hero-sub">Diagnosticamos tu proceso real, lo automatizamos a tu medida y nos quedamos después de la entrega.</p>
+      <div class="cta-row">
+        <a href="https://wa.me/56966275675?text=Hola%20BiPlot%20%F0%9F%91%8B%2C%20quiero%20agendar%20un%20diagn%C3%B3stico." target="_blank" rel="noopener" class="btn primary">Agenda un diagnóstico</a>
+        <a href="#casos" class="btn ghost">Ver casos reales</a>
+      </div>
+      <div class="hero-trust">
+        <span><b>Fundos 360</b>Inmobiliaria</span>
+        <span><b>Haru 360</b>Restaurante</span>
+        <span><b>&lt;48h</b>Respuesta</span>
       </div>
     </div>
-
-    <div class="band" id="band-2" data-range="0.26,0.50">
-      <div class="band-inner">
-        <span class="kicker">El caos silencioso</span>
-        <h2><span class="hero-sr">Planillas, WhatsApp y un poco de todo, ordenado por nadie.</span><span class="split" aria-hidden="true" data-split></span></h2>
-      </div>
-    </div>
-
-    <div class="band" id="band-3" data-range="0.54,0.78">
-      <div class="band-inner">
-        <span class="kicker">La metodología</span>
-        <h2><span class="hero-sr">Cada proceso, trazado a tu medida.</span><span class="split" aria-hidden="true" data-split></span></h2>
-      </div>
-    </div>
-
-    <div class="band" id="band-settle" data-range="0.82,1.00">
-      <div class="band-inner">
-        <span class="kicker">BiPlot</span>
-        <h2><span class="hero-sr">Automatización hecha a la medida de tu negocio.</span><span class="split" aria-hidden="true" data-split></span></h2>
-        <p class="sub">Diagnosticamos tu proceso real, lo automatizamos a tu medida y nos quedamos después de la entrega.</p>
-        <div class="cta-row">
-          <a href="https://wa.me/56966275675?text=Hola%20BiPlot%20%F0%9F%91%8B%2C%20quiero%20agendar%20un%20diagn%C3%B3stico." target="_blank" rel="noopener" class="btn primary">Agenda un diagnóstico</a>
-          <a href="#metodologia" class="btn ghost">Ver cómo trabajamos</a>
-        </div>
-      </div>
-    </div>
-
-    <div class="scroll-cue" aria-hidden="true">
-      <span>Scroll</span>
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 4v16M6 14l6 6 6-6"/></svg>
-    </div>
-
-    <div class="static-hero" id="staticHero">
-      <div class="scrim"></div>
-      <div class="static-hero-content">
-        <div class="inner">
-          <span class="kicker">BiPlot</span>
-          <h1>Automatización hecha a la medida de tu negocio.</h1>
-          <p>Diagnosticamos tu proceso real, lo automatizamos a tu medida y nos quedamos después de la entrega.</p>
-          <div class="cta-row">
-            <a href="https://wa.me/56966275675?text=Hola%20BiPlot%20%F0%9F%91%8B%2C%20quiero%20agendar%20un%20diagn%C3%B3stico." target="_blank" rel="noopener" class="btn primary">Agenda un diagnóstico</a>
-            <a href="#metodologia" class="btn ghost">Ver cómo trabajamos</a>
-          </div>
-        </div>
-      </div>
+    <div class="hero-frame">
+      <video id="heroVideo" src="assets/casos/teaser-biplot-h.mp4" poster="assets/casos/teaser-biplot-h.jpg" autoplay muted loop playsinline aria-label="Teaser de BiPlot"></video>
+      <button class="hero-sound" id="heroSound" aria-pressed="false" aria-label="Activar sonido del video">
+        <svg class="off-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M11 5 6 9H3v6h3l5 4V5Z"/><line x1="16" y1="9" x2="21" y2="15"/><line x1="21" y1="9" x2="16" y2="15"/></svg>
+        <svg class="on-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M11 5 6 9H3v6h3l5 4V5Z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M18 6a9 9 0 0 1 0 12"/></svg>
+      </button>
     </div>
   </div>
-</div>
+</header>
 
 <main id="main" tabindex="-1">
 
-  <section id="teaser" class="teaser-section" aria-labelledby="teaser-h">
+  <section id="servicios" aria-labelledby="servicios-h">
     <div class="wrap">
-      <span class="eyebrow">Conoce BiPlot</span>
-      <h2 class="h-lg reveal" id="teaser-h" style="max-width:none">Automatización a la medida, en 30 segundos</h2>
-      <div class="teaser-frame reveal">
-        <video class="case-video" data-h="assets/casos/teaser-biplot-h.mp4" data-v="assets/casos/teaser-biplot-v.mp4" data-ph="assets/casos/teaser-biplot-h.jpg" data-pv="assets/casos/teaser-biplot-v.jpg" controls playsinline preload="metadata" aria-label="Teaser de BiPlot"></video>
-      </div>
-    </div>
-  </section>
-
-  <section id="problema" aria-labelledby="problema-h">
-    <div class="wrap">
-      <span class="eyebrow">El problema</span>
-      <h2 class="h-lg reveal" id="problema-h">El caos silencioso que nadie puso en el presupuesto</h2>
-      <p class="lede reveal">Muchas pymes operan con planillas, WhatsApp y sistemas sueltos. Funciona, hasta que no: errores, duplicidad de datos y una dependencia total de la persona que "sabe cómo se hace esto".</p>
-      <div class="problem-grid reveal-group">
-        <div class="problem-card part">
-          <span class="quote-mark">"</span>
-          <p>Decidimos desde la urgencia: atendemos lo que explota primero, no lo que importa más.</p>
-          <span class="tag">Dueño de pyme de servicios</span>
+      <span class="eyebrow">Servicios</span>
+      <h2 class="h-lg reveal" id="servicios-h">Lo que hacemos, en concreto</h2>
+      <p class="lede reveal">Cada servicio nace del diagnóstico. Nada se vende suelto sin entender primero tu proceso.</p>
+      <div class="services-grid reveal-group">
+        <div class="service-card part">
+          <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M4 17V7l8-4 8 4v10l-8 4-8-4Z"/><path d="M4 7l8 4 8-4M12 11v10"/></svg>
+          <h3>Integración de sistemas</h3>
+          <p>Conectamos las herramientas que ya usas para que dejen de vivir aisladas entre sí.</p>
         </div>
-        <div class="problem-card part">
-          <span class="quote-mark">"</span>
-          <p>Si la persona que maneja la planilla se enferma o se va, el proceso completo se detiene con ella.</p>
-          <span class="tag">Dependencia operativa</span>
+        <div class="service-card part">
+          <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M4 4h16v4H4zM4 10h10v4H4zM4 16h7v4H4z"/></svg>
+          <h3>Automatización de procesos</h3>
+          <p>Tareas repetitivas de cobranza, reportes o seguimiento, hechas por el sistema, no por una persona.</p>
         </div>
-        <div class="problem-card part">
-          <span class="quote-mark">"</span>
-          <p>Compramos una herramienta potente que el equipo nunca aprendió a usar. Fue dinero tirado.</p>
-          <span class="tag">Sobre el software genérico</span>
+        <div class="service-card part">
+          <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M3 3v18h18"/><path d="M7 15l4-5 3 3 5-7"/></svg>
+          <h3>Dashboards a medida</h3>
+          <p>Un panel que responde las preguntas que tu negocio realmente hace, no las que trae la plantilla.</p>
+        </div>
+        <div class="service-card part">
+          <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M12 3a9 9 0 1 0 9 9"/><path d="M12 3v9l6 3"/></svg>
+          <h3>Acompañamiento continuo</h3>
+          <p>Ajustamos y mejoramos el sistema a medida que tu negocio cambia. No es una entrega única.</p>
         </div>
       </div>
     </div>
@@ -593,36 +571,6 @@ body.paused *, body.paused *::before, body.paused *::after{animation-play-state:
           <h3>Soporte después de la entrega</h3>
           <p>Seguimos siendo el socio que responde, no el proveedor que entrega y desaparece.</p>
           <p class="mstep-deliver"><span class="lbl">Entregable</span> Un socio que responde cuando el proceso cambia.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <section id="servicios" aria-labelledby="servicios-h">
-    <div class="wrap">
-      <span class="eyebrow">Servicios</span>
-      <h2 class="h-lg reveal" id="servicios-h">Lo que hacemos, en concreto</h2>
-      <p class="lede reveal">Cada servicio nace del diagnóstico. Nada se vende suelto sin entender primero tu proceso.</p>
-      <div class="services-grid reveal-group">
-        <div class="service-card part">
-          <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M4 17V7l8-4 8 4v10l-8 4-8-4Z"/><path d="M4 7l8 4 8-4M12 11v10"/></svg>
-          <h3>Integración de sistemas</h3>
-          <p>Conectamos las herramientas que ya usas para que dejen de vivir aisladas entre sí.</p>
-        </div>
-        <div class="service-card part">
-          <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M4 4h16v4H4zM4 10h10v4H4zM4 16h7v4H4z"/></svg>
-          <h3>Automatización de procesos</h3>
-          <p>Tareas repetitivas de cobranza, reportes o seguimiento, hechas por el sistema, no por una persona.</p>
-        </div>
-        <div class="service-card part">
-          <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M3 3v18h18"/><path d="M7 15l4-5 3 3 5-7"/></svg>
-          <h3>Dashboards a medida</h3>
-          <p>Un panel que responde las preguntas que tu negocio realmente hace, no las que trae la plantilla.</p>
-        </div>
-        <div class="service-card part">
-          <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M12 3a9 9 0 1 0 9 9"/><path d="M12 3v9l6 3"/></svg>
-          <h3>Acompañamiento continuo</h3>
-          <p>Ajustamos y mejoramos el sistema a medida que tu negocio cambia. No es una entrega única.</p>
         </div>
       </div>
     </div>
@@ -732,114 +680,6 @@ body.paused *, body.paused *::before, body.paused *::after{animation-play-state:
             <li>Canal directo de soporte</li>
           </ul>
           <a href="#contacto" class="btn ghost">Conversar plan</a>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <section id="historia" aria-labelledby="historia-h">
-    <div class="wrap">
-      <span class="eyebrow">Cómo pensamos la automatización</span>
-      <h2 class="h-lg reveal" id="historia-h">Seis décadas, la misma línea</h2>
-      <p class="lede reveal">Antes de BiPlot, un proceso de negocio pasó por el papel, el terminal, el software genérico y el ruido de mil herramientas. Recorre las épocas.</p>
-
-      <div class="pl-carousel-wrap reveal">
-        <div class="pl-viewport">
-          <div class="pl-track" id="plTrack">
-
-            <div class="pl-slide pl-active" data-slide="0">
-              <div class="pl-visual">
-                <div class="pl-era-box pl-era-paper">
-                  <div class="card">Planillas a mano.<br>Un clip para no perder la hoja.<br><span class="redl">un cuaderno</span> WhatsApp y un Excel.</div>
-                </div>
-              </div>
-              <div class="pl-copy">
-                <span class="pl-era">1985 · El papel</span>
-                <h3>Antes de todo esto, había una libreta</h3>
-                <p>Planillas a mano, un clip para no perder la hoja y la memoria de una sola persona sosteniendo el proceso completo.</p>
-              </div>
-            </div>
-
-            <div class="pl-slide" data-slide="1">
-              <div class="pl-visual">
-                <div class="pl-era-box pl-era-terminal">
-                  <div class="term"><span class="p">&gt;</span> LEYENDO PROCESO...<br><span class="p">&gt;</span> 14 PASOS MANUALES<br><span class="p">&gt;</span> DIAGNÓSTICO<span class="cur">&nbsp;</span></div>
-                </div>
-              </div>
-              <div class="pl-copy">
-                <span class="pl-era">1990 · El diagnóstico</span>
-                <h3>Todo cambio serio empieza por leer el proceso real</h3>
-                <p>Antes de tocar nada, entendemos paso a paso cómo trabaja tu equipo hoy. Sin apurarnos a la solución.</p>
-              </div>
-            </div>
-
-            <div class="pl-slide" data-slide="2">
-              <div class="pl-visual">
-                <div class="pl-era-box pl-era-crt">
-                  <div class="msg">Ahora tienes dos problemas.</div>
-                </div>
-              </div>
-              <div class="pl-copy">
-                <span class="pl-era">1998 · El enredo</span>
-                <h3>Compraste una herramienta. Ahora tienes dos problemas</h3>
-                <p>Una herramienta potente que tu equipo nunca aprende a usar es dinero tirado. Así se ve el software genérico por dentro.</p>
-              </div>
-            </div>
-
-            <div class="pl-slide" data-slide="3">
-              <div class="pl-visual">
-                <div class="pl-era-box pl-era-saas">
-                  <div class="cards">
-                    <div class="c"><b>Escalable</b>Para cualquier negocio.</div>
-                    <div class="c"><b>Innovador</b>Con IA de punta.</div>
-                  </div>
-                </div>
-              </div>
-              <div class="pl-copy">
-                <span class="pl-era">2015 · El genérico</span>
-                <h3>Todas prometen lo mismo, con las mismas tres palabras</h3>
-                <p>Así trabajan la mayoría de las consultoras de automatización: plantillas genéricas vestidas de innovación.</p>
-              </div>
-            </div>
-
-            <div class="pl-slide" data-slide="4">
-              <div class="pl-visual">
-                <div class="pl-era-box pl-era-biplot">
-                  <img src="assets/hero-ending.jpg" alt="La curva de datos de BiPlot" loading="lazy">
-                </div>
-              </div>
-              <div class="pl-copy">
-                <span class="pl-era">Hoy · BiPlot</span>
-                <h3>La misma línea, por fin trazada con precisión</h3>
-                <p>Procesos diagnosticados de verdad, automatizados a la medida de cada cliente, con soporte real después de la entrega.</p>
-              </div>
-            </div>
-
-            <div class="pl-slide" data-slide="5">
-              <div class="pl-visual">
-                <div class="pl-era-box pl-era-final">
-                  <svg viewBox="0 0 300 120" aria-hidden="true">
-                    <path class="curve" d="M10 90 C 70 90, 90 30, 150 30 S 240 90, 290 20"/>
-                    <circle cx="290" cy="20" r="5" fill="#FF6B4A"/>
-                  </svg>
-                </div>
-              </div>
-              <div class="pl-copy">
-                <span class="pl-era">Tu turno</span>
-                <h3>Tu proceso es el próximo punto de esta curva</h3>
-                <p>Del papel al pixel, la línea nunca dejó de trazarse. Ahora te toca a ti agregar el siguiente punto.</p>
-              </div>
-            </div>
-
-          </div>
-        </div>
-        <div class="pl-controls">
-          <div class="pl-dots" id="plDots"></div>
-          <a href="plotline.html" class="btn ghost pl-cta">Ver el recorrido completo</a>
-          <div class="pl-arrows">
-            <button id="plPrev" aria-label="Época anterior"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg></button>
-            <button id="plNext" aria-label="Época siguiente"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg></button>
-          </div>
         </div>
       </div>
     </div>

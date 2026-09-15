@@ -326,20 +326,38 @@ body.motion-settled .reveal-group.in .part:nth-child(4){transition-delay:0ms}
 .case-status{margin-top:22px;display:inline-flex;align-items:center;gap:9px;font-size:.85rem;color:var(--text-secondary);font-family:var(--mono);letter-spacing:.03em}
 .case-status::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--accent);box-shadow:0 0 0 4px var(--accent-muted);flex:none}
 @media (max-width:700px){.case-visual.has-video{aspect-ratio:9/16;max-width:330px;margin-inline:auto}}
-/* casos carousel */
-.cases-carousel{margin-top:44px;position:relative}
-.cases-viewport{overflow:hidden;border-radius:24px}
-.cases-track{display:flex;transition:transform .55s var(--ease)}
-.case-slide{flex:0 0 100%;min-width:100%}
-.case-slide .case{margin-top:0}
-.cases-controls{display:flex;align-items:center;justify-content:space-between;margin-top:24px;gap:16px}
-.cases-dots{display:flex;gap:10px}
-.cases-dots button{width:9px;height:9px;border-radius:50%;border:none;background:var(--line);cursor:pointer;padding:0;transition:background .25s var(--ease),transform .25s var(--ease)}
-.cases-dots button.active{background:var(--accent);transform:scale(1.3)}
-.cases-arrows{display:flex;gap:10px}
-.cases-arrows button{width:44px;height:44px;border-radius:50%;background:var(--panel);border:1px solid var(--line);color:var(--text-primary);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:border-color .25s var(--ease),color .25s var(--ease)}
-.cases-arrows button:hover{border-color:var(--accent);color:var(--accent)}
-.cases-arrows svg{width:20px;height:20px}
+/* casos: paneles expansibles */
+.case-panels{margin-top:44px;display:flex;gap:10px;height:min(72vh,540px)}
+.panel{position:relative;flex:1 1 0;min-width:0;overflow:hidden;border-radius:18px;cursor:pointer;border:1px solid var(--line);background:#0a1220;padding:0;color:var(--text-primary);text-align:left;font-family:var(--body);transition:flex-grow .55s var(--ease)}
+.panel:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+.panel.is-active{flex-grow:7}
+.panel-vid{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.45;transition:opacity .5s var(--ease)}
+.panel.is-active .panel-vid{opacity:1}
+.panel-shade{position:absolute;inset:0;background:linear-gradient(180deg,rgba(8,18,32,.1) 0%,rgba(8,18,32,.5) 55%,rgba(6,14,26,.94) 100%)}
+.panel-tab{position:absolute;left:50%;bottom:22px;transform:translateX(-50%) rotate(180deg);writing-mode:vertical-rl;font-family:var(--display);font-weight:700;font-size:1.12rem;letter-spacing:-.01em;white-space:nowrap;z-index:3;text-shadow:0 2px 10px rgba(0,0,0,.6);transition:opacity .3s var(--ease)}
+.panel.is-active .panel-tab{opacity:0;pointer-events:none}
+.panel-info{position:absolute;left:0;right:0;bottom:0;padding:26px 28px;z-index:3;opacity:0;transform:translateY(16px);transition:opacity .45s var(--ease) .12s,transform .45s var(--ease) .12s;pointer-events:none}
+.panel.is-active .panel-info{opacity:1;transform:none}
+.pi-rubro{font-family:var(--mono);font-size:.66rem;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);display:block}
+.pi-title{margin-top:8px;font-family:var(--display);font-weight:700;font-size:clamp(1.5rem,2.6vw,2rem)}
+.pi-desc{margin-top:12px;color:var(--text-secondary);font-size:.96rem;line-height:1.55;max-width:60ch}
+.pi-stats{margin-top:16px;display:flex;gap:26px;flex-wrap:wrap}
+.pi-stats span{display:flex;flex-direction:column;gap:3px;font-size:.8rem;color:var(--text-secondary);max-width:24ch}
+.pi-stats b{color:var(--text-primary);font-family:var(--display);font-size:.98rem}
+.pi-status{margin-top:16px;display:inline-flex;align-items:center;gap:9px;font-family:var(--mono);font-size:.78rem;color:var(--text-secondary)}
+.pi-status::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--accent);box-shadow:0 0 0 4px var(--accent-muted);flex:none}
+@media (max-width:860px){
+  .case-panels{flex-direction:column;height:auto;gap:12px}
+  .panel{flex:none;display:block}
+  .panel:not(.is-active){height:66px}
+  .panel-tab{writing-mode:horizontal-tb;transform:none;left:20px;top:20px;bottom:auto;font-size:1.05rem}
+  .panel.is-active{height:auto}
+  .panel.is-active .panel-tab{display:none}
+  .panel.is-active .panel-vid{position:relative;inset:auto;width:100%;height:210px;opacity:1}
+  .panel.is-active .panel-shade{display:none}
+  .panel.is-active .panel-info{position:relative;left:auto;right:auto;bottom:auto;opacity:1;transform:none;padding:20px}
+  .pi-desc{max-width:none}
+}
 
 /* brand teaser */
 .teaser-section .wrap{text-align:center}
@@ -630,52 +648,41 @@ body.paused *, body.paused *::before, body.paused *::after{animation-play-state:
       <h2 class="h-lg reveal" id="casos-h" style="max-width:none">Casos reales, hechos a la medida</h2>
       <p class="casos-intro reveal">Cada proyecto parte del proceso real del negocio. Estos son algunos sistemas que diseñamos y construimos de punta a punta.</p>
 
-      <div class="cases-carousel reveal" id="casesCarousel">
-        <div class="cases-viewport">
-          <div class="cases-track" id="casesTrack">
-          <div class="case-slide">
-          <div class="case">
-        <div>
-          <div class="case-head"><h3>Fundos 360</h3><span class="case-rubro">Inmobiliaria · venta de parcelas</span></div>
-          <p style="color:var(--text-secondary);font-size:1.05rem;line-height:1.6;max-width:52ch;margin-top:18px">Fundos vende parcelas rurales en un ciclo largo —lead, reserva, escritura, facturación al inversionista, posventa y comisiones— que vivía disperso en planillas, WhatsApp y papel: sin una vista única del estado de cada venta, con escrituras y comisiones calculadas a mano y sin control de quién veía los datos financieros. Construimos Fundos OS, una plataforma a su medida que digitaliza el ciclo completo con permisos por rol.</p>
-          <div class="case-stat">
-            <div><b>Ciclo completo</b><span>CRM, inventario, escrituras y comisiones conectados</span></div>
-            <div><b>Por rol</b><span>cada dato financiero visible solo para quien corresponde</span></div>
-            <div><b>Multiproyecto</b><span>escala a Marchigüe y Malalcahuello sin perder control</span></div>
-          </div>
-        </div>
-        <div class="case-visual has-video">
-          <video class="case-video" data-h="assets/casos/fundos-360-h.mp4" data-v="assets/casos/fundos-360-v.mp4" data-ph="assets/casos/fundos-360-h.jpg" data-pv="assets/casos/fundos-360-v.jpg" controls playsinline preload="none" aria-label="Video del caso Fundos 360"></video>
-        </div>
-          </div>
-          </div>
+      <div class="case-panels reveal" id="casePanels">
 
-          <div class="case-slide">
-          <div class="case case-alt">
-        <div>
-          <div class="case-head"><h3>Haru 360</h3><span class="case-rubro">Restaurante · cocina japonesa</span></div>
-          <p style="color:var(--text-secondary);font-size:1.05rem;line-height:1.6;max-width:52ch;margin-top:18px">Haru Isidora, restaurante de cocina japonesa en Arica, atiende en local, con delivery propio, apps de pedidos y menús para empresas y colegios. Toda la información vivía repartida —caja, máquinas de pago, apps y una planilla hecha a mano—, con fórmulas que se rompían y totales que no cuadraban entre una hoja y otra, sin costo real por plato ni ventas separadas por canal. Diseñamos Haru 360, un sistema a su medida que centraliza ventas, cocina, delivery, inventario y caja.</p>
-          <div class="case-stat">
-            <div><b>Todo en uno</b><span>ventas, cocina, delivery, inventario y caja</span></div>
-            <div><b>Costo por plato</b><span>margen real por producto y por canal</span></div>
-            <div><b>Multicanal</b><span>local, delivery, apps y menús a empresas</span></div>
+        <button type="button" class="panel is-active" data-idx="0" aria-expanded="true" aria-label="Ver caso Fundos 360">
+          <video class="panel-vid" src="assets/casos/fundos-360-h.mp4" poster="assets/casos/fundos-360-h.jpg" muted loop playsinline preload="none" aria-hidden="true"></video>
+          <span class="panel-shade"></span>
+          <span class="panel-tab">Fundos 360</span>
+          <div class="panel-info">
+            <span class="pi-rubro">Inmobiliaria · venta de parcelas</span>
+            <h3 class="pi-title">Fundos 360</h3>
+            <p class="pi-desc">Un ciclo de venta largo —lead, reserva, escritura, facturación al inversionista, posventa y comisiones— vivía disperso en planillas, WhatsApp y papel. Construimos Fundos OS: una plataforma a su medida que digitaliza el ciclo completo con permisos por rol.</p>
+            <div class="pi-stats">
+              <span><b>Ciclo completo</b>CRM, escrituras y comisiones conectados</span>
+              <span><b>Por rol</b>datos financieros visibles solo a quien corresponde</span>
+              <span><b>Multiproyecto</b>escala a Marchigüe y Malalcahuello</span>
+            </div>
           </div>
-          <span class="case-status">Sistema diseñado a la medida · en implementación</span>
-        </div>
-        <div class="case-visual has-video">
-          <video class="case-video" data-h="assets/casos/haru-360-h.mp4" data-v="assets/casos/haru-360-v.mp4" data-ph="assets/casos/haru-360-h.jpg" data-pv="assets/casos/haru-360-v.jpg" controls playsinline preload="none" aria-label="Video del sistema Haru 360"></video>
-        </div>
+        </button>
+
+        <button type="button" class="panel" data-idx="1" aria-expanded="false" aria-label="Ver caso Haru 360">
+          <video class="panel-vid" src="assets/casos/haru-360-h.mp4" poster="assets/casos/haru-360-h.jpg" muted loop playsinline preload="none" aria-hidden="true"></video>
+          <span class="panel-shade"></span>
+          <span class="panel-tab">Haru 360</span>
+          <div class="panel-info">
+            <span class="pi-rubro">Restaurante · cocina japonesa</span>
+            <h3 class="pi-title">Haru 360</h3>
+            <p class="pi-desc">Haru Isidora (Arica) operaba con caja, máquinas de pago, apps de delivery y una planilla a mano: totales que no cuadraban y sin costo real por plato. Diseñamos Haru 360, un sistema a su medida que centraliza ventas, cocina, delivery, inventario y caja.</p>
+            <div class="pi-stats">
+              <span><b>Todo en uno</b>ventas, cocina, delivery, inventario y caja</span>
+              <span><b>Costo por plato</b>margen real por producto y por canal</span>
+              <span><b>Multicanal</b>local, delivery, apps y menús a empresas</span>
+            </div>
+            <span class="pi-status">Sistema diseñado a la medida · en implementación</span>
           </div>
-          </div>
-          </div>
-        </div>
-        <div class="cases-controls">
-          <div class="cases-dots" id="casesDots"></div>
-          <div class="cases-arrows">
-            <button id="casesPrev" aria-label="Caso anterior"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg></button>
-            <button id="casesNext" aria-label="Caso siguiente"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg></button>
-          </div>
-        </div>
+        </button>
+
       </div>
     </div>
   </section>

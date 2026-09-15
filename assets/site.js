@@ -79,68 +79,28 @@
     if (formSuccess) formSuccess.classList.add('show');
   });
 
-  /* ============ PORTFOLIO VIDEOS: horizontal (desktop) / vertical (mobile) ============ */
-  const vertical = window.matchMedia('(max-width:700px)').matches;
-  document.querySelectorAll('.case-video').forEach((v) => {
-    const src = vertical ? v.dataset.v : v.dataset.h;
-    const poster = vertical ? v.dataset.pv : v.dataset.ph;
-    if (poster) v.setAttribute('poster', poster);
-    if (src) v.setAttribute('src', src);
-  });
-
-  /* ============ CASES CAROUSEL ============ */
-  (function initCasesCarousel() {
-    const track = document.getElementById('casesTrack');
-    if (!track) return;
-    const slides = [...track.querySelectorAll('.case-slide')];
-    const dotsWrap = document.getElementById('casesDots');
-    const prevBtn = document.getElementById('casesPrev');
-    const nextBtn = document.getElementById('casesNext');
-    const total = slides.length;
-    let index = 0;
-
-    if (total < 2) {
-      // one case: no controls needed
-      if (dotsWrap) dotsWrap.style.display = 'none';
-      const arrows = document.querySelector('.cases-arrows');
-      if (arrows) arrows.style.display = 'none';
-      return;
-    }
-
-    if (dotsWrap) {
-      slides.forEach((_, i) => {
-        const d = document.createElement('button');
-        d.setAttribute('aria-label', 'Ir al caso ' + (i + 1));
-        if (i === 0) d.classList.add('active');
-        d.addEventListener('click', () => go(i));
-        dotsWrap.appendChild(d);
+  /* ============ CASES: expanding panels ============ */
+  (function initCasePanels() {
+    const wrap = document.getElementById('casePanels');
+    if (!wrap) return;
+    const panels = [...wrap.querySelectorAll('.panel')];
+    if (!panels.length) return;
+    const fine = window.matchMedia('(hover:hover) and (pointer:fine)').matches;
+    function setActive(i) {
+      panels.forEach((p, pi) => {
+        const on = pi === i;
+        p.classList.toggle('is-active', on);
+        p.setAttribute('aria-expanded', String(on));
+        const v = p.querySelector('video');
+        if (v) { if (on) { v.play().catch(() => {}); } else { try { v.pause(); } catch (e) {} } }
       });
     }
-    const dots = dotsWrap ? [...dotsWrap.children] : [];
-
-    function go(i) {
-      index = (i + total) % total;
-      track.style.transform = 'translateX(-' + (index * 100) + '%)';
-      dots.forEach((d, di) => d.classList.toggle('active', di === index));
-      slides.forEach((s, si) => {
-        if (si !== index) { const v = s.querySelector('video'); if (v) { try { v.pause(); } catch (e) {} } }
-      });
-    }
-    if (prevBtn) prevBtn.addEventListener('click', () => go(index - 1));
-    if (nextBtn) nextBtn.addEventListener('click', () => go(index + 1));
-
-    /* swipe */
-    let startX = null;
-    const vp = track.parentElement;
-    vp.addEventListener('touchstart', (e) => { startX = e.touches[0].clientX; }, { passive: true });
-    vp.addEventListener('touchend', (e) => {
-      if (startX === null) return;
-      const dx = e.changedTouches[0].clientX - startX;
-      if (Math.abs(dx) > 40) go(index + (dx < 0 ? 1 : -1));
-      startX = null;
-    }, { passive: true });
-
-    go(0);
+    panels.forEach((p, i) => {
+      p.addEventListener('click', () => setActive(i));
+      p.addEventListener('focus', () => setActive(i));
+      if (fine) p.addEventListener('mouseenter', () => setActive(i));
+    });
+    setActive(0);
   })();
 
   /* pause offscreen/hidden-tab animation loops */

@@ -11,6 +11,49 @@ Five agent skills installed at project level. Claude Code loads any
 | `design-md-library` | [VoltAgent/awesome-design-md](https://github.com/VoltAgent/awesome-design-md) | 74 `DESIGN.md` design systems extracted from real sites, with a catalog index. Vendored locally — see note below. |
 | `playwright-cli` | [microsoft/playwright-cli](https://github.com/microsoft/playwright-cli) | Drive a real browser from the CLI: navigate, click, fill, snapshot, trace, generate tests. |
 
+## Los tres ámbitos
+
+Un skill puede vivir en tres sitios, y el alcance cambia por completo:
+
+| Ámbito | Ruta | Alcance |
+| --- | --- | --- |
+| Proyecto | `.claude/skills/` en el repo | Sólo este repo. Se versiona en git |
+| Usuario | `~/.claude/skills/` | Todos los proyectos de esa máquina. No se versiona |
+| Cuenta | Ajustes de claude.ai | Todas tus sesiones, repos y dispositivos |
+
+Este directorio es el ámbito **proyecto**: los cinco skills acompañan a
+`biplot/biplot` y no alcanzan al resto de repos de la organización.
+
+### Instalarlos a nivel usuario
+
+Para tenerlos en cualquier proyecto de una máquina, ejecuta una vez por
+equipo:
+
+```bash
+bash scripts/install-skills.sh
+```
+
+Instala los cinco en `~/.claude/skills/` y verifica el resultado. Es
+idempotente: volver a ejecutarlo los actualiza. Funciona sin haber clonado
+el repo — descarga lo que necesita — así que en un equipo nuevo basta con:
+
+```bash
+BASE=https://raw.githubusercontent.com/Biplot/biplot/refs/heads/claude/hopeful-maxwell-yv724z
+curl -fsSLO "$BASE/scripts/install-skills.sh"
+less install-skills.sh      # léelo antes de ejecutarlo
+bash install-skills.sh
+```
+
+Una vez fusionada esa rama en `main`, sustituye `refs/heads/claude/...` por
+`main` en la URL. El script ya resuelve la rama por su cuenta: prueba `main`
+primero y sólo cae a la rama de trabajo si `main` todavía no trae el skill.
+
+En Windows, ejecútalo desde Git Bash o WSL; la ruta destino es entonces
+`%USERPROFILE%\.claude\skills`. Reinicia Claude Code al terminar.
+
+La instalación a nivel usuario deja también un árbol `~/.agents/skills/`
+para Codex, Cursor y similares. Es inofensivo; bórralo si no lo usas.
+
 ## Managing them
 
 Four of the five are tracked in `skills-lock.json` and were installed with

@@ -6,3 +6,7 @@ desktop.ini
 # Logs / temp
 *.log
 .vercel
+
+# Playwright CLI runtime artifacts (snapshots, console logs, traces)
+.playwright-cli/
+.playwright/

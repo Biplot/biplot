@@ -149,16 +149,25 @@
 
   /* ── Entrada: arrastrar, rueda, pellizco, clic ── */
   var punteros = {}, arrastre = null;
-  function objetoEn(el) {
+  // Las siluetas de salas vecinas se traslapan (la cara de vidrio de una tapa el piso de la otra):
+  // manda la sala cuyo piso está bajo el puntero; si no hay piso de sala ahí, la silueta tocada.
+  function zonaEnPiso(clx, cly) {
+    var r = rect(), vb = svg.viewBox.baseVal;
+    var sx = vb.x + (clx - r.left) * vb.width / r.width, sy = vb.y + (cly - r.top) * vb.height / r.height;
+    var x = (sx / 32 + sy / 16) / 2, y = (sy / 16 - sx / 32) / 2;
+    var z = esc3.zonas.filter(function (zn) { var b = zn.caja; return x >= b[0] && x <= b[2] && y >= b[1] && y <= b[3]; })[0];
+    return z ? { tipo: 'zona', id: z.id } : null;
+  }
+  function objetoEn(el, clx, cly) {
     if (!el || !el.closest) return null;
     var a = el.closest('.actor'); if (a) return { tipo: 'actor', id: a.getAttribute('data-actor') };
-    if (el.classList && el.classList.contains('zona-hit')) return { tipo: 'zona', id: el.getAttribute('data-zona') };
+    if (el.classList && el.classList.contains('zona-hit')) return (clx !== undefined && zonaEnPiso(clx, cly)) || { tipo: 'zona', id: el.getAttribute('data-zona') };
     return null;
   }
   svg.addEventListener('pointerdown', function (e) {
     punteros[e.pointerId] = { x: e.clientX, y: e.clientY };
     var ids = Object.keys(punteros);
-    if (ids.length === 1) arrastre = { x: e.clientX, y: e.clientY, cx: cam.x, cy: cam.y, movio: false, obj: objetoEn(e.target) };
+    if (ids.length === 1) arrastre = { x: e.clientX, y: e.clientY, cx: cam.x, cy: cam.y, movio: false, obj: objetoEn(e.target, e.clientX, e.clientY) };
     else if (ids.length === 2) {
       var a = punteros[ids[0]], b = punteros[ids[1]];
       arrastre = { pellizco: true, d: Math.hypot(a.x - b.x, a.y - b.y), z: cam.z, movio: true };
@@ -169,7 +178,7 @@
     if (punteros[e.pointerId]) punteros[e.pointerId] = { x: e.clientX, y: e.clientY };
     if (!arrastre) {
       if (e.pointerType === 'mouse' && e.target && svg.contains(e.target)) {
-        var o = objetoEn(e.target);
+        var o = objetoEn(e.target, e.clientX, e.clientY);
         if (!o && resaltado && resaltado.origen === 'mouse') resaltar(null);
         else if (o && (!resaltado || resaltado.id !== o.id)) { o.origen = 'mouse'; resaltar(o); }
       }

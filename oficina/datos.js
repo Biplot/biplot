@@ -110,7 +110,8 @@
         ],
         enlaces: [{ texto: 'Probar el cotizador', url: 'https://nuhome-crm-nu.vercel.app/cotizador' }],
         equipo: ['lupe', 'celda', 'grilla', 'bucle', 'tamandua', 'faro', 'pepa'],
-        media: null
+        media: { h: 'media/nuhome-360-h.mp4', v: 'media/nuhome-360-v.mp4', poster: 'media/nuhome-360-h.jpg' },
+        nota: 'Pantallas recreadas con datos de ejemplo.'
       },
       {
         id: 'fundos', nombre: 'Fundos 360', cliente: 'Fundos Inmobiliaria', rubro: 'Inmobiliaria · venta de parcelas', estado: 'Plataforma a la medida',

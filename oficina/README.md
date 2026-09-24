@@ -61,9 +61,9 @@ Grotesk y Space Mono). Los videos se cargan sólo al abrir el panel de su sala.
 
 - **Textos, enlaces, quién trabajó en qué**: `datos.js`. Cada proyecto tiene `equipo` (ids del personal), `enlaces`,
   `puntos` y `media`. Sin `media`, el panel muestra la sala dibujada.
-- **Teaser de Nu Home** (lo está haciendo otra conversación en `biplot-nucleo/04-marca/05-teaser-nuhome-360`): copiar
-  los MP4 comprimidos a `assets/casos/nuhome-360-h.mp4` y `-v.mp4` con su póster `.jpg`, y en `datos.js` poner
-  `media: { h: '../assets/casos/nuhome-360-h.mp4', v: '../assets/casos/nuhome-360-v.mp4', poster: '../assets/casos/nuhome-360-h.jpg' }`.
+- **Videos de las salas**: Fundos y Haru usan los teasers del sitio (`assets/casos/`). El de Nu Home vive en
+  `oficina/media/`: sale de `biplot-nucleo/04-marca/05-teaser-nuhome-360` (versión con cierre BiPlot), comprimido con
+  `ffmpeg -crf 28 -preset slow -movflags +faststart` (13 MB → 3,7 MB) y con el póster en el segundo 10.
 - **Una sala de proyecto nueva**: las cinco salas del fondo están en `escena.js` (`SALAS`, en orden de izquierda a
   derecha, 4 baldosas cada una) con su pantalla en `PANTALLAS` y sus muebles más abajo. Para reemplazar una sala se
   cambia el id en `SALAS`, sus muebles y su entrada en `datos.js`; para sumar una sexta hay que ensanchar la planta
@@ -142,5 +142,4 @@ procesos, versiones sin datos reales):
 
 - Confirmar que los clientes autorizan su sala pública (Haru Isidora ya aparece en la portada de biplot.cl; Nu Home,
   Fundos y Eleven, por confirmar).
-- Sumar el teaser de Nu Home cuando esté listo (ver "Cómo se edita").
 - Registrar biplot.cl/oficina en `biplot-nucleo/03-entregables/artefactos.md` al mergear.

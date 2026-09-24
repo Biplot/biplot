@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Elenco · prueba</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Space+Grotesk:wght@500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../oficina.css">
+<style>
+  body { margin: 0; background: #0A1B2E; color: #F2F4F7; font-family: Inter, sans-serif; }
+  .fila { display: flex; flex-wrap: wrap; gap: 16px; padding: 16px; }
+  figure { margin: 0; background: radial-gradient(120% 90% at 50% -5%, #17446F 0%, #0E2A47 52%, #091D33 100%); border-radius: 12px; padding: 8px; }
+  figcaption { text-align: center; font: 600 14px "Space Grotesk"; padding: 4px 0 8px; }
+  .chico svg { width: 90px; height: 110px; }
+</style>
+</head>
+<body>
+<div class="fila" id="grande"></div>
+<div class="fila chico" id="chico"></div>
+<div class="fila" id="placas"></div>
+<script src="../datos.js"></script>
+<script src="../elenco.js"></script>
+<script>
+  var E = window.Elenco, D = window.OFICINA_DATOS;
+  E.ids.forEach(function (id) {
+    var p = D.personal.find(function (x) { return x.id === id; });
+    ['grande', 'chico'].forEach(function (donde) {
+      var fig = document.createElement('figure');
+      fig.innerHTML = '<svg viewBox="-140 -275 280 290" width="280" height="290">' + E.defs() + E.svg(id) + '</svg><figcaption>' + p.nombre + ' · ' + p.rol + '</figcaption>';
+      document.getElementById(donde).appendChild(fig);
+    });
+    var pl = document.createElement('figure');
+    pl.innerHTML = '<svg viewBox="0 0 300 190" width="300" height="190">' + E.defs() + E.placaTarjeta(p, true) + '</svg>';
+    document.getElementById('placas').appendChild(pl);
+  });
+</script>
+</body>
+</html>

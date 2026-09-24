@@ -1,0 +1,287 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Caso Taller Aguilar</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&family=Space+Mono:wght@400;700&display=swap">
+
+<style>
+:root{
+  --paper:#F2F4F7; --surface:#FFFFFF; --surface-2:#EDF1F5;
+  --ink:#0E2A47; --ink-2:#34485F; --muted:#5F6F82;
+  --line:#DCE3EB; --line-soft:#E8EDF3;
+  --accent:#0B776D; --accent-soft:#D9F3EF; --on-accent:#FFFFFF;
+  --brass:#35679A; --brass-soft:#E1EAF4;
+  --good:#2C6F52; --good-soft:#DFEFE7;
+  --crit:#8F3126; --crit-soft:#FAE2DF;
+  --shadow:0 1px 2px rgba(14,42,71,.05),0 8px 24px -16px rgba(14,42,71,.28);
+  --f-display:"Space Grotesk","Segoe UI",system-ui,sans-serif;
+  --f-body:Inter,"Segoe UI",system-ui,sans-serif;
+  --f-mono:"Space Mono",ui-monospace,Consolas,monospace;
+  --measure:68ch;
+  --s1:.5rem; --s2:.875rem; --s3:1.375rem; --s4:2.25rem; --s5:3.5rem; --s6:5rem;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --paper:#0A1B2E; --surface:#0E2A47; --surface-2:#14345A;
+  --ink:#F2F4F7; --ink-2:#C4D2E0; --muted:#8FA3B8;
+  --line:#23456B; --line-soft:#1A3858;
+  --accent:#17C3B2; --accent-soft:#103F4A; --on-accent:#0E2A47;
+  --brass:#7FA6D0; --brass-soft:#17365A;
+  --good:#5BA982; --good-soft:#12291F;
+  --crit:#CF6A5C; --crit-soft:#2E1A17;
+  --shadow:0 1px 2px rgba(0,0,0,.4),0 8px 24px -16px rgba(0,0,0,.7);
+}}
+:root[data-theme="dark"]{
+  --paper:#0A1B2E; --surface:#0E2A47; --surface-2:#14345A;
+  --ink:#F2F4F7; --ink-2:#C4D2E0; --muted:#8FA3B8;
+  --line:#23456B; --line-soft:#1A3858;
+  --accent:#17C3B2; --accent-soft:#103F4A; --on-accent:#0E2A47;
+  --brass:#7FA6D0; --brass-soft:#17365A;
+  --good:#5BA982; --good-soft:#12291F;
+  --crit:#CF6A5C; --crit-soft:#2E1A17;
+  --shadow:0 1px 2px rgba(0,0,0,.4),0 8px 24px -16px rgba(0,0,0,.7);
+}
+*{box-sizing:border-box}
+body{background:var(--paper);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.6;margin:0;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1040px;margin:0 auto;padding:0 clamp(1.25rem,4vw,3rem)}
+.col{max-width:var(--measure)}
+h1,h2,h3,h4{font-family:var(--f-display);margin:0;line-height:1.14;letter-spacing:-.015em;text-wrap:balance;font-weight:600}
+h1{font-size:clamp(2.2rem,5.4vw,3.5rem);font-weight:700;letter-spacing:-.03em}
+h2{font-size:clamp(1.5rem,3vw,2rem)}
+h3{font-size:1.05rem}
+h4{font-size:.92rem}
+p{margin:0}
+strong{font-weight:600}
+.eyebrow{font-family:var(--f-mono);font-size:.7rem;font-weight:500;letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}
+.lede{font-size:1.16rem;line-height:1.55;color:var(--ink-2)}
+.small{font-size:.93rem;color:var(--muted);line-height:1.55}
+.mono{font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+
+header{border-bottom:1px solid var(--line);background:var(--surface);padding:var(--s5) 0 var(--s4)}
+.brandline{display:flex;align-items:center;gap:.7rem;margin-bottom:var(--s3);flex-wrap:wrap}
+.brandline .dot{width:7px;height:7px;border-radius:50%;background:var(--accent)}
+h1 .thin{display:block;font-weight:500;color:var(--muted);font-size:.34em;letter-spacing:-.01em;margin-top:.55rem}
+.hdr-meta{display:flex;flex-wrap:wrap;gap:var(--s3) var(--s4);margin-top:var(--s4);padding-top:var(--s3);border-top:1px solid var(--line-soft)}
+.hdr-meta div{display:flex;flex-direction:column;gap:.15rem}
+.hdr-meta .k{font-family:var(--f-mono);font-size:.64rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.hdr-meta .v{font-family:var(--f-display);font-size:.92rem;font-weight:500}
+.cta{display:inline-flex;align-items:center;gap:.5rem;margin-top:var(--s3);padding:.55rem 1rem;background:var(--accent);color:var(--on-accent);border-radius:3px;text-decoration:none;font-family:var(--f-display);font-weight:600;font-size:.88rem}
+.cta:hover{filter:brightness(1.08)}
+
+section{padding:var(--s6) 0;border-bottom:1px solid var(--line-soft)}
+.sec-head{display:flex;gap:var(--s3);align-items:baseline;margin-bottom:var(--s4)}
+.sec-num{font-family:var(--f-mono);font-size:.78rem;font-weight:600;color:var(--accent);flex:none;padding-top:.35rem;letter-spacing:.06em}
+.sec-head .col{display:flex;flex-direction:column;gap:var(--s2)}
+.body{display:flex;flex-direction:column;gap:var(--s2)}
+
+.tblwrap{overflow-x:auto;margin-top:var(--s4);border:1px solid var(--line);border-radius:4px;background:var(--surface);box-shadow:var(--shadow)}
+table{border-collapse:collapse;width:100%;min-width:540px;font-size:.9rem}
+th,td{text-align:left;padding:.68rem var(--s2);border-bottom:1px solid var(--line-soft);vertical-align:top}
+th{font-family:var(--f-mono);font-size:.64rem;letter-spacing:.13em;text-transform:uppercase;color:var(--muted);font-weight:600;background:var(--surface-2)}
+td:first-child{font-family:var(--f-display);font-weight:600;font-size:.9rem}
+td.num{font-family:var(--f-mono);font-variant-numeric:tabular-nums;white-space:nowrap}
+td.g{color:var(--good);font-weight:600}
+tr:last-child td{border-bottom:none}
+
+.quotes{display:grid;grid-template-columns:repeat(auto-fit,minmax(258px,1fr));gap:var(--s2);margin-top:var(--s4)}
+.q{background:var(--surface);border:1px solid var(--line);border-left:2px solid var(--brass);border-radius:4px;padding:var(--s3);display:flex;flex-direction:column;gap:.6rem}
+.q p{font-size:.97rem;line-height:1.5;font-style:italic;color:var(--ink)}
+.q .who{font-family:var(--f-mono);font-size:.66rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+
+.arq{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:var(--s2);margin-top:var(--s4)}
+.a{border:1px solid var(--line);background:var(--surface);border-radius:4px;padding:var(--s3);display:flex;flex-direction:column;gap:.4rem;opacity:.55}
+.a.win{opacity:1;border-color:var(--accent);border-width:1.5px;background:var(--accent-soft)}
+.a .t{font-family:var(--f-mono);font-size:.68rem;font-weight:600;letter-spacing:.11em;color:var(--muted)}
+.a.win .t{color:var(--accent)}
+.a p{font-size:.87rem;line-height:1.45;color:var(--ink-2)}
+.a .verdict{font-family:var(--f-mono);font-size:.66rem;letter-spacing:.06em;margin-top:auto;padding-top:.5rem;border-top:1px solid var(--line-soft);color:var(--muted)}
+.a.win .verdict{color:var(--accent);font-weight:600}
+
+.rail{margin-top:var(--s4);border-top:1px solid var(--line)}
+.st{display:grid;grid-template-columns:82px minmax(0,1fr);gap:var(--s3);padding:var(--s3) 0;border-bottom:1px solid var(--line-soft)}
+.st .code{font-family:var(--f-mono);font-size:.92rem;font-weight:600;color:var(--accent);padding-top:.1rem}
+.st .b{display:flex;flex-direction:column;gap:.35rem}
+.st p{font-size:.95rem;line-height:1.55;color:var(--ink-2)}
+.st.hl{background:var(--accent-soft);margin-left:-1rem;padding-left:1rem;padding-right:1rem;border-left:2px solid var(--accent)}
+
+.mods{display:grid;grid-template-columns:repeat(auto-fit,minmax(238px,1fr));gap:var(--s2);margin-top:var(--s4)}
+.m{background:var(--surface);border:1px solid var(--line);border-radius:4px;padding:var(--s3);display:flex;flex-direction:column;gap:.4rem}
+.m h4{color:var(--ink)}
+.m p{font-size:.88rem;line-height:1.45;color:var(--ink-2)}
+.m .tagn{font-family:var(--f-mono);font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;padding:.14rem .4rem;border-radius:2px;align-self:flex-start;background:var(--accent-soft);color:var(--accent)}
+.m .tagv{background:var(--brass-soft);color:var(--brass)}
+
+.steps{margin:var(--s4) 0 0;padding:0;counter-reset:s}
+.steps li{list-style:none;counter-increment:s;display:grid;grid-template-columns:2rem minmax(0,1fr);gap:.7rem;padding:.62rem 0;border-bottom:1px solid var(--line-soft);font-size:.96rem;color:var(--ink-2);line-height:1.5}
+.steps li::before{content:counter(s,decimal-leading-zero);font-family:var(--f-mono);font-size:.72rem;color:var(--accent);font-weight:600;padding-top:.24rem}
+.pull{border-left:2px solid var(--accent);padding:.15rem 0 .15rem var(--s3);margin-top:var(--s4);font-size:1.1rem;line-height:1.55}
+.note{background:var(--surface-2);border:1px solid var(--line-soft);border-radius:4px;padding:var(--s3);font-size:.92rem;line-height:1.55;color:var(--ink-2);margin-top:var(--s4)}
+footer{padding:var(--s5) 0 var(--s6)}
+:where(a,button):focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+
+<header>
+  <div class="wrap">
+    <div class="brandline"><span class="dot"></span><span class="eyebrow">BIPLOT · Caso 01 de 04 · Arquetipo C</span></div>
+    <h1>Taller Aguilar<span class="thin">Un taller mecánico que perdía ocho órdenes al mes sin darse cuenta</span></h1>
+    <div class="hdr-meta">
+      <div><span class="k">Rubro</span><span class="v">Mecánica automotriz</span></div>
+      <div><span class="k">Tamaño</span><span class="v">11 personas · 4 mecánicos</span></div>
+      <div><span class="k">Volumen</span><span class="v">~180 órdenes / mes</span></div>
+      <div><span class="k">Arquetipo</span><span class="v">C · Sistema operativo</span></div>
+      <div><span class="k">Plazo</span><span class="v">7 semanas</span></div>
+    </div>
+    <a class="cta" href="demo.html">Abrir la demo &rarr;</a>
+  </div>
+</header>
+
+<main class="wrap">
+
+<section>
+  <div class="sec-head"><span class="sec-num">01</span><div class="col">
+    <h2>El negocio</h2>
+    <p class="lede">Taller multimarca en La Serena. Cuatro mecánicos, dos personas en recepción, un jefe de taller y el dueño. Atiende particulares y flotas de empresa, que son la mitad de la facturación.</p>
+  </div></div>
+  <div class="col body">
+    <p>La operación es un <strong>taller de trabajos</strong>: entra un vehículo con un problema, alguien lo diagnostica, se cotiza, el cliente aprueba (o no), se ejecuta, se entrega. Suena simple. El problema es que ese recorrido tomaba entre tres y once días, cruzaba a cinco personas distintas y no vivía en ninguna parte.</p>
+    <p>Antes de BIPLOT: la orden se escribía en un talonario de papel; el presupuesto se armaba en la calculadora del celular y se mandaba por WhatsApp desde el teléfono personal de quien atendiera; los repuestos se anotaban en un cuaderno de bodega; y la facturación la hacía la contadora a fin de mes con lo que le llegara.</p>
+  </div>
+</section>
+
+<section>
+  <div class="sec-head"><span class="sec-num">02</span><div class="col">
+    <h2>Cómo se determinaron los dolores</h2>
+    <p class="lede">No preguntando &laquo;qué necesitas&raquo;. Ese es el error de origen: el cliente responde con la solución que se imagina, no con el problema que tiene.</p>
+  </div></div>
+  <div class="col body">
+    <p><strong>E0 · Calificación (45 min).</strong> El dueño llegó pidiendo &laquo;un sistema para facturar&raquo;. Los cinco filtros dieron verde: hay dolor medible, el que decide es el dueño y estaba en la reunión, existen datos aunque sean de papel, pueden pagar, y calza con un arquetipo conocido. Se vendió el diagnóstico.</p>
+    <p><strong>E1 · Diagnóstico (2 semanas, pagado).</strong> Tres actividades concretas:</p>
+  </div>
+  <ol class="steps col">
+    <li><strong>Acompañar cuatro órdenes completas</strong> desde que entra el auto hasta que sale, cronómetro en mano. No se preguntó cuánto demora: se midió.</li>
+    <li><strong>Digitalizar tres meses del talonario</strong> — 540 órdenes — y cruzarlas contra las facturas emitidas. Ahí aparecieron las órdenes que se hicieron y nunca se cobraron.</li>
+    <li><strong>Entrevistar por separado</strong> a recepción, a dos mecánicos y al dueño con la misma pregunta: &laquo;¿qué te hace perder tiempo?&raquo;. Las respuestas no coincidieron, y esa discrepancia fue el hallazgo más útil.</li>
+  </ol>
+
+  <div class="quotes col">
+    <div class="q"><p>&laquo;Yo cotizo por WhatsApp y después no sé si contestaron. A veces me acuerdo a los cinco días.&raquo;</p><span class="who">Recepción</span></div>
+    <div class="q"><p>&laquo;Voy a buscar la pastilla y no hay. Ahí recién avisamos al cliente que se atrasa.&raquo;</p><span class="who">Mecánico</span></div>
+    <div class="q"><p>&laquo;Yo sé cuánto vendí. No sé cuánto gané, ni en qué trabajo gano más.&raquo;</p><span class="who">Dueño</span></div>
+  </div>
+
+  <p class="small col" style="margin-top:var(--s3)">El dueño pedía facturación. El dolor real estaba dos pasos antes: en las aprobaciones que se perdían y en los repuestos que no estaban. La facturación era el síntoma que él alcanzaba a ver.</p>
+
+  <div class="tblwrap">
+    <table>
+      <thead><tr><th>Dolor encontrado</th><th>Cómo se midió</th><th>Costo anual</th></tr></thead>
+      <tbody>
+        <tr><td>Órdenes ejecutadas sin facturar</td><td>Cruce talonario vs. facturas, 3 meses</td><td class="num">8 / mes &middot; $17,4M</td></tr>
+        <tr><td>Aprobaciones que se enfrían</td><td>Cronometraje de 4 órdenes + WhatsApp</td><td class="num">3,2 días promedio</td></tr>
+        <tr><td>Quiebres de stock a mitad de trabajo</td><td>Conteo en bodega vs. cuaderno</td><td class="num">6 / mes &middot; 22 h perdidas</td></tr>
+        <tr><td>Seguimiento manual de cotizaciones</td><td>Bitácora de llamadas de recepción</td><td class="num">14 h / mes</td></tr>
+        <tr><td>Margen desconocido por trabajo</td><td>No existía el dato</td><td class="num">sin medición</td></tr>
+        <tr><td>Vehículos listos sin retirar</td><td>Conteo de patio, 2 semanas</td><td class="num">3 estacionamientos</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="small col" style="margin-top:var(--s2)">La línea base completa: 8 órdenes perdidas/mes, 3,2 días de ciclo de aprobación, 6,0 días de ciclo total, 14 h/mes de seguimiento manual, margen no medido. Todo lo que la demo muestra se compara contra estos números.</p>
+</section>
+
+<section>
+  <div class="sec-head"><span class="sec-num">03</span><div class="col">
+    <h2>Por qué arquetipo C</h2>
+    <p class="lede">Se evaluaron los cuatro en orden. C ganó, pero sólo después de descartar los otros tres por escrito &#8212; que es la parte que se salta todo el mundo.</p>
+  </div></div>
+  <div class="arq">
+    <div class="a"><span class="t">D · HIGIENE</span><p>¿Hay pasos que se puedan simplemente eliminar?</p><span class="verdict">Parcial. Se eliminó el cuaderno de bodega, pero el proceso en sí es necesario.</span></div>
+    <div class="a"><span class="t">B · AUTOMATIZACIÓN</span><p>¿Se puede automatizar sobre lo que ya existe?</p><span class="verdict">No. No hay sistema base: el proceso vive en papel y WhatsApp. No hay nada que automatizar.</span></div>
+    <div class="a"><span class="t">A · VISIBILIDAD</span><p>¿Alcanza con consolidar y ver los datos?</p><span class="verdict">No. Los datos no existen en forma digital. Un tablero sobre papel escaneado no es un tablero.</span></div>
+    <div class="a win"><span class="t">C · SISTEMA</span><p>El proceso vive en cabezas y papel. Hay que crear el registro antes de poder medirlo o automatizarlo.</p><span class="verdict">Elegido. Es el caso legítimo de C.</span></div>
+  </div>
+  <div class="note col">
+    <strong>La regla que se aplicó:</strong> C sólo se justifica cuando no existe un registro digital del proceso. Si el taller ya hubiera tenido las órdenes en una planilla, la respuesta correcta habría sido A + B por una fracción del costo. Preguntarse esto por escrito es lo que evita construir un sistema de siete semanas donde bastaba uno de dos.
+  </div>
+</section>
+
+<section>
+  <div class="sec-head"><span class="sec-num">04</span><div class="col">
+    <h2>El pipeline aplicado</h2>
+    <p class="lede">Las diez fases del motor, con lo que efectivamente pasó en cada una.</p>
+  </div></div>
+  <div class="rail">
+    <div class="st"><span class="code">E0</span><div class="b"><h4>Calificación</h4><p>45 minutos. Verde en los cinco filtros. Se detectó de inmediato que lo pedido (facturación) no era lo necesario, pero no se discutió ahí: se dejó para el diagnóstico, con datos.</p></div></div>
+    <div class="st"><span class="code">E1</span><div class="b"><h4>Diagnóstico &#8212; 2 semanas, pagado</h4><p>Acompañamiento de 4 órdenes, digitalización de 540 del talonario, entrevistas separadas. Resultado: la radiografía de la sección 02 y la línea base contra la que se mide todo.</p></div></div>
+    <div class="st hl"><span class="code">E2</span><div class="b"><h4>Arquetipo y rebanada mínima</h4><p>Arquetipo C. La rebanada mínima <strong>no fue el sistema completo</strong>: fue órdenes + presupuestos + aprobación, las tres cosas donde estaba el dinero perdido. Repuestos, clientes y márgenes vinieron después. Métrica de éxito comprometida: <strong>cero órdenes sin facturar</strong> y <strong>ciclo de aprobación bajo 1 día</strong>.</p></div></div>
+    <div class="st"><span class="code">E3</span><div class="b"><h4>Contrato de datos &#8212; 4 días</h4><p>Carga del maestro de clientes y vehículos desde la planilla de la contadora (1.240 filas, 380 duplicados por patente mal escrita) y del catálogo de repuestos desde la lista del proveedor. El informe de calidad se le mostró al dueño: fue el primer momento en que vio valor.</p></div></div>
+    <div class="st"><span class="code">E4</span><div class="b"><h4>Modelo y permisos &#8212; 3 días</h4><p>Seis entidades: cliente, vehículo, orden, presupuesto, repuesto, mecánico. Ocho estados de orden. Cuatro roles con vistas distintas &#8212; el mecánico no ve márgenes ni precios de venta, decisión explícita del dueño. Bitácora activa desde el primer día.</p></div></div>
+    <div class="st"><span class="code">E5</span><div class="b"><h4>Construcción &#8212; 4 semanas</h4><p>Cuatro entregas semanales, cada una demostrada con los datos reales del taller. Semana 1: tablero de órdenes. Semana 2: presupuestos y documento. Semana 3: repuestos y consumo. Semana 4: márgenes y automatizaciones.</p></div></div>
+    <div class="st"><span class="code">E6</span><div class="b"><h4>Validación &#8212; 2 semanas</h4><p>Marcha blanca: recepción cargó todas las órdenes en el sistema <em>y</em> en el talonario, en paralelo. Al cierre se compararon ambos. Aparecieron dos reglas de negocio que nadie había mencionado (recargo por grúa, descuento a flota) y se incorporaron.</p></div></div>
+    <div class="st"><span class="code">E7</span><div class="b"><h4>Puesta en marcha &#8212; 1 semana</h4><p>Seis videos de menos de tres minutos, uno por tarea. Campeón interno: la jefa de recepción, no el dueño. Fecha de corte con el talonario y dos semanas de acompañamiento intensivo.</p></div></div>
+    <div class="st"><span class="code">E8</span><div class="b"><h4>Medición &#8212; día 90</h4><p>Ver sección 06. El informe de valor se convirtió en el argumento para el plan de soporte y en el caso que abrió los dos clientes siguientes del rubro.</p></div></div>
+    <div class="st hl"><span class="code">E9</span><div class="b"><h4>Cosecha &#8212; 2 días</h4><p>Al núcleo BIPLOT: el tablero arrastrable, el motor de reglas, la bitácora, el generador de documentos, el kit de tablas y el sistema de roles. Todo eso <strong>ya no se vuelve a construir</strong> para el cliente siguiente. Al playbook: la estructura orden&#8594;presupuesto&#8594;aprobación sirve para cualquier negocio que cotice antes de ejecutar.</p></div></div>
+  </div>
+</section>
+
+<section>
+  <div class="sec-head"><span class="sec-num">05</span><div class="col">
+    <h2>La solución</h2>
+    <p class="lede">Nueve módulos. Cuatro son núcleo BIPLOT reutilizable; cinco son la capa vertical del taller.</p>
+  </div></div>
+  <div class="mods">
+    <div class="m"><span class="tagn tagv">vertical</span><h4>Tablero de taller</h4><p>Ocho columnas, de Recepción a Entregado. Se arrastra una orden y el sistema registra el cambio, avisa y dispara reglas. Una orden no puede pasar a trabajo sin presupuesto aprobado &#8212; el candado que eliminó las órdenes perdidas.</p></div>
+    <div class="m"><span class="tagn tagv">vertical</span><h4>Órdenes de trabajo</h4><p>Todas las OT con filtro por estado, búsqueda y orden por columna. Cada una abre en un panel con mano de obra, repuestos, márgenes e historial completo.</p></div>
+    <div class="m"><span class="tagn tagv">vertical</span><h4>Presupuestos</h4><p>Se arman desde la orden y generan el documento formal. Muestra días de espera por cotización, con semáforo. Se puede simular la respuesta del cliente: aprobar o rechazar.</p></div>
+    <div class="m"><span class="tagn tagv">vertical</span><h4>Repuestos</h4><p>Stock, mínimo, consumo del mes, costo, precio y margen por SKU. Cuando el cliente aprueba, el descuento de bodega es automático.</p></div>
+    <div class="m"><span class="tagn tagv">vertical</span><h4>Clientes y vehículos</h4><p>Parque atendido, facturación histórica por cliente y órdenes abiertas. Base de la campaña de mantención preventiva.</p></div>
+    <div class="m"><span class="tagn">núcleo</span><h4>Motor de automatizaciones</h4><p>Seis reglas <em>cuando&#8594;entonces</em> que se encienden y apagan sin programar. Es el mismo motor que corre en los otros tres casos: sólo cambian las condiciones.</p></div>
+    <div class="m"><span class="tagn">núcleo</span><h4>Alertas</h4><p>Bandeja de todo lo que el sistema detectó solo. Ninguna alerta se escribe a mano.</p></div>
+    <div class="m"><span class="tagn">núcleo</span><h4>Bitácora</h4><p>Quién hizo qué, cuándo y sobre qué registro. Las marcadas AUTO las hizo el sistema. Es lo que hace posible medir en E8.</p></div>
+    <div class="m"><span class="tagn">núcleo</span><h4>Roles y panel</h4><p>Cuatro perfiles con módulos e información distintos, y el tablero ejecutivo con la comparación contra la línea base.</p></div>
+  </div>
+  <div class="note col">
+    <strong>Cómo recorrer la demo en tres minutos:</strong> abre <em>Taller</em> y arrastra una orden entre columnas. Intenta mover una a &laquo;En trabajo&raquo; sin presupuesto aprobado &#8212; el sistema lo impide. Entra a <em>Presupuestos</em>, abre uno enviado y aprueba por el cliente: mira cómo se descuentan los repuestos solos. Después pulsa <strong>Simular día siguiente</strong> dos o tres veces y revisa <em>Alertas</em>: todo eso apareció sin que nadie lo escribiera. Termina cambiando el perfil a Mecánico y observa qué desaparece.
+  </div>
+</section>
+
+<section>
+  <div class="sec-head"><span class="sec-num">06</span><div class="col">
+    <h2>El valor entregado</h2>
+    <p class="lede">Medición al día 90 contra la línea base de E1. Este es el documento que renueva el contrato.</p>
+  </div></div>
+  <div class="tblwrap">
+    <table>
+      <thead><tr><th>Indicador</th><th>Antes (E1)</th><th>Día 90</th><th>Efecto</th></tr></thead>
+      <tbody>
+        <tr><td>Órdenes sin facturar</td><td class="num">8 / mes</td><td class="num g">0</td><td class="num g">+$1,45M / mes</td></tr>
+        <tr><td>Ciclo de aprobación</td><td class="num">3,2 días</td><td class="num g">0,8 días</td><td class="num g">&minus;75%</td></tr>
+        <tr><td>Ciclo total de la orden</td><td class="num">6,0 días</td><td class="num g">4,6 días</td><td class="num g">&minus;1,4 días</td></tr>
+        <tr><td>Seguimiento manual</td><td class="num">14 h / mes</td><td class="num g">0 h</td><td class="num g">regla automática</td></tr>
+        <tr><td>Quiebres de stock</td><td class="num">6 / mes</td><td class="num g">1 / mes</td><td class="num g">&minus;18 h perdidas</td></tr>
+        <tr><td>Margen por trabajo</td><td class="num">sin medir</td><td class="num g">54% promedio</td><td class="num g">decisión de precios</td></tr>
+        <tr><td>Adopción del equipo</td><td class="num">&#8212;</td><td class="num g">100% de OT en sistema</td><td class="num g">talonario apagado</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="pull col">El proyecto se pagó solo en el primer mes con las órdenes que dejaron de perderse. Todo lo demás &#8212; el margen visible, las horas liberadas, el stock sano &#8212; fue ganancia sobre eso.</p>
+</section>
+
+<section style="border-bottom:none">
+  <div class="sec-head"><span class="sec-num">07</span><div class="col">
+    <h2>Qué se llevó BIPLOT</h2>
+    <p class="lede">La fase E9 es la razón por la que este caso importa más allá del taller.</p>
+  </div></div>
+  <div class="col body">
+    <p>De los nueve módulos, <strong>cuatro quedaron en el núcleo</strong>: motor de reglas, alertas, bitácora y el sistema de roles con panel ejecutivo. Sumado al kit de interfaz &#8212; tablas con filtro y orden, tablero arrastrable, paneles de detalle, generador de documentos &#8212; eso es aproximadamente el <strong>45% del trabajo del proyecto</strong> que no se vuelve a hacer nunca más.</p>
+    <p>Al playbook se agregó un patrón: <em>negocio que cotiza antes de ejecutar</em>. Taller mecánico, imprenta, constructora, estudio jurídico, agencia. La estructura orden&#8594;<wbr>presupuesto&#8594;<wbr>aprobación&#8594;<wbr>ejecución&#8594;<wbr>entrega es la misma; cambian los nombres y los estados. El próximo cliente con esta forma parte con el 45% construido y un diagnóstico que toma tres días en vez de dos semanas.</p>
+  </div>
+</section>
+
+</main>
+<footer class="wrap">
+  <p class="small col">BIPLOT &middot; Caso 01 de 04 &middot; Los datos del negocio son ilustrativos y están construidos sobre la operación real de un taller de este tamaño. La demo es funcional: el estado vive en el navegador y se reinicia al recargar la página.</p>
+</footer>

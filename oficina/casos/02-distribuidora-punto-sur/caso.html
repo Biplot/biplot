@@ -1,0 +1,291 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Caso Punto Sur</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&family=Space+Mono:wght@400;700&display=swap">
+
+<style>
+:root{
+  --paper:#F2F4F7; --surface:#FFFFFF; --surface-2:#EDF1F5;
+  --ink:#0E2A47; --ink-2:#34485F; --muted:#5F6F82;
+  --line:#DCE3EB; --line-soft:#E8EDF3;
+  --accent:#0B776D; --accent-soft:#D9F3EF; --on-accent:#FFFFFF;
+  --brass:#35679A; --brass-soft:#E1EAF4;
+  --good:#2C6F52; --good-soft:#DFEFE7;
+  --crit:#8F3126; --crit-soft:#FAE2DF;
+  --shadow:0 1px 2px rgba(14,42,71,.05),0 8px 24px -16px rgba(14,42,71,.28);
+  --f-display:"Space Grotesk","Segoe UI",system-ui,sans-serif;
+  --f-body:Inter,"Segoe UI",system-ui,sans-serif;
+  --f-mono:"Space Mono",ui-monospace,Consolas,monospace;
+  --measure:68ch;
+  --s1:.5rem; --s2:.875rem; --s3:1.375rem; --s4:2.25rem; --s5:3.5rem; --s6:5rem;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --paper:#0A1B2E; --surface:#0E2A47; --surface-2:#14345A;
+  --ink:#F2F4F7; --ink-2:#C4D2E0; --muted:#8FA3B8;
+  --line:#23456B; --line-soft:#1A3858;
+  --accent:#17C3B2; --accent-soft:#103F4A; --on-accent:#0E2A47;
+  --brass:#7FA6D0; --brass-soft:#17365A;
+  --good:#5BA982; --good-soft:#12291F;
+  --crit:#CF6A5C; --crit-soft:#2E1A17;
+  --shadow:0 1px 2px rgba(0,0,0,.4),0 8px 24px -16px rgba(0,0,0,.7);
+}}
+:root[data-theme="dark"]{
+  --paper:#0A1B2E; --surface:#0E2A47; --surface-2:#14345A;
+  --ink:#F2F4F7; --ink-2:#C4D2E0; --muted:#8FA3B8;
+  --line:#23456B; --line-soft:#1A3858;
+  --accent:#17C3B2; --accent-soft:#103F4A; --on-accent:#0E2A47;
+  --brass:#7FA6D0; --brass-soft:#17365A;
+  --good:#5BA982; --good-soft:#12291F;
+  --crit:#CF6A5C; --crit-soft:#2E1A17;
+  --shadow:0 1px 2px rgba(0,0,0,.4),0 8px 24px -16px rgba(0,0,0,.7);
+}
+*{box-sizing:border-box}
+body{background:var(--paper);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.6;margin:0;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1040px;margin:0 auto;padding:0 clamp(1.25rem,4vw,3rem)}
+.col{max-width:var(--measure)}
+h1,h2,h3,h4{font-family:var(--f-display);margin:0;line-height:1.14;letter-spacing:-.015em;text-wrap:balance;font-weight:600}
+h1{font-size:clamp(2.2rem,5.4vw,3.5rem);font-weight:700;letter-spacing:-.03em}
+h2{font-size:clamp(1.5rem,3vw,2rem)}
+h3{font-size:1.05rem}
+h4{font-size:.92rem}
+p{margin:0}
+strong{font-weight:600}
+.eyebrow{font-family:var(--f-mono);font-size:.7rem;font-weight:500;letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}
+.lede{font-size:1.16rem;line-height:1.55;color:var(--ink-2)}
+.small{font-size:.93rem;color:var(--muted);line-height:1.55}
+.mono{font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+
+header{border-bottom:1px solid var(--line);background:var(--surface);padding:var(--s5) 0 var(--s4)}
+.brandline{display:flex;align-items:center;gap:.7rem;margin-bottom:var(--s3);flex-wrap:wrap}
+.brandline .dot{width:7px;height:7px;border-radius:50%;background:var(--accent)}
+h1 .thin{display:block;font-weight:500;color:var(--muted);font-size:.34em;letter-spacing:-.01em;margin-top:.55rem}
+.hdr-meta{display:flex;flex-wrap:wrap;gap:var(--s3) var(--s4);margin-top:var(--s4);padding-top:var(--s3);border-top:1px solid var(--line-soft)}
+.hdr-meta div{display:flex;flex-direction:column;gap:.15rem}
+.hdr-meta .k{font-family:var(--f-mono);font-size:.64rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.hdr-meta .v{font-family:var(--f-display);font-size:.92rem;font-weight:500}
+.cta{display:inline-flex;align-items:center;gap:.5rem;margin-top:var(--s3);padding:.55rem 1rem;background:var(--accent);color:var(--on-accent);border-radius:3px;text-decoration:none;font-family:var(--f-display);font-weight:600;font-size:.88rem}
+.cta:hover{filter:brightness(1.08)}
+
+section{padding:var(--s6) 0;border-bottom:1px solid var(--line-soft)}
+.sec-head{display:flex;gap:var(--s3);align-items:baseline;margin-bottom:var(--s4)}
+.sec-num{font-family:var(--f-mono);font-size:.78rem;font-weight:600;color:var(--accent);flex:none;padding-top:.35rem;letter-spacing:.06em}
+.sec-head .col{display:flex;flex-direction:column;gap:var(--s2)}
+.body{display:flex;flex-direction:column;gap:var(--s2)}
+
+.tblwrap{overflow-x:auto;margin-top:var(--s4);border:1px solid var(--line);border-radius:4px;background:var(--surface);box-shadow:var(--shadow)}
+table{border-collapse:collapse;width:100%;min-width:540px;font-size:.9rem}
+th,td{text-align:left;padding:.68rem var(--s2);border-bottom:1px solid var(--line-soft);vertical-align:top}
+th{font-family:var(--f-mono);font-size:.64rem;letter-spacing:.13em;text-transform:uppercase;color:var(--muted);font-weight:600;background:var(--surface-2)}
+td:first-child{font-family:var(--f-display);font-weight:600;font-size:.9rem}
+td.num{font-family:var(--f-mono);font-variant-numeric:tabular-nums;white-space:nowrap}
+td.g{color:var(--good);font-weight:600}
+tr:last-child td{border-bottom:none}
+
+.quotes{display:grid;grid-template-columns:repeat(auto-fit,minmax(258px,1fr));gap:var(--s2);margin-top:var(--s4)}
+.q{background:var(--surface);border:1px solid var(--line);border-left:2px solid var(--brass);border-radius:4px;padding:var(--s3);display:flex;flex-direction:column;gap:.6rem}
+.q p{font-size:.97rem;line-height:1.5;font-style:italic;color:var(--ink)}
+.q .who{font-family:var(--f-mono);font-size:.66rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+
+.arq{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:var(--s2);margin-top:var(--s4)}
+.a{border:1px solid var(--line);background:var(--surface);border-radius:4px;padding:var(--s3);display:flex;flex-direction:column;gap:.4rem;opacity:.55}
+.a.win{opacity:1;border-color:var(--accent);border-width:1.5px;background:var(--accent-soft)}
+.a .t{font-family:var(--f-mono);font-size:.68rem;font-weight:600;letter-spacing:.11em;color:var(--muted)}
+.a.win .t{color:var(--accent)}
+.a p{font-size:.87rem;line-height:1.45;color:var(--ink-2)}
+.a .verdict{font-family:var(--f-mono);font-size:.66rem;letter-spacing:.06em;margin-top:auto;padding-top:.5rem;border-top:1px solid var(--line-soft);color:var(--muted)}
+.a.win .verdict{color:var(--accent);font-weight:600}
+
+.rail{margin-top:var(--s4);border-top:1px solid var(--line)}
+.st{display:grid;grid-template-columns:82px minmax(0,1fr);gap:var(--s3);padding:var(--s3) 0;border-bottom:1px solid var(--line-soft)}
+.st .code{font-family:var(--f-mono);font-size:.92rem;font-weight:600;color:var(--accent);padding-top:.1rem}
+.st .b{display:flex;flex-direction:column;gap:.35rem}
+.st p{font-size:.95rem;line-height:1.55;color:var(--ink-2)}
+.st.hl{background:var(--accent-soft);margin-left:-1rem;padding-left:1rem;padding-right:1rem;border-left:2px solid var(--accent)}
+
+.mods{display:grid;grid-template-columns:repeat(auto-fit,minmax(238px,1fr));gap:var(--s2);margin-top:var(--s4)}
+.m{background:var(--surface);border:1px solid var(--line);border-radius:4px;padding:var(--s3);display:flex;flex-direction:column;gap:.4rem}
+.m h4{color:var(--ink)}
+.m p{font-size:.88rem;line-height:1.45;color:var(--ink-2)}
+.m .tagn{font-family:var(--f-mono);font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;padding:.14rem .4rem;border-radius:2px;align-self:flex-start;background:var(--accent-soft);color:var(--accent)}
+.m .tagv{background:var(--brass-soft);color:var(--brass)}
+
+.steps{margin:var(--s4) 0 0;padding:0;counter-reset:s}
+.steps li{list-style:none;counter-increment:s;display:grid;grid-template-columns:2rem minmax(0,1fr);gap:.7rem;padding:.62rem 0;border-bottom:1px solid var(--line-soft);font-size:.96rem;color:var(--ink-2);line-height:1.5}
+.steps li::before{content:counter(s,decimal-leading-zero);font-family:var(--f-mono);font-size:.72rem;color:var(--accent);font-weight:600;padding-top:.24rem}
+.pull{border-left:2px solid var(--accent);padding:.15rem 0 .15rem var(--s3);margin-top:var(--s4);font-size:1.1rem;line-height:1.55}
+.note{background:var(--surface-2);border:1px solid var(--line-soft);border-radius:4px;padding:var(--s3);font-size:.92rem;line-height:1.55;color:var(--ink-2);margin-top:var(--s4)}
+footer{padding:var(--s5) 0 var(--s6)}
+:where(a,button):focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+
+
+<header>
+  <div class="wrap">
+    <div class="brandline"><span class="dot"></span><span class="eyebrow">BIPLOT · Caso 02 de 04 · Arquetipo A</span></div>
+    <h1>Punto Sur<span class="thin">Una distribuidora que llevaba ocho meses vendiendo cuatro productos por debajo de su costo</span></h1>
+    <div class="hdr-meta">
+      <div><span class="k">Rubro</span><span class="v">Distribución mayorista</span></div>
+      <div><span class="k">Tamaño</span><span class="v">14 personas · 3 camiones</span></div>
+      <div><span class="k">Volumen</span><span class="v">220 clientes · 450 SKU</span></div>
+      <div><span class="k">Arquetipo</span><span class="v">A · Visibilidad</span></div>
+      <div><span class="k">Plazo</span><span class="v">4 semanas</span></div>
+    </div>
+    <a class="cta" href="demo.html">Abrir la demo &rarr;</a>
+  </div>
+</header>
+
+<main class="wrap">
+
+<section>
+  <div class="sec-head"><span class="sec-num">01</span><div class="col">
+    <h2>El negocio</h2>
+    <p class="lede">Distribuidora de abarrotes y bebidas en la Región de Coquimbo. Reparte a almacenes de barrio, minimarkets y botillerías en seis comunas. Tres camiones, catorce personas, cuarenta años de historia familiar.</p>
+  </div></div>
+  <div class="col body">
+    <p>A diferencia del taller, aquí <strong>sí había sistemas</strong>. Un ERP que emite facturas desde 2016, una planilla de compras que lleva la bodega, otra planilla con la cartera que mantiene la contadora, y la lista de precios del proveedor que llega en PDF cada tres meses.</p>
+    <p>El problema no era falta de datos. Era que <strong>ninguna de esas cuatro fuentes se hablaba con las otras</strong>. El ERP sabe a qué precio se vendió, la planilla de bodega sabe a qué precio se compró, y nadie había restado nunca una cosa de la otra. La gerencia veía la venta a fin de mes y estimaba el margen &laquo;en un 28% más o menos&raquo;.</p>
+  </div>
+</section>
+
+<section>
+  <div class="sec-head"><span class="sec-num">02</span><div class="col">
+    <h2>Cómo se determinaron los dolores</h2>
+    <p class="lede">Este caso se resolvió casi por completo en el escritorio, cruzando archivos. No hizo falta acompañar el proceso: hizo falta juntar lo que ya existía.</p>
+  </div></div>
+  <div class="col body">
+    <p><strong>E0 · Calificación (45 min).</strong> La gerenta pidió &laquo;un dashboard de ventas&raquo;. Los cinco filtros en verde. Se detectó de inmediato que un dashboard de ventas no era el problema &#8212; ya sabían cuánto vendían &#8212; pero se dejó para el diagnóstico.</p>
+    <p><strong>E1 · Diagnóstico (2 semanas, pagado).</strong> Tres actividades:</p>
+  </div>
+  <ol class="steps col">
+    <li><strong>Pedir las cuatro fuentes tal como están</strong>, sin limpiarlas. Cuatro meses de facturación del ERP, la planilla de compras, la cartera y la lista de precios. Nada más.</li>
+    <li><strong>Cruzar venta contra compra, SKU por SKU.</strong> La operación que nadie había hecho nunca. Tomó tres días y produjo el hallazgo completo del proyecto.</li>
+    <li><strong>Entrevistar por separado</strong> a la gerenta, al jefe comercial, a cobranza y a bodega. Cada uno tenía un número distinto para la misma pregunta.</li>
+  </ol>
+
+  <div class="quotes col">
+    <div class="q"><p>&laquo;Nosotros trabajamos con 28% de margen. Es lo que siempre hemos manejado.&raquo;</p><span class="who">Gerencia</span></div>
+    <div class="q"><p>&laquo;Yo premio al vendedor que factura más. No sé cuál deja más plata, eso lo ve la gerencia.&raquo;</p><span class="who">Jefe comercial</span></div>
+    <div class="q"><p>&laquo;La cartera la sé cuando la contadora me manda la planilla. Como el día 10 del mes siguiente.&raquo;</p><span class="who">Cobranza</span></div>
+    <div class="q"><p>&laquo;El proveedor sube el precio y yo lo anoto. Si alguien tiene que cambiar el precio de venta, no soy yo.&raquo;</p><span class="who">Bodega</span></div>
+  </div>
+
+  <p class="small col" style="margin-top:var(--s3)">Las cuatro respuestas eran correctas y ninguna era completa. El margen real era 22,4%, no 28%. La brecha de 5,6 puntos sobre la venta anual equivalía a más que la utilidad declarada del ejercicio anterior.</p>
+
+  <div class="tblwrap">
+    <table>
+      <thead><tr><th>Dolor encontrado</th><th>Cómo se midió</th><th>Magnitud</th></tr></thead>
+      <tbody>
+        <tr><td>SKU vendidos bajo costo</td><td>Cruce venta vs. compra, 4 meses</td><td class="num">4 SKU &middot; 8 meses así</td></tr>
+        <tr><td>Margen real desconocido</td><td>Cálculo ponderado por SKU</td><td class="num">5,6 pts de brecha</td></tr>
+        <tr><td>Cartera visible con 30 días de atraso</td><td>Fecha de la planilla vs. vencimiento</td><td class="num">52 días de cobro</td></tr>
+        <tr><td>Consolidación manual de planillas</td><td>Bitácora de la contadora y la gerenta</td><td class="num">22 h / mes</td></tr>
+        <tr><td>Quiebres de stock no anticipados</td><td>Conteo de pedidos no despachados</td><td class="num">9 / mes</td></tr>
+        <tr><td>Clientes que dejan de comprar</td><td>Última compra por cliente</td><td class="num">4 perdidos / mes</td></tr>
+        <tr><td>Capital detenido en bodega</td><td>Stock sin rotación &times; costo</td><td class="num">18% del inventario</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="small col" style="margin-top:var(--s2)">Línea base: margen real 22,4% (creído 28%) &middot; 4 SKU a pérdida &middot; 52 días de cobro &middot; 22 h/mes de consolidación &middot; 9 quiebres/mes &middot; 4 clientes perdidos/mes sin detectar.</p>
+</section>
+
+<section>
+  <div class="sec-head"><span class="sec-num">03</span><div class="col">
+    <h2>Por qué arquetipo A</h2>
+    <p class="lede">Este es el caso más frecuente en Pyme y el más fácil de sobre-resolver. La tentación de reemplazar el ERP existente era real y habría sido un error caro.</p>
+  </div></div>
+  <div class="arq">
+    <div class="a"><span class="t">D &middot; HIGIENE</span><p>¿Hay pasos que se puedan eliminar?</p><span class="verdict">Parcial. Se eliminó el informe mensual de consolidación de la contadora: 22 h/mes que ya no se hacen.</span></div>
+    <div class="a"><span class="t">B &middot; AUTOMATIZACIÓN</span><p>¿Se puede automatizar sobre lo que existe?</p><span class="verdict">Parcial y posterior. Las alertas se agregaron encima, pero primero había que consolidar: no se automatiza sobre datos que nadie ha cruzado.</span></div>
+    <div class="a win"><span class="t">A &middot; VISIBILIDAD</span><p>Los datos existen en cuatro sistemas y ninguno se habla con los otros. Falta la capa que los cruce.</p><span class="verdict">Elegido. Cuatro semanas, sin cambiar cómo trabaja nadie.</span></div>
+    <div class="a"><span class="t">C &middot; SISTEMA</span><p>¿Hay que construir el registro del proceso?</p><span class="verdict">No. Tienen ERP funcionando hace diez años. Reemplazarlo eran seis meses para resolver un problema de tres días.</span></div>
+  </div>
+  <div class="note col">
+    <strong>La regla que se aplicó:</strong> si el registro digital ya existe, la respuesta es A, no C. El cliente pedía un dashboard &#8212; que es A &#8212; pero por la razón equivocada: quería ver mejor la venta, y lo que necesitaba era ver el margen. El arquetipo era correcto; la pregunta no.
+  </div>
+</section>
+
+<section>
+  <div class="sec-head"><span class="sec-num">04</span><div class="col">
+    <h2>El pipeline aplicado</h2>
+    <p class="lede">En arquetipo A, la fase E3 no es un paso previo: <strong>es el proyecto</strong>. Todo lo demás se apoya en ella.</p>
+  </div></div>
+  <div class="rail">
+    <div class="st"><span class="code">E0</span><div class="b"><h4>Calificación</h4><p>45 minutos. Verde en los cinco filtros. Se pidieron los cuatro archivos en la misma reunión, sin limpiar, para poder cotizar el diagnóstico con conocimiento.</p></div></div>
+    <div class="st"><span class="code">E1</span><div class="b"><h4>Diagnóstico &#8212; 2 semanas, pagado</h4><p>El cruce venta&#8211;compra produjo el hallazgo al tercer día. Las dos semanas restantes se usaron en cuantificar el resto y en las entrevistas. El informe se presentó con los cuatro SKU a pérdida en la primera lámina.</p></div></div>
+    <div class="st hl"><span class="code">E2</span><div class="b"><h4>Arquetipo y rebanada mínima</h4><p>Arquetipo A. La rebanada mínima fue <strong>margen real por producto y por cliente</strong>, nada más. Cartera, inventario y automatizaciones vinieron después. Métrica comprometida: <strong>margen real visible al día</strong> y <strong>cero SKU con margen negativo</strong>.</p></div></div>
+    <div class="st hl"><span class="code">E3</span><div class="b"><h4>Contrato de datos &#8212; 1 semana</h4><p><strong>La fase central de este caso.</strong> Cuatro conectores: exportación SQL nocturna del ERP, lectura de la planilla de compras, lectura de la cartera, y conversión de la lista de precios en PDF. Informe de calidad con 47 incidencias sobre 5.100 filas. Se le mostró a la gerenta y ahí el proyecto quedó vendido de nuevo.</p></div></div>
+    <div class="st"><span class="code">E4</span><div class="b"><h4>Modelo y permisos &#8212; 2 días</h4><p>Cuatro entidades: producto, cliente, venta, factura. Ninguna transacción &#8212; el sistema no opera, sólo observa. Cuatro roles: gerencia ve todo, comercial no ve cartera, cobranza no ve márgenes, bodega no ve precios de venta.</p></div></div>
+    <div class="st"><span class="code">E5</span><div class="b"><h4>Construcción &#8212; 3 semanas</h4><p>Semana 1: margen real por producto. Semana 2: clientes, cartera y aging. Semana 3: inventario, rotación y motor de reglas. Cada entrega con los datos reales de la distribuidora.</p></div></div>
+    <div class="st"><span class="code">E6</span><div class="b"><h4>Validación &#8212; 1 semana</h4><p>La gerenta y el jefe comercial revisaron el margen de veinte SKU contra las facturas físicas. Apareció una regla no mencionada: los descuentos por volumen a mayoristas se aplicaban fuera del sistema y distorsionaban el margen. Se incorporó.</p></div></div>
+    <div class="st"><span class="code">E7</span><div class="b"><h4>Puesta en marcha &#8212; 3 días</h4><p>Corto, porque nadie tuvo que cambiar cómo trabaja. Capacitación a cuatro personas, una hora cada una. Campeón interno: el jefe comercial, el más resistente en E1 y el que más lo usa hoy.</p></div></div>
+    <div class="st"><span class="code">E8</span><div class="b"><h4>Medición &#8212; día 90</h4><p>Ver sección 06. El informe de valor se usó para vender el plan recurrente y como caso de referencia en el rubro.</p></div></div>
+    <div class="st hl"><span class="code">E9</span><div class="b"><h4>Cosecha &#8212; 1 día</h4><p>Al núcleo: los <strong>conectores de ingesta</strong> y el <strong>perfilador de calidad de datos</strong> &#8212; la pieza más valiosa que ha producido BIPLOT hasta ahora, porque todo arquetipo A la necesita. Además la capa de métricas, el aging de cartera y el gráfico de serie temporal.</p></div></div>
+  </div>
+</section>
+
+<section>
+  <div class="sec-head"><span class="sec-num">05</span><div class="col">
+    <h2>La solución</h2>
+    <p class="lede">Nueve módulos, ninguno transaccional. El sistema no le dice a nadie qué hacer: le muestra a cada quien lo que no podía ver.</p>
+  </div></div>
+  <div class="mods">
+    <div class="m"><span class="tagn tagv">vertical</span><h4>Margen real</h4><p>Rentabilidad efectiva por SKU con el costo de reposición actual, no el histórico. Filtro de margen negativo y columna de precio sugerido que calcula el valor que devuelve 22% de margen. Es el corazón del proyecto.</p></div>
+    <div class="m"><span class="tagn tagv">vertical</span><h4>Clientes</h4><p>Ranking por <em>utilidad aportada</em>, no por venta. Los dos rankings no coinciden, y antes se premiaba al primero. Incluye días sin comprar y cupo de crédito.</p></div>
+    <div class="m"><span class="tagn tagv">vertical</span><h4>Cobranza</h4><p>Cartera por antigüedad en cinco tramos, actualizada al día en vez de al día 10 del mes siguiente. Registrar un pago actualiza todo en tiempo real.</p></div>
+    <div class="m"><span class="tagn tagv">vertical</span><h4>Inventario</h4><p>Días de cobertura por SKU, capital inmovilizado y quiebre proyectado. Distingue lo que falta de lo que sobra: ambos cuestan plata.</p></div>
+    <div class="m"><span class="tagn">núcleo</span><h4>Fuentes de datos</h4><p>La fase E3 hecha producto: cuatro fuentes conectadas, filas leídas, calidad e incidencias, última sincronización. Sin esta capa todo lo demás es decoración.</p></div>
+    <div class="m"><span class="tagn">núcleo</span><h4>Motor de automatizaciones</h4><p>El mismo motor del caso del taller, con seis condiciones distintas. La regla de cartera crítica consolida por cliente, no por factura: cobranza no trabaja factura por factura.</p></div>
+    <div class="m"><span class="tagn">núcleo</span><h4>Alertas</h4><p>Todo lo que el sistema detectó cruzando fuentes que antes no se hablaban.</p></div>
+    <div class="m"><span class="tagn">núcleo</span><h4>Bitácora</h4><p>Registro de detecciones y correcciones. Base del informe de valor de E8.</p></div>
+    <div class="m"><span class="tagn">núcleo</span><h4>Roles y panel</h4><p>Cuatro perfiles con visibilidad distinta, y el tablero ejecutivo con venta, margen, cartera y fuga contra la línea base.</p></div>
+  </div>
+  <div class="note col">
+    <strong>Cómo recorrer la demo en tres minutos:</strong> entra a <em>Margen real</em> y filtra por &laquo;sólo margen negativo&raquo;. Abre uno de esos productos y pulsa <strong>Aplicar precio sugerido</strong>: mira cómo cambia el panel. Pasa a <em>Fuentes de datos</em> para ver la capa E3, que es lo que ningún competidor muestra. Termina en <em>Clientes</em> ordenando por utilidad y después por facturado: son dos rankings distintos, y esa diferencia es el argumento comercial completo.
+  </div>
+</section>
+
+<section>
+  <div class="sec-head"><span class="sec-num">06</span><div class="col">
+    <h2>El valor entregado</h2>
+    <p class="lede">Medición al día 90 contra la línea base de E1.</p>
+  </div></div>
+  <div class="tblwrap">
+    <table>
+      <thead><tr><th>Indicador</th><th>Antes (E1)</th><th>Día 90</th><th>Efecto</th></tr></thead>
+      <tbody>
+        <tr><td>SKU con margen negativo</td><td class="num">4</td><td class="num g">0</td><td class="num g">precios corregidos</td></tr>
+        <tr><td>Margen real conocido</td><td class="num">no se medía</td><td class="num g">al día, por SKU</td><td class="num g">22,4% real vs. 28% creído</td></tr>
+        <tr><td>Días de cobro</td><td class="num">52 días</td><td class="num g">38 días</td><td class="num g">&minus;27%</td></tr>
+        <tr><td>Consolidación manual</td><td class="num">22 h / mes</td><td class="num g">0 h</td><td class="num g">informe eliminado</td></tr>
+        <tr><td>Quiebres de stock</td><td class="num">9 / mes</td><td class="num g">2 / mes</td><td class="num g">compra anticipada</td></tr>
+        <tr><td>Clientes en fuga detectados</td><td class="num">0 de 4</td><td class="num g">4 de 4</td><td class="num g">3 recuperados</td></tr>
+        <tr><td>Capital inmovilizado</td><td class="num">18% del stock</td><td class="num g">11%</td><td class="num g">caja liberada</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="pull col">La corrección de cuatro precios pagó el proyecto completo en seis semanas. Y era un dato que la empresa tenía en su poder desde siempre, repartido en dos planillas que nadie había restado.</p>
+</section>
+
+<section style="border-bottom:none">
+  <div class="sec-head"><span class="sec-num">07</span><div class="col">
+    <h2>Qué se llevó BIPLOT</h2>
+    <p class="lede">Este caso produjo la pieza de núcleo más valiosa hasta ahora.</p>
+  </div></div>
+  <div class="col body">
+    <p>Los <strong>conectores de ingesta y el perfilador de calidad de datos</strong> son el activo. Todo proyecto de arquetipo A &#8212; que es el más frecuente en Pyme &#8212; empieza exactamente por ahí. Construirlo una vez y reutilizarlo convierte una fase de una semana en una de dos días.</p>
+    <p>Sumado a la capa de métricas, el aging de cartera, el gráfico de serie temporal y el motor de reglas que ya venía del caso anterior, aproximadamente el <strong>60% de este proyecto era código que ya existía</strong>. En el taller fue 0%. Ese salto, de 0% a 60% en el segundo proyecto, es exactamente lo que el trinquete de la fase E9 hace posible.</p>
+    <p>Al playbook se agregó el patrón <em>negocio con sistemas que no se hablan</em>: distribuidora, retail, importadora, cadena de locales. Cuando el cliente ya tiene ERP y planillas, la respuesta es esta y no un sistema nuevo.</p>
+  </div>
+</section>
+
+</main>
+<footer class="wrap">
+  <p class="small col">BIPLOT &middot; Caso 02 de 04 &middot; Los datos del negocio son ilustrativos y están construidos sobre la operación real de una distribuidora de este tamaño. La demo es funcional: el estado vive en el navegador y se reinicia al recargar la página.</p>
+</footer>

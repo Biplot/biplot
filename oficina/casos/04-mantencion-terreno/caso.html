@@ -1,0 +1,292 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Caso Mantención Elqui</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&family=Space+Mono:wght@400;700&display=swap">
+
+<style>
+:root{
+  --paper:#F2F4F7; --surface:#FFFFFF; --surface-2:#EDF1F5;
+  --ink:#0E2A47; --ink-2:#34485F; --muted:#5F6F82;
+  --line:#DCE3EB; --line-soft:#E8EDF3;
+  --accent:#0B776D; --accent-soft:#D9F3EF; --on-accent:#FFFFFF;
+  --brass:#35679A; --brass-soft:#E1EAF4;
+  --good:#2C6F52; --good-soft:#DFEFE7;
+  --crit:#8F3126; --crit-soft:#FAE2DF;
+  --shadow:0 1px 2px rgba(14,42,71,.05),0 8px 24px -16px rgba(14,42,71,.28);
+  --f-display:"Space Grotesk","Segoe UI",system-ui,sans-serif;
+  --f-body:Inter,"Segoe UI",system-ui,sans-serif;
+  --f-mono:"Space Mono",ui-monospace,Consolas,monospace;
+  --measure:68ch;
+  --s1:.5rem; --s2:.875rem; --s3:1.375rem; --s4:2.25rem; --s5:3.5rem; --s6:5rem;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --paper:#0A1B2E; --surface:#0E2A47; --surface-2:#14345A;
+  --ink:#F2F4F7; --ink-2:#C4D2E0; --muted:#8FA3B8;
+  --line:#23456B; --line-soft:#1A3858;
+  --accent:#17C3B2; --accent-soft:#103F4A; --on-accent:#0E2A47;
+  --brass:#7FA6D0; --brass-soft:#17365A;
+  --good:#5BA982; --good-soft:#12291F;
+  --crit:#CF6A5C; --crit-soft:#2E1A17;
+  --shadow:0 1px 2px rgba(0,0,0,.4),0 8px 24px -16px rgba(0,0,0,.7);
+}}
+:root[data-theme="dark"]{
+  --paper:#0A1B2E; --surface:#0E2A47; --surface-2:#14345A;
+  --ink:#F2F4F7; --ink-2:#C4D2E0; --muted:#8FA3B8;
+  --line:#23456B; --line-soft:#1A3858;
+  --accent:#17C3B2; --accent-soft:#103F4A; --on-accent:#0E2A47;
+  --brass:#7FA6D0; --brass-soft:#17365A;
+  --good:#5BA982; --good-soft:#12291F;
+  --crit:#CF6A5C; --crit-soft:#2E1A17;
+  --shadow:0 1px 2px rgba(0,0,0,.4),0 8px 24px -16px rgba(0,0,0,.7);
+}
+*{box-sizing:border-box}
+body{background:var(--paper);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.6;margin:0;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1040px;margin:0 auto;padding:0 clamp(1.25rem,4vw,3rem)}
+.col{max-width:var(--measure)}
+h1,h2,h3,h4{font-family:var(--f-display);margin:0;line-height:1.14;letter-spacing:-.015em;text-wrap:balance;font-weight:600}
+h1{font-size:clamp(2.2rem,5.4vw,3.5rem);font-weight:700;letter-spacing:-.03em}
+h2{font-size:clamp(1.5rem,3vw,2rem)}
+h3{font-size:1.05rem}
+h4{font-size:.92rem}
+p{margin:0}
+strong{font-weight:600}
+.eyebrow{font-family:var(--f-mono);font-size:.7rem;font-weight:500;letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}
+.lede{font-size:1.16rem;line-height:1.55;color:var(--ink-2)}
+.small{font-size:.93rem;color:var(--muted);line-height:1.55}
+.mono{font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+
+header{border-bottom:1px solid var(--line);background:var(--surface);padding:var(--s5) 0 var(--s4)}
+.brandline{display:flex;align-items:center;gap:.7rem;margin-bottom:var(--s3);flex-wrap:wrap}
+.brandline .dot{width:7px;height:7px;border-radius:50%;background:var(--accent)}
+h1 .thin{display:block;font-weight:500;color:var(--muted);font-size:.34em;letter-spacing:-.01em;margin-top:.55rem}
+.hdr-meta{display:flex;flex-wrap:wrap;gap:var(--s3) var(--s4);margin-top:var(--s4);padding-top:var(--s3);border-top:1px solid var(--line-soft)}
+.hdr-meta div{display:flex;flex-direction:column;gap:.15rem}
+.hdr-meta .k{font-family:var(--f-mono);font-size:.64rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.hdr-meta .v{font-family:var(--f-display);font-size:.92rem;font-weight:500}
+.cta{display:inline-flex;align-items:center;gap:.5rem;margin-top:var(--s3);padding:.55rem 1rem;background:var(--accent);color:var(--on-accent);border-radius:3px;text-decoration:none;font-family:var(--f-display);font-weight:600;font-size:.88rem}
+.cta:hover{filter:brightness(1.08)}
+
+section{padding:var(--s6) 0;border-bottom:1px solid var(--line-soft)}
+.sec-head{display:flex;gap:var(--s3);align-items:baseline;margin-bottom:var(--s4)}
+.sec-num{font-family:var(--f-mono);font-size:.78rem;font-weight:600;color:var(--accent);flex:none;padding-top:.35rem;letter-spacing:.06em}
+.sec-head .col{display:flex;flex-direction:column;gap:var(--s2)}
+.body{display:flex;flex-direction:column;gap:var(--s2)}
+
+.tblwrap{overflow-x:auto;margin-top:var(--s4);border:1px solid var(--line);border-radius:4px;background:var(--surface);box-shadow:var(--shadow)}
+table{border-collapse:collapse;width:100%;min-width:540px;font-size:.9rem}
+th,td{text-align:left;padding:.68rem var(--s2);border-bottom:1px solid var(--line-soft);vertical-align:top}
+th{font-family:var(--f-mono);font-size:.64rem;letter-spacing:.13em;text-transform:uppercase;color:var(--muted);font-weight:600;background:var(--surface-2)}
+td:first-child{font-family:var(--f-display);font-weight:600;font-size:.9rem}
+td.num{font-family:var(--f-mono);font-variant-numeric:tabular-nums;white-space:nowrap}
+td.g{color:var(--good);font-weight:600}
+tr:last-child td{border-bottom:none}
+
+.quotes{display:grid;grid-template-columns:repeat(auto-fit,minmax(258px,1fr));gap:var(--s2);margin-top:var(--s4)}
+.q{background:var(--surface);border:1px solid var(--line);border-left:2px solid var(--brass);border-radius:4px;padding:var(--s3);display:flex;flex-direction:column;gap:.6rem}
+.q p{font-size:.97rem;line-height:1.5;font-style:italic;color:var(--ink)}
+.q .who{font-family:var(--f-mono);font-size:.66rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+
+.arq{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:var(--s2);margin-top:var(--s4)}
+.a{border:1px solid var(--line);background:var(--surface);border-radius:4px;padding:var(--s3);display:flex;flex-direction:column;gap:.4rem;opacity:.55}
+.a.win{opacity:1;border-color:var(--accent);border-width:1.5px;background:var(--accent-soft)}
+.a .t{font-family:var(--f-mono);font-size:.68rem;font-weight:600;letter-spacing:.11em;color:var(--muted)}
+.a.win .t{color:var(--accent)}
+.a p{font-size:.87rem;line-height:1.45;color:var(--ink-2)}
+.a .verdict{font-family:var(--f-mono);font-size:.66rem;letter-spacing:.06em;margin-top:auto;padding-top:.5rem;border-top:1px solid var(--line-soft);color:var(--muted)}
+.a.win .verdict{color:var(--accent);font-weight:600}
+
+.rail{margin-top:var(--s4);border-top:1px solid var(--line)}
+.st{display:grid;grid-template-columns:82px minmax(0,1fr);gap:var(--s3);padding:var(--s3) 0;border-bottom:1px solid var(--line-soft)}
+.st .code{font-family:var(--f-mono);font-size:.92rem;font-weight:600;color:var(--accent);padding-top:.1rem}
+.st .b{display:flex;flex-direction:column;gap:.35rem}
+.st p{font-size:.95rem;line-height:1.55;color:var(--ink-2)}
+.st.hl{background:var(--accent-soft);margin-left:-1rem;padding-left:1rem;padding-right:1rem;border-left:2px solid var(--accent)}
+
+.mods{display:grid;grid-template-columns:repeat(auto-fit,minmax(238px,1fr));gap:var(--s2);margin-top:var(--s4)}
+.m{background:var(--surface);border:1px solid var(--line);border-radius:4px;padding:var(--s3);display:flex;flex-direction:column;gap:.4rem}
+.m h4{color:var(--ink)}
+.m p{font-size:.88rem;line-height:1.45;color:var(--ink-2)}
+.m .tagn{font-family:var(--f-mono);font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;padding:.14rem .4rem;border-radius:2px;align-self:flex-start;background:var(--accent-soft);color:var(--accent)}
+.m .tagv{background:var(--brass-soft);color:var(--brass)}
+
+.steps{margin:var(--s4) 0 0;padding:0;counter-reset:s}
+.steps li{list-style:none;counter-increment:s;display:grid;grid-template-columns:2rem minmax(0,1fr);gap:.7rem;padding:.62rem 0;border-bottom:1px solid var(--line-soft);font-size:.96rem;color:var(--ink-2);line-height:1.5}
+.steps li::before{content:counter(s,decimal-leading-zero);font-family:var(--f-mono);font-size:.72rem;color:var(--accent);font-weight:600;padding-top:.24rem}
+.pull{border-left:2px solid var(--accent);padding:.15rem 0 .15rem var(--s3);margin-top:var(--s4);font-size:1.1rem;line-height:1.55}
+.note{background:var(--surface-2);border:1px solid var(--line-soft);border-radius:4px;padding:var(--s3);font-size:.92rem;line-height:1.55;color:var(--ink-2);margin-top:var(--s4)}
+footer{padding:var(--s5) 0 var(--s6)}
+:where(a,button):focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+
+
+<header>
+  <div class="wrap">
+    <div class="brandline"><span class="dot"></span><span class="eyebrow">BIPLOT · Caso 04 de 04 · Arquetipo D + B</span></div>
+    <h1>Servicios Elqui<span class="thin">Siete de catorce pasos del proceso existían sólo para mover un dato de un papel a un Word</span></h1>
+    <div class="hdr-meta">
+      <div><span class="k">Rubro</span><span class="v">Mantención industrial</span></div>
+      <div><span class="k">Tamaño</span><span class="v">3 cuadrillas · 11 personas</span></div>
+      <div><span class="k">Volumen</span><span class="v">12 contratos · ~90 visitas/mes</span></div>
+      <div><span class="k">Arquetipo</span><span class="v">D + B · Higiene y automatización</span></div>
+      <div><span class="k">Plazo</span><span class="v">1 semana (D) + 3 semanas (B)</span></div>
+    </div>
+    <a class="cta" href="demo.html">Abrir la demo &rarr;</a>
+  </div>
+</header>
+
+<main class="wrap">
+
+<section>
+  <div class="sec-head"><span class="sec-num">01</span><div class="col">
+    <h2>El negocio</h2>
+    <p class="lede">Empresa de mantención industrial electromecánica en el Valle del Elqui. Tres cuadrillas que salen a faena: plantas procesadoras, pisqueras, frigoríficos, minería mediana. Doce contratos de mantención programada.</p>
+  </div></div>
+  <div class="col body">
+    <p>El producto que vende esta empresa no es la mantención. Es <strong>el informe</strong>. La faena necesita el documento que acredita que el equipo se revisó, qué se encontró y qué se cambió &#8212; para su propio cumplimiento, sus auditorías y sus seguros. La mantención se hace en cuatro horas; el informe demoraba entre ocho y doce días.</p>
+    <p>El recorrido era este: el técnico llenaba un checklist en papel, sacaba fotos con su celular, pedía una firma en la hoja, volvía a la oficina y entregaba la carpeta. Ahí alguien digitaba el checklist en un Word, descargaba y pegaba las fotos, escaneaba la hoja firmada, armaba el informe, lo revisaba el jefe, se convertía a PDF y se enviaba. Además, los materiales usados se anotaban en un cuaderno de bodega.</p>
+  </div>
+</section>
+
+<section>
+  <div class="sec-head"><span class="sec-num">02</span><div class="col">
+    <h2>Cómo se determinaron los dolores</h2>
+    <p class="lede">Aquí el diagnóstico fue casi enteramente cronómetro. El hallazgo no fue un dato escondido: fue el proceso mismo, dibujado por primera vez.</p>
+  </div></div>
+  <div class="col body">
+    <p><strong>E0 · Calificación (45 min).</strong> El jefe de operaciones pidió &laquo;una app para que los técnicos llenen el checklist en el celular&raquo;. Los cinco filtros en verde. La petición era razonable y parcialmente correcta &#8212; pero apuntaba a un solo paso de catorce.</p>
+    <p><strong>E1 · Diagnóstico (1 semana, pagado).</strong> Tres actividades:</p>
+  </div>
+  <ol class="steps col">
+    <li><strong>Acompañar cuatro visitas completas</strong>, desde que la camioneta sale hasta que el informe llega al cliente. Cronómetro en cada paso. Nadie en la empresa había visto nunca el proceso completo dibujado.</li>
+    <li><strong>Medir los catorce pasos</strong> y clasificar cada uno con una sola pregunta: <em>¿el cliente pagaría por este paso si lo viera?</em>. Siete no pasaron la pregunta.</li>
+    <li><strong>Revisar el cumplimiento de plazo</strong> de los doce contratos. El plazo pactado para entregar el informe era de 2 a 7 días hábiles según cliente. Se cumplía en el 34% de los casos.</li>
+  </ol>
+
+  <div class="quotes col">
+    <div class="q"><p>&laquo;Yo hago la mantención en cuatro horas. Después son dos horas de papeleo por cada visita.&raquo;</p><span class="who">Técnico</span></div>
+    <div class="q"><p>&laquo;Digito lo mismo dos veces: lo que trae el técnico en papel y después el informe.&raquo;</p><span class="who">Administración</span></div>
+    <div class="q"><p>&laquo;Los clientes reclaman por el informe, no por el trabajo. El trabajo está bien hecho.&raquo;</p><span class="who">Jefe de operaciones</span></div>
+    <div class="q"><p>&laquo;Si hay algo grave, el cliente se entera cuando le llega el informe. Diez días después.&raquo;</p><span class="who">Técnico</span></div>
+  </div>
+
+  <p class="small col" style="margin-top:var(--s3)">La última frase fue la que cambió el alcance del proyecto. Un hallazgo crítico &#8212; un rodamiento a punto de fallar, una conexión eléctrica recalentada &#8212; llegaba al cliente diez días después de detectarse. Eso no es un problema administrativo: es un riesgo operacional.</p>
+
+  <div class="tblwrap">
+    <table>
+      <thead><tr><th>Dolor encontrado</th><th>Cómo se midió</th><th>Magnitud</th></tr></thead>
+      <tbody>
+        <tr><td>Pasos que no agregan valor</td><td>Mapeo de 4 visitas, paso por paso</td><td class="num">7 de 14 pasos</td></tr>
+        <tr><td>Tiempo administrativo por orden</td><td>Cronómetro</td><td class="num">415 min &rarr; de los cuales 202 inútiles</td></tr>
+        <tr><td>Demora del informe al cliente</td><td>Fecha de visita vs. fecha de envío</td><td class="num">9,4 días promedio</td></tr>
+        <tr><td>Cumplimiento del plazo pactado</td><td>12 contratos, 6 meses</td><td class="num">34%</td></tr>
+        <tr><td>Hallazgo crítico sin aviso inmediato</td><td>Revisión de informes con no conformidades</td><td class="num">100% esperaba el informe</td></tr>
+        <tr><td>Doble digitación</td><td>Observación directa</td><td class="num">checklist + informe</td></tr>
+        <tr><td>Materiales sin descontar</td><td>Cuaderno de bodega vs. consumo real</td><td class="num">15 min/visita</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="small col" style="margin-top:var(--s2)">Línea base: 415 min por orden &middot; 9,4 días hasta el informe &middot; 34% de cumplimiento de plazo &middot; 7 pasos sin valor &middot; 0 avisos inmediatos de hallazgo crítico.</p>
+</section>
+
+<section>
+  <div class="sec-head"><span class="sec-num">03</span><div class="col">
+    <h2>Por qué D antes que B</h2>
+    <p class="lede">El orden importa. Automatizar primero habría dejado el desperdicio corriendo más rápido.</p>
+  </div></div>
+  <div class="arq">
+    <div class="a win"><span class="t">D &middot; HIGIENE</span><p>Siete de catorce pasos existían sólo para mover un dato de un soporte a otro. Se eliminaron capturando bien el dato una sola vez, en origen.</p><span class="verdict">Elegido primero. Una semana, sin tecnología nueva.</span></div>
+    <div class="a win"><span class="t">B &middot; AUTOMATIZACIÓN</span><p>Sobre el proceso ya limpio: informe generado solo, materiales descontados solos, aviso inmediato de hallazgo crítico.</p><span class="verdict">Elegido después. Tres semanas.</span></div>
+    <div class="a"><span class="t">A &middot; VISIBILIDAD</span><p>¿Alcanza con ver el cumplimiento?</p><span class="verdict">No. Ver que se incumple el plazo no lo arregla. El indicador se agregó, pero como consecuencia, no como solución.</span></div>
+    <div class="a"><span class="t">C &middot; SISTEMA</span><p>¿Hay que construir un sistema completo de gestión?</p><span class="verdict">No hacía falta. Se construyó lo mínimo para capturar en origen, no un ERP de servicios.</span></div>
+  </div>
+  <div class="note col">
+    <strong>La regla que se aplicó:</strong> nunca automatizar un paso antes de preguntarse si el paso debería existir. La app de checklist que pedía el cliente habría acelerado el paso 4 de catorce y dejado intactos los siete que sobraban. El resultado habría sido un proceso igual de largo con una pantalla más bonita.
+  </div>
+</section>
+
+<section>
+  <div class="sec-head"><span class="sec-num">04</span><div class="col">
+    <h2>El pipeline aplicado</h2>
+    <p class="lede">Dos proyectos encadenados: una semana de higiene, tres de automatización. El primero pagó el segundo.</p>
+  </div></div>
+  <div class="rail">
+    <div class="st"><span class="code">E0</span><div class="b"><h4>Calificación</h4><p>45 minutos. Verde. Lo pedido &#8212; una app de checklist &#8212; era correcto pero insuficiente. No se corrigió en la reunión.</p></div></div>
+    <div class="st"><span class="code">E1</span><div class="b"><h4>Diagnóstico &#8212; 1 semana, pagado</h4><p>Cuatro visitas acompañadas con cronómetro, mapeo de catorce pasos y clasificación de cada uno con la pregunta &laquo;¿el cliente pagaría por esto?&raquo;. El mapa dibujado fue el entregable que vendió el proyecto.</p></div></div>
+    <div class="st hl"><span class="code">E2</span><div class="b"><h4>Arquetipo y rebanada mínima</h4><p>D primero, B después. La rebanada mínima del proyecto D fue <strong>eliminar los siete pasos</strong>: sólo requería que el técnico capturara el checklist, las fotos y la firma en el dispositivo. La del proyecto B fue <strong>el informe automático</strong>. Métricas: <strong>informe en menos de 2 días</strong> y <strong>cumplimiento de plazo sobre 90%</strong>.</p></div></div>
+    <div class="st"><span class="code">E3</span><div class="b"><h4>Contrato de datos &#8212; 3 días</h4><p>Poco que ingerir: los contratos y el maestro de clientes venían de una planilla, y el catálogo de materiales del cuaderno de bodega, que se digitalizó una vez. Los datos de terreno no existían en forma digital: se empezaron a capturar desde cero.</p></div></div>
+    <div class="st"><span class="code">E4</span><div class="b"><h4>Modelo y permisos &#8212; 2 días</h4><p>Cinco entidades: cliente/faena, contrato, orden de servicio, checklist y material. Tres roles: el técnico no ve valores ni facturación, administración no programa cuadrillas, operaciones ve todo.</p></div></div>
+    <div class="st"><span class="code">E5</span><div class="b"><h4>Construcción &#8212; 3 semanas</h4><p>Semana 1: captura en faena y programa de cuadrillas. Semana 2: generación automática del informe. Semana 3: contratos, materiales y reglas.</p></div></div>
+    <div class="st"><span class="code">E6</span><div class="b"><h4>Validación &#8212; 1 semana</h4><p>Dos cuadrillas en paralelo: una con papel, otra con el sistema. Se compararon los informes resultantes. Apareció una regla no mencionada: algunos clientes exigen el informe firmado por un profesional con timbre. Se incorporó al documento generado.</p></div></div>
+    <div class="st"><span class="code">E7</span><div class="b"><h4>Puesta en marcha &#8212; 1 semana</h4><p>La adopción era el riesgo real: técnicos con años de papel. Campeón interno: el técnico más antiguo, escogido a propósito. Capacitación en faena, no en sala.</p></div></div>
+    <div class="st"><span class="code">E8</span><div class="b"><h4>Medición &#8212; día 90</h4><p>Ver sección 06.</p></div></div>
+    <div class="st hl"><span class="code">E9</span><div class="b"><h4>Cosecha &#8212; 1 día</h4><p>Al núcleo: el <strong>motor de checklists configurables</strong> y el <strong>generador de informes técnicos</strong> con hallazgos, materiales y fotos. Al playbook, la herramienta más valiosa de todas: el <strong>mapa de proceso con clasificación de valor</strong>, que ahora se aplica en la fase E1 de cualquier cliente.</p></div></div>
+  </div>
+</section>
+
+<section>
+  <div class="sec-head"><span class="sec-num">05</span><div class="col">
+    <h2>La solución</h2>
+    <p class="lede">Diez módulos. Uno de ellos, <em>Proceso</em>, no gestiona nada: muestra qué se eliminó y por qué. Es la evidencia permanente del arquetipo D.</p>
+  </div></div>
+  <div class="mods">
+    <div class="m"><span class="tagn tagv">vertical</span><h4>Proceso</h4><p>El antes y el después, paso por paso, con los siete eliminados tachados y el motivo de cada uno. Es el módulo que más se muestra en las reuniones de gerencia y el que no existe en ningún software del mercado.</p></div>
+    <div class="m"><span class="tagn tagv">vertical</span><h4>Órdenes de servicio</h4><p>Checklist, fotos, materiales y horas capturados <em>en la faena</em>. Marcar los ítems y cerrar la orden es todo lo que hace el técnico.</p></div>
+    <div class="m"><span class="tagn tagv">vertical</span><h4>Informes</h4><p>Cada documento se escribió solo al cerrar la orden. La tabla muestra los días entre visita y envío contra el plazo pactado de cada contrato.</p></div>
+    <div class="m"><span class="tagn tagv">vertical</span><h4>Contratos</h4><p>Frecuencia pactada, última visita y cumplimiento de plazo por cliente. Detecta las mantenciones vencidas antes de que el cliente reclame.</p></div>
+    <div class="m"><span class="tagn tagv">vertical</span><h4>Materiales</h4><p>Consumo descontado desde terreno. Reemplazó el cuaderno de bodega, que era el paso 14 del proceso antiguo.</p></div>
+    <div class="m"><span class="tagn">núcleo</span><h4>Programa de cuadrillas</h4><p><strong>Componente reutilizado del caso 03</strong>, donde asignaba sillones dentales. Aquí asigna cuadrillas a faenas. Mismo problema: repartir tiempo de un recurso limitado.</p></div>
+    <div class="m"><span class="tagn">núcleo</span><h4>Motor de automatizaciones</h4><p>Seis reglas que corren sobre el proceso ya limpio. La más valiosa avisa el hallazgo crítico el mismo día, sin esperar el informe.</p></div>
+    <div class="m"><span class="tagn">núcleo</span><h4>Alertas</h4><p>Informes sin enviar, contratos vencidos, hallazgos críticos y materiales bajo mínimo.</p></div>
+    <div class="m"><span class="tagn">núcleo</span><h4>Bitácora</h4><p>Cada informe generado queda registrado como AUTO. Es la evidencia de las horas liberadas.</p></div>
+    <div class="m"><span class="tagn">núcleo</span><h4>Roles y panel</h4><p>Tres perfiles y el tablero con demora del informe, cumplimiento de plazo y carga de cuadrillas contra la línea base.</p></div>
+  </div>
+  <div class="note col">
+    <strong>Cómo recorrer la demo en tres minutos:</strong> empieza por <em>Proceso</em> &#8212; ahí está el argumento completo del arquetipo D en una pantalla. Después ve a <em>Órdenes de servicio</em>, filtra por &laquo;Programada&raquo;, abre una y pulsa <strong>Cerrar orden en faena</strong>: el informe técnico aparece generado, sin que nadie lo escriba. Pulsa <strong>Enviar al cliente</strong> y mira los días transcurridos contra el plazo del contrato. Termina en <em>Programa</em>, que es el mismo componente de agenda del caso dental.
+  </div>
+</section>
+
+<section>
+  <div class="sec-head"><span class="sec-num">06</span><div class="col">
+    <h2>El valor entregado</h2>
+    <p class="lede">Medición al día 90 contra la línea base de E1. Es el caso donde la fase D sola ya justificaba el proyecto.</p>
+  </div></div>
+  <div class="tblwrap">
+    <table>
+      <thead><tr><th>Indicador</th><th>Antes (E1)</th><th>Día 90</th><th>Efecto</th></tr></thead>
+      <tbody>
+        <tr><td>Pasos del proceso</td><td class="num">14</td><td class="num g">9</td><td class="num g">7 eliminados, 3 automáticos</td></tr>
+        <tr><td>Minutos por orden</td><td class="num">415 min</td><td class="num g">213 min</td><td class="num g">&minus;202 min</td></tr>
+        <tr><td>Días hasta el informe</td><td class="num">9,4 días</td><td class="num g">1,6 días</td><td class="num g">&minus;83%</td></tr>
+        <tr><td>Cumplimiento de plazo</td><td class="num">34%</td><td class="num g">96%</td><td class="num g">contratos protegidos</td></tr>
+        <tr><td>Aviso de hallazgo crítico</td><td class="num">10 días</td><td class="num g">mismo día</td><td class="num g">riesgo operacional</td></tr>
+        <tr><td>Doble digitación</td><td class="num">cada orden</td><td class="num g">eliminada</td><td class="num g">captura en origen</td></tr>
+        <tr><td>Cuaderno de bodega</td><td class="num">en uso</td><td class="num g">eliminado</td><td class="num g">descuento automático</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="pull col">Doscientos dos minutos por orden, en noventa órdenes al mes, son trescientas horas al trimestre que dejaron de gastarse. La mitad de ese ahorro llegó en la primera semana, sin escribir una línea de código: sólo dejando de hacer lo que no aportaba.</p>
+</section>
+
+<section style="border-bottom:none">
+  <div class="sec-head"><span class="sec-num">07</span><div class="col">
+    <h2>Qué se llevó BIPLOT</h2>
+    <p class="lede">El aporte más importante de este caso no fue código.</p>
+  </div></div>
+  <div class="col body">
+    <p>Al núcleo entraron dos componentes: el <strong>motor de checklists configurables</strong> y el <strong>generador de informes técnicos</strong>. Ambos sirven a cualquier negocio que documente un trabajo en terreno: mantención, inspección, auditoría, instalación, control de calidad, fiscalización.</p>
+    <p>Pero lo que más vale se lo llevó el playbook: el <strong>mapa de proceso con clasificación de valor</strong>. Cronometrar cada paso y someterlo a la pregunta &laquo;¿el cliente pagaría por esto si lo viera?&raquo; es una técnica que ahora se aplica en la fase E1 de <em>todos</em> los clientes, sea cual sea el arquetipo. Y el módulo <em>Proceso</em> se convirtió en una pieza estándar: hacer visible lo que se eliminó es la forma más directa de demostrar valor en la fase E8.</p>
+    <p>Reutilización de núcleo en este proyecto: <strong>≈75%</strong>. La curva completa de los cuatro casos: 0% &rarr; 60% &rarr; 70% &rarr; 75%. Eso es el trinquete de la fase E9 funcionando, y es la diferencia entre una consultora y una empresa que compone.</p>
+  </div>
+</section>
+
+</main>
+<footer class="wrap">
+  <p class="small col">BIPLOT &middot; Caso 04 de 04 &middot; Los datos del negocio son ilustrativos y están construidos sobre la operación real de una empresa de mantención de este tamaño. La demo es funcional: el estado vive en el navegador y se reinicia al recargar la página.</p>
+</footer>

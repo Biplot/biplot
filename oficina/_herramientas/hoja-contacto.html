@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Hoja de contacto · kit exportado</title>
+<style>
+  body { margin: 0; padding: 12px; background: #0A1B2E; color: #F2F4F7; font: 12px Inter, sans-serif; }
+  .g { display: flex; flex-wrap: wrap; gap: 10px; align-items: flex-start; }
+  figure { margin: 0; } img { display: block; height: 300px; border-radius: 6px; } .og img { height: 150px; }
+  figcaption { margin-top: 4px; }
+</style>
+</head>
+<body>
+<div class="g" id="g"></div>
+<script>
+  var ids = ['lupe', 'celda', 'grilla', 'bucle', 'tamandua', 'faro', 'pepa'], lista = [];
+  ids.forEach(function (i) { lista.push('ficha-' + i + '-4x5', 'ficha-' + i + '-9x16'); });
+  ['oficina', 'elenco', 'motor'].forEach(function (p) { lista.push(p + '-4x5', p + '-9x16'); });
+  lista.push('oficina-og');
+  var q = new URLSearchParams(location.search).get('solo');
+  if (q) lista = lista.filter(function (n) { return n.indexOf(q) > -1; });
+  document.getElementById('g').innerHTML = lista.map(function (n) {
+    return '<figure class="' + (n.indexOf('og') > -1 ? 'og' : '') + '"><img src="../kit/png/' + n + '.png?' + Date.now() + '" alt=""><figcaption>' + n + '</figcaption></figure>';
+  }).join('');
+</script>
+</body>
+</html>

@@ -1,0 +1,986 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Servicios Elqui Terreno</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&family=Space+Mono:wght@400;700&display=swap">
+
+<style>
+:root{
+  --paper:#F2F4F7; --surface:#FFFFFF; --surface-2:#EDF1F5; --surface-3:#E2E7EE;
+  --ink:#0E2A47; --ink-2:#34485F; --muted:#5F6F82; --faint:#8A9AAD;
+  --line:#DCE3EB; --line-soft:#E8EDF3;
+  --accent:#0B776D; --accent-2:#08615A; --accent-soft:#D9F3EF; --accent-tint:#EEF9F7; --on-accent:#FFFFFF;
+  --brass:#35679A; --brass-soft:#E1EAF4;
+  --good:#2C6F52; --good-soft:#DFEFE7;
+  --warn:#96591A; --warn-soft:#FAECD9;
+  --crit:#8F3126; --crit-soft:#FAE2DF;
+  --info:#1F5A7A; --info-soft:#DFEBF3;
+  --shadow-1:0 1px 2px rgba(14,42,71,.06);
+  --shadow-2:0 2px 4px rgba(14,42,71,.05),0 12px 28px -18px rgba(14,42,71,.35);
+  --shadow-3:0 4px 8px rgba(14,42,71,.08),0 24px 48px -20px rgba(14,42,71,.4);
+  --f:Inter,"Segoe UI",system-ui,sans-serif;
+  --m:"Space Mono",ui-monospace,Consolas,monospace;
+  --d:"Space Grotesk","Segoe UI",system-ui,sans-serif;
+  --r:4px;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --paper:#0A1B2E; --surface:#0E2A47; --surface-2:#14345A; --surface-3:#1A3E68;
+  --ink:#F2F4F7; --ink-2:#C4D2E0; --muted:#8FA3B8; --faint:#6B7F96;
+  --line:#23456B; --line-soft:#1A3858;
+  --accent:#17C3B2; --accent-2:#4FD8C9; --accent-soft:#103F4A; --accent-tint:#0E3442; --on-accent:#0E2A47;
+  --brass:#7FA6D0; --brass-soft:#17365A;
+  --good:#5FAE86; --good-soft:#122C21;
+  --warn:#C99050; --warn-soft:#2E2314;
+  --crit:#D47364; --crit-soft:#331A17;
+  --info:#66A5C6; --info-soft:#13272F;
+  --shadow-1:0 1px 2px rgba(0,0,0,.4);
+  --shadow-2:0 2px 4px rgba(0,0,0,.3),0 12px 28px -18px rgba(0,0,0,.8);
+  --shadow-3:0 4px 8px rgba(0,0,0,.4),0 24px 48px -20px rgba(0,0,0,.9);
+}}
+:root[data-theme="dark"]{
+  --paper:#0A1B2E; --surface:#0E2A47; --surface-2:#14345A; --surface-3:#1A3E68;
+  --ink:#F2F4F7; --ink-2:#C4D2E0; --muted:#8FA3B8; --faint:#6B7F96;
+  --line:#23456B; --line-soft:#1A3858;
+  --accent:#17C3B2; --accent-2:#4FD8C9; --accent-soft:#103F4A; --accent-tint:#0E3442; --on-accent:#0E2A47;
+  --brass:#7FA6D0; --brass-soft:#17365A;
+  --good:#5FAE86; --good-soft:#122C21;
+  --warn:#C99050; --warn-soft:#2E2314;
+  --crit:#D47364; --crit-soft:#331A17;
+  --info:#66A5C6; --info-soft:#13272F;
+  --shadow-1:0 1px 2px rgba(0,0,0,.4);
+  --shadow-2:0 2px 4px rgba(0,0,0,.3),0 12px 28px -18px rgba(0,0,0,.8);
+  --shadow-3:0 4px 8px rgba(0,0,0,.4),0 24px 48px -20px rgba(0,0,0,.9);
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--f);font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased}
+h1,h2,h3{font-family:var(--d)}
+button,input,select,textarea{font:inherit;color:inherit}
+h1,h2,h3,h4{margin:0;font-weight:600;line-height:1.2;letter-spacing:-.01em}
+p{margin:0}
+.mono{font-family:var(--m);font-variant-numeric:tabular-nums}
+.lbl{font-family:var(--m);font-size:.62rem;font-weight:600;letter-spacing:.13em;text-transform:uppercase;color:var(--muted)}
+:where(button,a,input,select,[tabindex]):focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:2px}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+
+.app{display:grid;grid-template-columns:212px minmax(0,1fr);min-height:100vh}
+@media(max-width:900px){.app{grid-template-columns:1fr}}
+.side{background:var(--surface);border-right:1px solid var(--line);display:flex;flex-direction:column;position:sticky;top:0;height:100vh;overflow-y:auto}
+@media(max-width:900px){.side{position:static;height:auto;border-right:none;border-bottom:1px solid var(--line)}}
+.brand{padding:16px 16px 14px;border-bottom:1px solid var(--line-soft);display:flex;flex-direction:column;gap:2px}
+.brand .biz{font-size:.95rem;font-weight:700;letter-spacing:-.02em}
+.brand .by{font-family:var(--m);font-size:.58rem;letter-spacing:.14em;text-transform:uppercase;color:var(--faint);display:flex;align-items:center;gap:5px}
+.brand .by i{width:5px;height:5px;border-radius:50%;background:var(--accent);display:inline-block}
+nav{padding:10px 8px;display:flex;flex-direction:column;gap:1px;flex:1}
+nav .grp{padding:12px 8px 5px;font-family:var(--m);font-size:.58rem;letter-spacing:.14em;text-transform:uppercase;color:var(--faint)}
+nav button{display:flex;align-items:center;gap:9px;width:100%;text-align:left;background:none;border:none;padding:7px 8px;border-radius:var(--r);cursor:pointer;color:var(--ink-2);font-size:.85rem;font-weight:500;transition:background .12s,color .12s}
+nav button:hover{background:var(--surface-2);color:var(--ink)}
+nav button.on{background:var(--accent-soft);color:var(--accent);font-weight:600}
+nav button .ic{width:15px;height:15px;flex:none;opacity:.85}
+nav button .bdg{margin-left:auto;font-family:var(--m);font-size:.62rem;font-weight:600;background:var(--crit);color:#fff;padding:1px 5px;border-radius:8px;min-width:17px;text-align:center}
+.side-foot{padding:10px;border-top:1px solid var(--line-soft);display:flex;flex-direction:column;gap:7px}
+.rolebox{display:flex;flex-direction:column;gap:4px}
+.rolebox select{width:100%;padding:5px 7px;border:1px solid var(--line);background:var(--surface-2);border-radius:var(--r);font-size:.78rem}
+
+.top{position:sticky;top:0;z-index:30;background:color-mix(in srgb,var(--paper) 88%,transparent);backdrop-filter:blur(8px);border-bottom:1px solid var(--line);padding:11px 20px;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.top h1{font-size:1.02rem} .top .sub{font-size:.78rem;color:var(--muted)} .top .sp{flex:1}
+.clock{display:flex;align-items:center;gap:7px;font-family:var(--m);font-size:.72rem;color:var(--muted);background:var(--surface);border:1px solid var(--line);padding:4px 8px;border-radius:var(--r)}
+main{padding:20px;display:flex;flex-direction:column;gap:18px;max-width:1440px}
+.view{display:none;flex-direction:column;gap:18px}
+.view.on{display:flex}
+
+.btn{display:inline-flex;align-items:center;gap:6px;padding:6px 11px;border-radius:var(--r);border:1px solid var(--line);background:var(--surface);color:var(--ink);font-size:.8rem;font-weight:500;cursor:pointer;transition:background .12s,border-color .12s;white-space:nowrap}
+.btn:hover{background:var(--surface-2);border-color:var(--muted)}
+.btn.pri{background:var(--accent);border-color:var(--accent);color:var(--on-accent);font-weight:600}
+.btn.pri:hover{background:var(--accent-2);border-color:var(--accent-2)}
+.btn.gd{background:var(--good);border-color:var(--good);color:#fff}
+.btn.dg{background:var(--crit);border-color:var(--crit);color:#fff}
+.btn.sm{padding:3px 8px;font-size:.74rem}
+.btn:disabled{opacity:.42;cursor:not-allowed}
+
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow-1)}
+.card-h{padding:11px 14px;border-bottom:1px solid var(--line-soft);display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.card-h h3{font-size:.87rem} .card-h .sp{flex:1}
+.card-b{padding:14px}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(178px,1fr));gap:10px}
+.kpi{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:12px 13px;display:flex;flex-direction:column;gap:5px;box-shadow:var(--shadow-1);position:relative;overflow:hidden}
+.kpi::before{content:"";position:absolute;left:0;top:0;bottom:0;width:2px;background:var(--accent)}
+.kpi.w::before{background:var(--warn)} .kpi.c::before{background:var(--crit)} .kpi.g::before{background:var(--good)}
+.kpi .v{font-family:var(--m);font-size:1.55rem;font-weight:600;letter-spacing:-.02em;line-height:1}
+.kpi .d{font-size:.72rem;color:var(--muted);display:flex;align-items:center;gap:5px;flex-wrap:wrap}
+.delta{font-family:var(--m);font-size:.68rem;font-weight:600;padding:1px 5px;border-radius:3px}
+.delta.up{background:var(--good-soft);color:var(--good)} .delta.dn{background:var(--crit-soft);color:var(--crit)}
+
+.pill{display:inline-flex;align-items:center;gap:4px;font-family:var(--m);font-size:.63rem;font-weight:600;letter-spacing:.05em;text-transform:uppercase;padding:2px 7px;border-radius:10px;white-space:nowrap}
+.p-gray{background:var(--surface-3);color:var(--muted)} .p-info{background:var(--info-soft);color:var(--info)}
+.p-good{background:var(--good-soft);color:var(--good)} .p-warn{background:var(--warn-soft);color:var(--warn)}
+.p-crit{background:var(--crit-soft);color:var(--crit)} .p-acc{background:var(--accent-soft);color:var(--accent)}
+.p-brass{background:var(--brass-soft);color:var(--brass)}
+
+.tools{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.tools input[type=search],.tools select{padding:5px 9px;border:1px solid var(--line);background:var(--surface);border-radius:var(--r);font-size:.8rem}
+.tools input[type=search]{min-width:190px}
+.tw{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:.82rem;min-width:640px}
+th{text-align:left;padding:8px 12px;background:var(--surface-2);border-bottom:1px solid var(--line);font-family:var(--m);font-size:.6rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-weight:600;white-space:nowrap;cursor:pointer;user-select:none}
+th:hover{color:var(--ink)} th .ar{opacity:.45;font-size:.7rem}
+td{padding:8px 12px;border-bottom:1px solid var(--line-soft);vertical-align:middle}
+tbody tr{cursor:pointer;transition:background .1s}
+tbody tr:hover{background:var(--accent-tint)}
+tbody tr.danger{background:color-mix(in srgb,var(--crit-soft) 55%,transparent)}
+td.num{font-family:var(--m);font-variant-numeric:tabular-nums;text-align:right;white-space:nowrap}
+td.k{font-family:var(--m);font-size:.76rem;color:var(--accent);font-weight:600;white-space:nowrap}
+.empty{padding:34px;text-align:center;color:var(--muted);font-size:.85rem}
+
+/* ===== PROGRAMA (agenda por recurso, núcleo del caso 03) ===== */
+.pg{display:grid;grid-template-columns:120px repeat(5,minmax(158px,1fr));gap:1px;background:var(--line);border:1px solid var(--line);border-radius:var(--r);overflow:hidden;min-width:900px}
+.pgwrap{overflow-x:auto}
+.pg>div{background:var(--surface);padding:8px 10px}
+.pg .hd{background:var(--surface-2);font-size:.76rem;font-weight:600;display:flex;flex-direction:column;gap:1px}
+.pg .hd span{font-family:var(--m);font-size:.62rem;color:var(--muted);font-weight:400;text-transform:capitalize}
+.pg .cr{background:var(--surface-2);display:flex;flex-direction:column;gap:2px;justify-content:center}
+.pg .cr b{font-size:.79rem} .pg .cr span{font-family:var(--m);font-size:.62rem;color:var(--muted)}
+.pg .cel{display:flex;flex-direction:column;gap:5px;min-height:66px}
+.os{border-radius:3px;padding:5px 7px;border-left:2px solid;cursor:pointer;display:flex;flex-direction:column;gap:1px;transition:box-shadow .12s,transform .1s}
+.os:hover{box-shadow:var(--shadow-2);transform:translateY(-1px)}
+.os .f{font-family:var(--m);font-size:.62rem;font-weight:600;opacity:.9}
+.os .c{font-size:.72rem;font-weight:600;line-height:1.25;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.os .t{font-size:.64rem;opacity:.8;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.o-programada{background:var(--info-soft);border-color:var(--info);color:var(--info)}
+.o-en_terreno{background:var(--warn-soft);border-color:var(--warn);color:var(--warn)}
+.o-ejecutada{background:var(--accent-soft);border-color:var(--accent);color:var(--accent)}
+.o-informe{background:var(--brass-soft);border-color:var(--brass);color:var(--brass)}
+.o-cerrada{background:var(--good-soft);border-color:var(--good);color:var(--good)}
+
+/* ===== PROCESO (arquetipo D) ===== */
+.proc{display:grid;grid-template-columns:repeat(auto-fit,minmax(310px,1fr));gap:14px}
+.pcol{display:flex;flex-direction:column;gap:7px}
+.pcol>.lbl{padding-bottom:6px;border-bottom:1px solid var(--line)}
+.pstep{display:grid;grid-template-columns:26px 1fr auto;gap:9px;align-items:center;padding:8px 10px;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);font-size:.82rem}
+.pstep .n{font-family:var(--m);font-size:.66rem;font-weight:600;color:var(--muted);text-align:center}
+.pstep .tt{display:flex;flex-direction:column;gap:1px;min-width:0}
+.pstep .tt b{font-weight:500}
+.pstep .tt span{font-size:.7rem;color:var(--muted)}
+.pstep.kill{opacity:.62;border-style:dashed;background:var(--crit-soft);border-color:color-mix(in srgb,var(--crit) 34%,transparent)}
+.pstep.kill .tt b{text-decoration:line-through;color:var(--crit)}
+.pstep.auto{background:var(--brass-soft);border-color:color-mix(in srgb,var(--brass) 34%,transparent)}
+.pstep .tm{font-family:var(--m);font-size:.7rem;color:var(--muted);white-space:nowrap}
+
+.chk{display:flex;flex-direction:column;gap:5px}
+.chkrow{display:grid;grid-template-columns:auto 1fr auto;gap:9px;align-items:center;padding:7px 9px;background:var(--surface-2);border:1px solid var(--line-soft);border-radius:var(--r);font-size:.8rem;cursor:pointer}
+.chkrow:hover{border-color:var(--accent)}
+.chkbox{width:17px;height:17px;border:1.5px solid var(--line);border-radius:3px;display:grid;place-items:center;font-size:.7rem;flex:none;background:var(--surface)}
+.chkrow.ok .chkbox{background:var(--good);border-color:var(--good);color:#fff}
+.chkrow.bad .chkbox{background:var(--crit);border-color:var(--crit);color:#fff}
+.chkrow.bad{background:var(--crit-soft);border-color:color-mix(in srgb,var(--crit) 30%,transparent)}
+
+.bars{display:flex;flex-direction:column;gap:8px}
+.bar{display:grid;grid-template-columns:150px 1fr 78px;gap:10px;align-items:center;font-size:.79rem}
+.bar.wide{grid-template-columns:196px 1fr 88px}
+.bar .tr{height:16px;background:var(--surface-3);border-radius:2px;overflow:hidden}
+.bar .fl{height:100%;background:var(--accent);border-radius:2px;transition:width .4s}
+.bar .fl.w{background:var(--warn)} .bar .fl.c{background:var(--crit)} .bar .fl.g{background:var(--good)} .bar .fl.b{background:var(--brass)}
+.bar .vv{font-family:var(--m);font-size:.76rem;text-align:right;font-variant-numeric:tabular-nums}
+.bar .nm{color:var(--ink-2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
+.rules{display:flex;flex-direction:column;gap:9px}
+.rule{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:12px 13px;display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:start;box-shadow:var(--shadow-1)}
+.rule.off{opacity:.5}
+.rule .body{display:flex;flex-direction:column;gap:6px;min-width:0}
+.rule h4{font-size:.85rem}
+.rule .logic{font-family:var(--m);font-size:.73rem;line-height:1.6;color:var(--ink-2);background:var(--surface-2);border:1px solid var(--line-soft);border-radius:var(--r);padding:7px 9px;overflow-x:auto}
+.rule .logic b{color:var(--accent);font-weight:600} .rule .logic i{color:var(--brass);font-style:normal;font-weight:600}
+.rule .meta{display:flex;gap:9px;font-size:.71rem;color:var(--muted);flex-wrap:wrap}
+.sw{position:relative;width:34px;height:19px;flex:none;cursor:pointer;background:var(--surface-3);border:1px solid var(--line);border-radius:11px;transition:background .15s;padding:0}
+.sw::after{content:"";position:absolute;top:1px;left:1px;width:15px;height:15px;border-radius:50%;background:var(--surface);box-shadow:var(--shadow-1);transition:transform .15s}
+.sw[aria-checked="true"]{background:var(--accent);border-color:var(--accent)}
+.sw[aria-checked="true"]::after{transform:translateX(15px)}
+
+.alerts{display:flex;flex-direction:column;gap:7px}
+.alert{display:grid;grid-template-columns:auto 1fr auto;gap:11px;align-items:center;padding:10px 12px;background:var(--surface);border:1px solid var(--line);border-left:2px solid var(--warn);border-radius:var(--r)}
+.alert.crit{border-left-color:var(--crit)} .alert.info{border-left-color:var(--info)} .alert.good{border-left-color:var(--good)}
+.alert .ic{width:22px;height:22px;border-radius:50%;display:grid;place-items:center;font-family:var(--m);font-size:.7rem;font-weight:600;background:var(--warn-soft);color:var(--warn);flex:none}
+.alert.crit .ic{background:var(--crit-soft);color:var(--crit)}
+.alert.info .ic{background:var(--info-soft);color:var(--info)}
+.alert.good .ic{background:var(--good-soft);color:var(--good)}
+.alert .tx{display:flex;flex-direction:column;gap:1px;min-width:0}
+.alert .tx b{font-size:.82rem} .alert .tx span{font-size:.74rem;color:var(--muted)}
+.alert.read{opacity:.5}
+
+.scrim{position:fixed;inset:0;background:rgba(10,27,46,.42);z-index:80;opacity:0;pointer-events:none;transition:opacity .18s}
+.scrim.on{opacity:1;pointer-events:auto}
+.panel{position:fixed;top:0;right:0;height:100vh;width:min(580px,100%);background:var(--surface);border-left:1px solid var(--line);z-index:90;transform:translateX(100%);transition:transform .22s cubic-bezier(.4,0,.2,1);display:flex;flex-direction:column;box-shadow:var(--shadow-3)}
+.panel.on{transform:none}
+.panel-h{padding:14px 16px;border-bottom:1px solid var(--line);display:flex;align-items:flex-start;gap:10px}
+.panel-h h3{font-size:1rem} .panel-h .sp{flex:1}
+.xbtn{background:none;border:1px solid var(--line);border-radius:var(--r);width:26px;height:26px;cursor:pointer;color:var(--muted);font-size:1rem;line-height:1;display:grid;place-items:center}
+.xbtn:hover{background:var(--surface-2);color:var(--ink)}
+.panel-b{padding:16px;overflow-y:auto;flex:1;display:flex;flex-direction:column;gap:16px}
+.panel-f{padding:11px 16px;border-top:1px solid var(--line);display:flex;gap:8px;flex-wrap:wrap;background:var(--surface-2)}
+.dl{display:grid;grid-template-columns:auto 1fr;gap:6px 14px;font-size:.82rem}
+.dl dt{color:var(--muted);white-space:nowrap} .dl dd{margin:0;text-align:right;font-weight:500}
+.sect{display:flex;flex-direction:column;gap:8px}
+.sect>.lbl{padding-bottom:5px;border-bottom:1px solid var(--line-soft)}
+.tot{display:flex;justify-content:space-between;padding:9px 10px;background:var(--accent-soft);border-radius:var(--r);font-weight:600}
+.tot .v{font-family:var(--m);color:var(--accent)}
+.tl{display:flex;flex-direction:column;position:relative;padding-left:16px}
+.tl::before{content:"";position:absolute;left:4px;top:6px;bottom:6px;width:1px;background:var(--line)}
+.tl .it{position:relative;padding:5px 0;font-size:.78rem;color:var(--ink-2)}
+.tl .it::before{content:"";position:absolute;left:-15px;top:11px;width:7px;height:7px;border-radius:50%;background:var(--surface);border:1.5px solid var(--accent)}
+.tl .it .t{font-family:var(--m);font-size:.66rem;color:var(--faint);margin-right:6px}
+.fotos{display:grid;grid-template-columns:repeat(auto-fill,minmax(78px,1fr));gap:6px}
+.foto{aspect-ratio:4/3;background:var(--surface-3);border:1px solid var(--line);border-radius:3px;display:grid;place-items:center;font-family:var(--m);font-size:.6rem;color:var(--faint);text-align:center;padding:4px}
+
+/* documento informe */
+.doc{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:20px;font-size:.83rem;display:flex;flex-direction:column;gap:14px}
+.doc-h{display:flex;justify-content:space-between;align-items:flex-start;gap:14px;padding-bottom:12px;border-bottom:2px solid var(--accent)}
+.doc-h .l h4{font-size:1rem} .doc-h .l p{font-size:.73rem;color:var(--muted)}
+.doc-h .r{text-align:right;font-family:var(--m);font-size:.7rem;color:var(--muted);line-height:1.7}
+.doc table{min-width:0;font-size:.78rem}
+.doc th{background:none;border-bottom:1px solid var(--line);cursor:default;padding:5px 7px}
+.doc td{padding:5px 7px} .doc tbody tr{cursor:default} .doc tbody tr:hover{background:none}
+.doc .note{font-size:.73rem;color:var(--muted);line-height:1.6;padding:9px 11px;background:var(--surface-2);border-radius:var(--r)}
+
+.toasts{position:fixed;bottom:16px;right:16px;z-index:200;display:flex;flex-direction:column;gap:7px;max-width:340px}
+.toast{background:var(--surface);border:1px solid var(--line);border-left:2px solid var(--accent);border-radius:var(--r);padding:10px 13px;box-shadow:var(--shadow-3);display:flex;flex-direction:column;gap:2px;animation:sl .22s ease-out}
+.toast b{font-size:.81rem} .toast span{font-size:.74rem;color:var(--muted)}
+.toast.auto{border-left-color:var(--brass)} .toast.good{border-left-color:var(--good)} .toast.bad{border-left-color:var(--crit)}
+@keyframes sl{from{transform:translateX(16px);opacity:0}to{transform:none;opacity:1}}
+
+.banner{display:flex;gap:11px;align-items:flex-start;padding:11px 14px;background:var(--accent-soft);border:1px solid color-mix(in srgb,var(--accent) 30%,transparent);border-radius:var(--r);font-size:.81rem;color:var(--ink-2);line-height:1.55}
+.banner b{color:var(--accent)}
+.banner.bad{background:var(--crit-soft);border-color:color-mix(in srgb,var(--crit) 32%,transparent)} .banner.bad b{color:var(--crit)}
+.banner.brass{background:var(--brass-soft);border-color:color-mix(in srgb,var(--brass) 34%,transparent)} .banner.brass b{color:var(--brass)}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:12px}
+.hint{font-size:.74rem;color:var(--muted);line-height:1.55}
+</style>
+
+<div class="app">
+  <aside class="side">
+    <div class="brand"><span class="biz">Servicios Elqui</span><span class="by"><i></i>BIPLOT OS · Demo</span></div>
+    <nav id="nav"></nav>
+    <div class="side-foot"><div class="rolebox"><span class="lbl">Perfil activo</span>
+      <select id="role">
+        <option value="jefe" selected>Jefe de operaciones</option>
+        <option value="tecnico">Técnico en terreno</option>
+        <option value="admin">Administración</option>
+      </select></div></div>
+  </aside>
+  <div>
+    <div class="top">
+      <div><h1 id="vt">Panel</h1><p class="sub" id="vs"></p></div>
+      <div class="sp"></div>
+      <div class="clock"><span id="hoy"></span></div>
+      <button class="btn" id="simBtn" title="Avanza el reloj un día y ejecuta las automatizaciones">Simular día siguiente</button>
+    </div>
+    <main>
+      <div class="view on" id="v-panel"></div>
+      <div class="view" id="v-programa"></div>
+      <div class="view" id="v-terreno"></div>
+      <div class="view" id="v-informes"></div>
+      <div class="view" id="v-contratos"></div>
+      <div class="view" id="v-materiales"></div>
+      <div class="view" id="v-proceso"></div>
+      <div class="view" id="v-autos"></div>
+      <div class="view" id="v-alertas"></div>
+      <div class="view" id="v-bitacora"></div>
+    </main>
+  </div>
+</div>
+<div class="scrim" id="scrim"></div>
+<aside class="panel" id="panel" role="dialog" aria-modal="true" aria-label="Detalle">
+  <div class="panel-h"><div class="sp"><h3 id="ph">—</h3><p id="phs" style="font-size:.76rem;color:var(--muted)"></p></div><button class="xbtn" id="pclose" aria-label="Cerrar">&times;</button></div>
+  <div class="panel-b" id="pb"></div><div class="panel-f" id="pf"></div>
+</aside>
+<div class="toasts" id="toasts"></div>
+
+<script>
+(function(){
+"use strict";
+/* ===== NÚCLEO BIPLOT ===== */
+const $=(s,r)=>(r||document).querySelector(s), $$=(s,r)=>[...(r||document).querySelectorAll(s)];
+const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const CLP=n=>'$'+Math.round(n).toLocaleString('es-CL');
+const K=n=>n>=1e6?'$'+(n/1e6).toFixed(1).replace('.',',')+'M':n>=1000?'$'+Math.round(n/1000)+'k':'$'+Math.round(n);
+const D=s=>new Date(s+'T12:00:00'); const iso=d=>d.toISOString().slice(0,10);
+const fmt=s=>D(s).toLocaleDateString('es-CL',{day:'2-digit',month:'short'});
+const fmtL=s=>D(s).toLocaleDateString('es-CL',{weekday:'long',day:'2-digit',month:'long',year:'numeric'});
+const fmtD=s=>D(s).toLocaleDateString('es-CL',{weekday:'short',day:'2-digit',month:'short'});
+const days=(a,b)=>Math.round((D(b)-D(a))/864e5);
+const addD=(s,n)=>iso(new Date(D(s)-0+n*864e5));
+const uid=p=>p+'-'+Math.random().toString(36).slice(2,7);
+const pct=n=>Math.round(n*100)+'%';
+let _s=4409911; const rnd=()=>{_s^=_s<<13;_s^=_s>>>17;_s^=_s<<5;return Math.abs(_s%100000)/100000};
+const pick=a=>a[Math.floor(rnd()*a.length)];
+const ri=(a,b)=>a+Math.floor(rnd()*(b-a+1));
+
+const S={hoy:'2026-08-31',semana:'2026-08-31',dia:0,clientes:[],cuadrillas:[],ordenes:[],materiales:[],
+  bitacora:[],alertas:[],reglas:[],role:'jefe',view:'panel',sel:null,sort:{},q:{},
+  hhAhorradas:0,informesAuto:0};
+function log(tipo,txt,ref){S.bitacora.unshift({id:uid('b'),f:S.hoy,tipo,txt,ref:ref||'',quien:ROLES[S.role].n})}
+function alerta(nivel,titulo,detalle,ref){S.alertas.unshift({id:uid('a'),f:S.hoy,nivel,titulo,detalle,ref:ref||'',leida:false})}
+function toast(t,d,cls){const el=document.createElement('div');el.className='toast'+(cls?' '+cls:'');
+  el.innerHTML='<b>'+esc(t)+'</b>'+(d?'<span>'+esc(d)+'</span>':'');$('#toasts').appendChild(el);
+  setTimeout(()=>{el.style.transition='opacity .3s';el.style.opacity='0';setTimeout(()=>el.remove(),320)},4600)}
+
+/* ===== CAPA VERTICAL — Mantención industrial en terreno ===== */
+const ROLES={
+  jefe:{n:'Rubén Castillo',t:'Jefe de operaciones',ver:['panel','programa','terreno','informes','contratos','materiales','proceso','autos','alertas','bitacora']},
+  tecnico:{n:'Marcelo Ibáñez',t:'Técnico en terreno',ver:['panel','programa','terreno','materiales']},
+  admin:{n:'Paola Sandoval',t:'Administración',ver:['panel','informes','contratos','materiales','proceso','autos','alertas','bitacora']}
+};
+const MODULOS=[
+  {id:'panel',n:'Panel',g:'Operación',ic:'M2 12h4l2-6 3 12 2-8 2 4h3'},
+  {id:'programa',n:'Programa',g:'Operación',ic:'M4 5h16v15H4zM4 9h16M8 3v4M16 3v4'},
+  {id:'terreno',n:'Órdenes de servicio',g:'Operación',ic:'M5 3h9l5 5v13H5zM14 3v5h5M9 13h6M9 17h4'},
+  {id:'informes',n:'Informes',g:'Operación',ic:'M6 2h9l4 4v16H6zM15 2v5h4M9 12h7M9 16h5'},
+  {id:'contratos',n:'Contratos',g:'Comercial',ic:'M12 3l8 4v6c0 4-3.5 7-8 8-4.5-1-8-4-8-8V7z'},
+  {id:'materiales',n:'Materiales',g:'Comercial',ic:'M12 3l8 4v10l-8 4-8-4V7z'},
+  {id:'proceso',n:'Proceso',g:'Inteligencia',ic:'M4 6h6M4 12h10M4 18h6M17 4l3 3-3 3M20 7h-6'},
+  {id:'autos',n:'Automatizaciones',g:'Inteligencia',ic:'M12 3v4M12 17v4M3 12h4M17 12h4M12 9a3 3 0 100 6 3 3 0 000-6z'},
+  {id:'alertas',n:'Alertas',g:'Inteligencia',ic:'M12 3a6 6 0 016 6c0 5 2 6 2 6H4s2-1 2-6a6 6 0 016-6zM10 20h4'},
+  {id:'bitacora',n:'Bitácora',g:'Inteligencia',ic:'M5 4h14v16H5zM9 8h6M9 12h6M9 16h3'}
+];
+const EST={programada:{n:'Programada',p:'p-info',c:'programada'},en_terreno:{n:'En terreno',p:'p-warn',c:'en_terreno'},
+  ejecutada:{n:'Ejecutada',p:'p-acc',c:'ejecutada'},informe:{n:'Informe listo',p:'p-brass',c:'informe'},
+  cerrada:{n:'Cerrada',p:'p-good',c:'cerrada'}};
+
+/* ---- el mapa de proceso: la evidencia del arquetipo D ---- */
+const PROC_ANTES=[
+  {n:'Programar visita en planilla Excel',t:15},
+  {n:'Imprimir hoja de ruta y checklist',t:10,kill:true,why:'El técnico ya lleva el checklist en el teléfono'},
+  {n:'Ejecutar mantención en faena',t:180},
+  {n:'Completar checklist en papel',t:20},
+  {n:'Sacar fotos con el celular personal',t:10},
+  {n:'Pedir firma del supervisor en papel',t:10},
+  {n:'Volver a oficina y entregar la carpeta',t:15,kill:true,why:'El reporte se cierra desde la faena'},
+  {n:'Digitar el checklist en Word',t:35,kill:true,why:'El dato ya está capturado en origen'},
+  {n:'Descargar y pegar las fotos',t:20,kill:true,why:'Las fotos se adjuntan en terreno'},
+  {n:'Escanear la hoja firmada',t:10,kill:true,why:'La firma se captura en el dispositivo'},
+  {n:'Armar el informe en Word',t:45,kill:true,why:'El informe se genera solo desde la orden'},
+  {n:'Revisión del jefe de operaciones',t:20},
+  {n:'Convertir a PDF y enviar por correo',t:10},
+  {n:'Anotar materiales usados en cuaderno de bodega',t:15,kill:true,why:'El consumo se descuenta al cerrar la orden'}
+];
+const PROC_DESPUES=[
+  {n:'Programar visita en el sistema',t:5},
+  {n:'Ejecutar mantención en faena',t:180},
+  {n:'Completar checklist en el dispositivo',t:12,auto:false},
+  {n:'Adjuntar fotos y firma en terreno',t:6},
+  {n:'Cerrar la orden desde la faena',t:2},
+  {n:'Informe generado automáticamente',t:0,auto:true},
+  {n:'Materiales descontados de bodega',t:0,auto:true},
+  {n:'Revisión del jefe de operaciones',t:8},
+  {n:'Envío automático al cliente',t:0,auto:true}
+];
+
+const CHK_BASE=[
+  'Inspección visual general del equipo',
+  'Medición de vibración en descansos',
+  'Verificación de temperatura de operación',
+  'Estado de correas y poleas',
+  'Nivel y estado de lubricante',
+  'Apriete de pernos de anclaje',
+  'Estado de conexiones eléctricas',
+  'Prueba de partida y detención',
+  'Limpieza de filtros',
+  'Registro de parámetros de operación'
+];
+
+function seed(){
+  S.cuadrillas=[
+    {id:'q1',n:'Cuadrilla A',e:'Electromecánica',tec:['Marcelo Ibáñez','Cristian Poblete']},
+    {id:'q2',n:'Cuadrilla B',e:'Instrumentación',tec:['Jorge Sandoval','Nicolás Aguirre']},
+    {id:'q3',n:'Cuadrilla C',e:'Mecánica pesada',tec:['Héctor Riquelme','Álvaro Meza','Diego Fuentes']}
+  ];
+  const cl=[
+    ['Agrícola Valle Verde SpA','Planta procesadora Vicuña','Vicuña','mensual',5],
+    ['Pisquera Los Nichos Ltda','Bodega y embotellado','Paihuano','mensual',5],
+    ['Minera Talcuna S.A.','Planta de chancado','Coquimbo','quincenal',3],
+    ['Frigorífico Costa Norte','Cámaras de frío','La Serena','mensual',3],
+    ['Packing El Tambo SpA','Línea de embalaje','Ovalle','bimestral',7],
+    ['Aguas del Elqui S.A.','Estación de bombeo 3','Vicuña','mensual',2],
+    ['Áridos Cordillera Ltda','Planta de áridos','Andacollo','bimestral',7],
+    ['Vitivinícola Andes SpA','Sala de máquinas','Vicuña','trimestral',7],
+    ['Conservas del Norte Ltda','Línea de autoclave','La Serena','mensual',3],
+    ['Transportes Marín S.A.','Taller de flota','Coquimbo','bimestral',7],
+    ['Planta Lechera Elqui','Pasteurizado','Ovalle','quincenal',3],
+    ['Agroindustrial Limarí','Deshidratado','Ovalle','mensual',5]
+  ];
+  S.clientes=cl.map((c,i)=>({id:'k'+(i+1),n:c[0],faena:c[1],com:c[2],frec:c[3],sla:c[4],
+    valor:ri(9,34)*100000, ultima:addD('2026-08-31',-ri(4,70))}));
+  S.materiales=[
+    {sku:'LUB-ISO68',n:'Lubricante ISO VG68 5L',stock:18,min:8,costo:24000,precio:42000},
+    {sku:'COR-B75',n:'Correa trapecial B75',stock:6,min:6,costo:9800,precio:19500},
+    {sku:'ROD-6205',n:'Rodamiento 6205 2RS',stock:22,min:12,costo:7400,precio:16900},
+    {sku:'FIL-HID-20',n:'Filtro hidráulico 20µ',stock:4,min:6,costo:18500,precio:38000},
+    {sku:'SEL-MEC-35',n:'Sello mecánico 35 mm',stock:3,min:4,costo:41000,precio:82000},
+    {sku:'CBL-4X6',n:'Cable 4×6 mm² (metro)',stock:120,min:60,costo:3200,precio:6400},
+    {sku:'CON-TRI-40',n:'Contactor trifásico 40A',stock:5,min:4,costo:52000,precio:98000},
+    {sku:'GRA-EP2',n:'Grasa EP2 1kg',stock:14,min:8,costo:8600,precio:17800},
+    {sku:'TER-PT100',n:'Termocupla PT100',stock:7,min:5,costo:29000,precio:58000},
+    {sku:'VAL-SOL-1',n:'Válvula solenoide 1"',stock:2,min:3,costo:64000,precio:121000}
+  ];
+  let folio=3120;
+  for(let d=-14;d<=10;d++){
+    const f=addD('2026-08-31',d), dow=D(f).getDay();
+    if(dow===0||dow===6) continue;
+    S.cuadrillas.forEach(q=>{
+      const n=ri(1,2);
+      for(let k=0;k<n;k++){
+        const c=S.clientes[Math.floor(rnd()*S.clientes.length)];
+        const tipo=rnd()<0.72?'preventiva':'correctiva';
+        let est;
+        if(d<-2) est=rnd()<0.9?'cerrada':'informe';
+        else if(d<0) est=pick(['ejecutada','informe','cerrada']);
+        else if(d===0) est=pick(['programada','en_terreno','ejecutada']);
+        else est='programada';
+        const chk=CHK_BASE.slice(0,ri(6,10)).map(n=>({n,ok:null,obs:''}));
+        if(est!=='programada'){ chk.forEach(x=>{x.ok=rnd()<0.86}); }
+        const mats=[]; const nm=ri(0,3);
+        for(let m=0;m<nm;m++){const mm=S.materiales[Math.floor(rnd()*S.materiales.length)];
+          if(!mats.find(x=>x.sku===mm.sku)) mats.push({sku:mm.sku,c:ri(1,3)})}
+        const o={id:'o'+(++folio),folio:'OS-'+folio,cli:c.id,tipo,f,cuad:q.id,est,
+          equipo:pick(['Bomba centrífuga P-101','Compresor de tornillo C-2','Motor eléctrico 75 HP','Chancador secundario','Cinta transportadora CT-4','Unidad condensadora UC-1','Reductor SEW 15 kW','Autoclave A-3','Ventilador centrífugo V-2']),
+          chk,mats,horas:ri(3,9),fotos:ri(2,7),
+          informe:{generado:null,enviado:null,minutos:0},
+          notas:[{f:addD(f,-ri(2,12)),t:'Orden programada según contrato de mantención'}]};
+        if(est==='ejecutada'||est==='informe'||est==='cerrada') o.notas.push({f,t:'Mantención ejecutada en faena por '+q.n});
+        if(est==='informe'||est==='cerrada'){o.informe.generado=f;o.informe.minutos=0;o.notas.push({f,t:'Informe generado automáticamente al cerrar la orden'})}
+        if(est==='cerrada'){const e=addD(f,ri(1,2));o.informe.enviado=e;o.notas.push({f:e,t:'Informe enviado al cliente'})}
+        S.ordenes.push(o);
+      }
+    });
+  }
+  reglas(); evaluar(true);
+}
+const cli=o=>S.clientes.find(c=>c.id===o.cli)||{n:'—'};
+const cuad=o=>S.cuadrillas.find(q=>q.id===o.cuad)||{n:'—'};
+const valorOS=o=>{const c=cli(o); return c.valor+o.mats.reduce((a,m)=>{const mm=S.materiales.find(x=>x.sku===m.sku);return a+(mm?mm.precio*m.c:0)},0)};
+const hallazgos=o=>o.chk.filter(x=>x.ok===false);
+const FREC={quincenal:15,mensual:30,bimestral:60,trimestral:90};
+
+/* ---- MOTOR DE REGLAS ---- */
+function reglas(){
+  S.reglas=[
+  {id:'r1',n:'Informe automático al cerrar',on:true,disparos:0,
+   cuando:'una orden pasa a <b>Ejecutada</b> con checklist completo',
+   entonces:'generar el informe técnico con hallazgos, materiales, horas y fotos',
+   ahorro:'reemplaza 100 min de digitación por orden'},
+  {id:'r2',n:'Informe listo sin enviar',on:true,disparos:0,
+   cuando:'un informe lleva <i>más de 1 día</i> generado y no se ha enviado',
+   entonces:'alertar a operaciones antes de que se venza el plazo del contrato',
+   ahorro:'protege el cumplimiento de plazo'},
+  {id:'r3',n:'Hallazgo crítico',on:true,disparos:0,
+   cuando:'el checklist registra <i>3 o más ítems no conformes</i>',
+   entonces:'avisar de inmediato, sin esperar el informe formal',
+   ahorro:'el cliente se entera el mismo día, no en 10'},
+  {id:'r4',n:'Mantención de contrato vencida',on:true,disparos:0,
+   cuando:'un cliente supera la <i>frecuencia pactada</i> sin visita',
+   entonces:'proponer la orden de servicio para programarla',
+   ahorro:'evita incumplir el contrato sin notarlo'},
+  {id:'r5',n:'Material bajo mínimo',on:true,disparos:0,
+   cuando:'el consumo en terreno deja un material <i>bajo su mínimo</i>',
+   entonces:'generar la sugerencia de compra',
+   ahorro:'elimina el cuaderno de bodega'},
+  {id:'r6',n:'Cuadrilla sobrecargada',on:false,disparos:0,
+   cuando:'una cuadrilla supera <i>45 horas</i> programadas en la semana',
+   entonces:'avisar antes de comprometer una visita más',
+   ahorro:'evita prometer lo que no se puede cumplir'}
+  ];
+}
+function evaluar(silent){
+  let n=0; const R=id=>S.reglas.find(r=>r.id===id);
+  if(R('r1').on) S.ordenes.filter(o=>o.est==='ejecutada'&&!o.informe.generado&&o.chk.every(x=>x.ok!==null)).forEach(o=>{
+    o.informe.generado=S.hoy; o.est='informe'; R('r1').disparos++; n++;
+    S.hhAhorradas+=100/60; S.informesAuto++;
+    o.notas.push({f:S.hoy,t:'Informe generado automáticamente al cerrar la orden'});
+    log('auto','Informe generado — '+o.folio+' · '+cli(o).n,o.folio);
+  });
+  if(R('r2').on) S.ordenes.filter(o=>o.est==='informe'&&o.informe.generado&&!o.informe.enviado&&days(o.informe.generado,S.hoy)>1&&!o._r2).forEach(o=>{
+    o._r2=true; R('r2').disparos++; n++;
+    alerta('warn','Informe listo sin enviar hace '+days(o.informe.generado,S.hoy)+' días',
+      o.folio+' · '+cli(o).n+' · plazo del contrato: '+cli(o).sla+' días hábiles.',o.folio);
+  });
+  if(R('r3').on) S.ordenes.filter(o=>hallazgos(o).length>=3&&!o._r3&&o.est!=='programada').forEach(o=>{
+    o._r3=true; R('r3').disparos++; n++;
+    const h=hallazgos(o);
+    alerta('crit','Hallazgo crítico en '+cli(o).faena,o.folio+' · '+o.equipo+' · '+h.length+' ítems no conformes: '+h.slice(0,2).map(x=>x.n).join(', ')+'. Aviso enviado el mismo día.',o.folio);
+    log('auto','Hallazgo crítico notificado — '+o.folio,o.folio);
+  });
+  if(R('r4').on) S.clientes.filter(c=>days(c.ultima,S.hoy)>FREC[c.frec]&&!c._r4).forEach(c=>{
+    c._r4=true; R('r4').disparos++; n++;
+    alerta('warn','Mantención de contrato vencida',c.n+' · '+c.faena+' · frecuencia '+c.frec+', última visita hace '+days(c.ultima,S.hoy)+' días. Orden propuesta para programar.',c.id);
+    log('auto','Contrato vencido detectado — '+c.n,c.id);
+  });
+  if(R('r5').on) S.materiales.filter(m=>m.stock<m.min&&!m._r5).forEach(m=>{
+    m._r5=true; R('r5').disparos++; n++;
+    alerta('warn','Material bajo mínimo: '+m.n,m.sku+' · quedan '+m.stock+' (mínimo '+m.min+'). Compra sugerida por '+CLP((m.min*2-m.stock)*m.costo)+'.',m.sku);
+  });
+  if(R('r6').on) S.cuadrillas.filter(q=>{
+    const h=S.ordenes.filter(o=>o.cuad===q.id&&o.f>=S.hoy&&o.f<=addD(S.hoy,6)).reduce((a,o)=>a+o.horas,0);
+    return h>45&&!q._r6}).forEach(q=>{
+    q._r6=true; R('r6').disparos++; n++;
+    const h=S.ordenes.filter(o=>o.cuad===q.id&&o.f>=S.hoy&&o.f<=addD(S.hoy,6)).reduce((a,o)=>a+o.horas,0);
+    alerta('warn','Cuadrilla sobrecargada',q.n+' tiene '+h+' h programadas esta semana. No comprometer más visitas.',q.id);
+  });
+  if(n&&!silent) toast(n+' automatización'+(n>1?'es':'')+' ejecutada'+(n>1?'s':''),'Revisa la bandeja de alertas','auto');
+  return n;
+}
+function simular(){
+  S.dia++; S.hoy=addD(S.hoy,1);
+  while([0,6].includes(D(S.hoy).getDay())) S.hoy=addD(S.hoy,1);
+  S.semana=S.hoy;
+  let ej=0,env=0;
+  S.ordenes.forEach(o=>{
+    if(o.est==='programada'&&o.f<=S.hoy&&rnd()<0.7){
+      o.est='ejecutada'; o.chk.forEach(x=>x.ok=rnd()<0.86); ej++;
+      const c=S.clientes.find(x=>x.id===o.cli); if(c){c.ultima=S.hoy;c._r4=false}
+      o.mats.forEach(m=>{const mm=S.materiales.find(x=>x.sku===m.sku); if(mm) mm.stock=Math.max(0,mm.stock-m.c)});
+      o.notas.push({f:S.hoy,t:'Mantención ejecutada en faena por '+cuad(o).n});
+    } else if(o.est==='en_terreno'&&rnd()<0.85){
+      o.est='ejecutada'; o.chk.forEach(x=>{if(x.ok===null)x.ok=rnd()<0.86}); ej++;
+      o.notas.push({f:S.hoy,t:'Mantención finalizada en faena'});
+    } else if(o.est==='informe'&&o.informe.generado&&!o.informe.enviado&&rnd()<0.55){
+      o.informe.enviado=S.hoy; o.est='cerrada'; env++;
+      o.notas.push({f:S.hoy,t:'Informe enviado al cliente'});
+    }
+  });
+  const n=evaluar();
+  log('sis','Día simulado — '+fmtL(S.hoy)+' · '+ej+' órdenes ejecutadas, '+env+' informes enviados, '+n+' automatizaciones');
+  toast('Avanzamos a '+fmtD(S.hoy),ej+' mantenciones ejecutadas · '+env+' informes enviados · '+n+' reglas disparadas',n?'auto':'');
+  render();
+}
+
+/* ===== RENDER ===== */
+function ico(d){return '<svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="'+d+'"/></svg>'}
+function navRender(){
+  const vis=ROLES[S.role].ver,gs=[];
+  MODULOS.filter(m=>vis.includes(m.id)).forEach(m=>{if(!gs.includes(m.g))gs.push(m.g)});
+  $('#nav').innerHTML=gs.map(g=>'<div class="grp">'+g+'</div>'+
+    MODULOS.filter(m=>m.g===g&&vis.includes(m.id)).map(m=>{
+      const nu=m.id==='alertas'?S.alertas.filter(a=>!a.leida).length:0;
+      return '<button data-v="'+m.id+'" class="'+(S.view===m.id?'on':'')+'">'+ico(m.ic)+'<span>'+m.n+'</span>'+(nu?'<span class="bdg">'+nu+'</span>':'')+'</button>'}).join('')).join('');
+}
+function tabla(id,cols,rows,onclick,rowcls){
+  const q=(S.q[id]||'').toLowerCase(), s=S.sort[id]||{};
+  let r=rows.filter(x=>!q||cols.some(c=>String(c.raw?c.raw(x):c.v(x)).toLowerCase().includes(q)));
+  if(s.k!=null){const c=cols[s.k];r=[...r].sort((a,b)=>{const A=c.sv?c.sv(a):c.raw?c.raw(a):c.v(a),B=c.sv?c.sv(b):c.raw?c.raw(b):c.v(b);
+    return (typeof A==='number'?A-B:String(A).localeCompare(String(B)))*(s.d?-1:1)})}
+  return `<div class="tw"><table><thead><tr>${cols.map((c,i)=>`<th data-t="${id}" data-i="${i}">${c.h}${s.k===i?`<span class="ar">${s.d?'▼':'▲'}</span>`:''}</th>`).join('')}</tr></thead>
+  <tbody>${r.length?r.map(x=>`<tr class="${rowcls?rowcls(x):''}" ${onclick?`data-row="${onclick(x)}"`:''}>${cols.map(c=>`<td class="${c.c||''}">${c.v(x)}</td>`).join('')}</tr>`).join(''):`<tr><td colspan="${cols.length}"><div class="empty">Sin resultados</div></td></tr>`}</tbody></table></div>`;
+}
+const toolbar=(id,ph,extra)=>`<div class="tools"><input type="search" data-q="${id}" placeholder="${ph}" value="${esc(S.q[id]||'')}">${extra||''}</div>`;
+
+const tAntes=PROC_ANTES.reduce((a,p)=>a+p.t,0);
+const tDespues=PROC_DESPUES.reduce((a,p)=>a+p.t,0);
+
+function vPanel(){
+  const act=S.ordenes.filter(o=>o.est!=='cerrada');
+  const hoy=S.ordenes.filter(o=>o.f===S.hoy);
+  const pendInf=S.ordenes.filter(o=>o.est==='informe');
+  const cerradas=S.ordenes.filter(o=>o.est==='cerrada');
+  const slaOk=cerradas.filter(o=>o.informe.enviado&&days(o.f,o.informe.enviado)<=cli(o).sla).length;
+  const vencidos=S.clientes.filter(c=>days(c.ultima,S.hoy)>FREC[c.frec]);
+  const bajo=S.materiales.filter(m=>m.stock<m.min);
+  const porCuad=S.cuadrillas.map(q=>({n:q.n,v:S.ordenes.filter(o=>o.cuad===q.id&&o.f>=S.hoy&&o.f<=addD(S.hoy,6)).reduce((a,o)=>a+o.horas,0)}));
+  const mxq=Math.max(1,...porCuad.map(p=>p.v));
+  const tiempoInf=cerradas.length?cerradas.reduce((a,o)=>a+(o.informe.enviado?days(o.f,o.informe.enviado):0),0)/cerradas.length:0;
+
+  return `<div class="banner"><div><b>Línea base del diagnóstico (E1)</b> — antes de BIPLOT el informe llegaba al cliente entre 8 y 12 días después de la visita, cada orden pasaba por 100 minutos de digitación en oficina, y ${PROC_ANTES.filter(p=>p.kill).length} de los ${PROC_ANTES.length} pasos del proceso no agregaban ningún valor. El módulo <b>Proceso</b> muestra cuáles se eliminaron.</div></div>
+  <div class="kpis">
+    <div class="kpi"><span class="lbl">Órdenes activas</span><span class="v">${act.length}</span><span class="d">${hoy.length} programadas hoy</span></div>
+    <div class="kpi g"><span class="lbl">Días hasta el informe</span><span class="v">${tiempoInf.toFixed(1)}</span><span class="d"><span class="delta up">antes: 9,4 d</span></span></div>
+    <div class="kpi g"><span class="lbl">Informes automáticos</span><span class="v">${S.ordenes.filter(o=>o.informe.generado).length}</span><span class="d">nadie los escribió</span></div>
+    <div class="kpi ${pendInf.length>4?'w':''}"><span class="lbl">Listos sin enviar</span><span class="v">${pendInf.length}</span><span class="d">requieren visto bueno</span></div>
+    <div class="kpi ${vencidos.length?'c':'g'}"><span class="lbl">Contratos vencidos</span><span class="v">${vencidos.length}</span><span class="d">sobre la frecuencia pactada</span></div>
+    <div class="kpi ${bajo.length?'c':'g'}"><span class="lbl">Materiales bajo mínimo</span><span class="v">${bajo.length}</span><span class="d">descontados desde terreno</span></div>
+  </div>
+  <div class="banner brass"><div><b>Higiene de proceso (arquetipo D):</b> el proceso pasó de ${PROC_ANTES.length} a ${PROC_DESPUES.length} pasos y de <b>${tAntes} minutos</b> a <b>${tDespues} minutos</b> por orden de servicio. Con ${S.ordenes.length} órdenes en el período, son <b>${Math.round((tAntes-tDespues)*S.ordenes.length/60)} horas</b> que dejaron de gastarse. Ninguna de ellas requirió tecnología: sólo dejar de hacer lo que no aportaba.</div></div>
+  <div class="grid2">
+    <div class="card"><div class="card-h"><h3>Carga de cuadrillas</h3><div class="sp"></div><span class="hint">horas programadas, próximos 7 días</span></div>
+      <div class="card-b"><div class="bars">${porCuad.map(p=>`<div class="bar wide"><span class="nm">${p.n}</span><div class="tr"><div class="fl ${p.v>45?'c':p.v>35?'w':'g'}" style="width:${p.v/mxq*100}%"></div></div><span class="vv">${p.v} h</span></div>`).join('')}</div>
+      <p class="hint" style="margin-top:11px">Sobre 45 horas semanales la cuadrilla no puede tomar más visitas. La regla que lo avisa está apagada: enciéndela en Automatizaciones.</p></div></div>
+    <div class="card"><div class="card-h"><h3>Cumplimiento de plazo</h3><div class="sp"></div><span class="pill ${slaOk/Math.max(1,cerradas.length)>.9?'p-good':'p-warn'}">${pct(cerradas.length?slaOk/cerradas.length:0)}</span></div>
+      <div class="card-b"><div class="bars">
+        ${S.clientes.slice(0,6).map(c=>{const os=S.ordenes.filter(o=>o.cli===c.id&&o.est==='cerrada');
+          const ok=os.filter(o=>o.informe.enviado&&days(o.f,o.informe.enviado)<=c.sla).length;
+          const r=os.length?ok/os.length:1;
+          return `<div class="bar wide"><span class="nm" title="${esc(c.n)}">${esc(c.n)}</span><div class="tr"><div class="fl ${r<.8?'c':r<.95?'w':'g'}" style="width:${r*100}%"></div></div><span class="vv">${pct(r)}</span></div>`}).join('')}
+      </div><p class="hint" style="margin-top:11px">Plazo pactado por contrato para entregar el informe. Antes se incumplía sistemáticamente.</p></div></div>
+  </div>
+  <div class="card"><div class="card-h"><h3>Requiere tu atención</h3><div class="sp"></div><span class="pill ${S.alertas.filter(a=>!a.leida).length?'p-crit':'p-good'}">${S.alertas.filter(a=>!a.leida).length} sin leer</span></div>
+    <div class="card-b">${S.alertas.filter(a=>!a.leida).length?`<div class="alerts">${S.alertas.filter(a=>!a.leida).slice(0,6).map(alertHTML).join('')}</div>`:'<div class="empty">Nada pendiente.</div>'}</div></div>`;
+}
+
+function vPrograma(){
+  const base=S.semana, dow=D(base).getDay();
+  const lun=addD(base,-(dow===0?6:dow-1));
+  const ds=[0,1,2,3,4].map(i=>addD(lun,i));
+  let g=`<div class="pg"><div class="hd">Cuadrilla</div>`;
+  ds.forEach(f=>{g+=`<div class="hd">${D(f).toLocaleDateString('es-CL',{weekday:'long'})}<span>${fmt(f)}</span></div>`});
+  S.cuadrillas.forEach(q=>{
+    g+=`<div class="cr"><b>${q.n}</b><span>${q.e}</span><span>${q.tec.length} técnicos</span></div>`;
+    ds.forEach(f=>{
+      const os=S.ordenes.filter(o=>o.cuad===q.id&&o.f===f);
+      g+=`<div class="cel">${os.map(o=>`<div class="os o-${EST[o.est].c}" data-os="${o.id}">
+        <span class="f">${o.folio} · ${o.horas}h</span>
+        <span class="c">${esc(cli(o).n)}</span>
+        <span class="t">${esc(o.equipo)}</span></div>`).join('')||'<span class="hint" style="text-align:center;padding:12px 0">—</span>'}</div>`;
+    });
+  });
+  g+='</div>';
+  const hs=S.cuadrillas.map(q=>ds.reduce((a,f)=>a+S.ordenes.filter(o=>o.cuad===q.id&&o.f===f).reduce((b,o)=>b+o.horas,0),0));
+  return `<div class="tools">
+    <button class="btn sm" data-sem="-7">← Semana anterior</button>
+    <span class="mono" style="font-size:.8rem">${fmt(lun)} – ${fmt(ds[4])}</span>
+    <button class="btn sm" data-sem="7">Semana siguiente →</button>
+    <button class="btn sm" data-sem="0">Hoy</button>
+    <div style="flex:1"></div>
+    <span class="hint">${hs.reduce((a,b)=>a+b,0)} h programadas · clic en una orden para abrirla</span></div>
+  <div class="banner"><div>Este componente es <b>núcleo BIPLOT reutilizado del caso 03</b>: allá asignaba sillones dentales, aquí asigna cuadrillas en faena. Es el mismo problema — repartir tiempo de un recurso limitado — y no se volvió a construir.</div></div>
+  <div class="pgwrap">${g}</div>`;
+}
+
+function vTerreno(){
+  const f=S.q['os-est']||'';
+  let rows=S.ordenes; if(f) rows=rows.filter(o=>o.est===f);
+  const cols=[
+    {h:'Folio',c:'k',v:o=>o.folio},
+    {h:'Fecha',v:o=>fmt(o.f),sv:o=>o.f},
+    {h:'Cliente / faena',v:o=>esc(cli(o).n)+'<br><span class="hint">'+esc(cli(o).faena)+'</span>',raw:o=>cli(o).n+' '+cli(o).faena},
+    {h:'Equipo',v:o=>esc(o.equipo),raw:o=>o.equipo},
+    {h:'Tipo',v:o=>`<span class="pill ${o.tipo==='correctiva'?'p-warn':'p-info'}">${o.tipo}</span>`,raw:o=>o.tipo},
+    {h:'Cuadrilla',v:o=>cuad(o).n,raw:o=>cuad(o).n},
+    {h:'Estado',v:o=>`<span class="pill ${EST[o.est].p}">${EST[o.est].n}</span>`,raw:o=>EST[o.est].n},
+    {h:'Hallazgos',c:'num',v:o=>{const h=hallazgos(o).length;return h?`<span class="pill ${h>=3?'p-crit':'p-warn'}">${h}</span>`:'—'},sv:o=>hallazgos(o).length},
+    {h:'Horas',c:'num',v:o=>o.horas,sv:o=>o.horas},
+    {h:'Valor',c:'num',v:o=>K(valorOS(o)),sv:o=>valorOS(o)}
+  ];
+  return `<div class="banner"><div>El checklist, las fotos y los materiales se capturan <b>en la faena</b>, no al volver a la oficina. Abre una orden ejecutada y marca los ítems: al cerrarla, el informe se genera solo.</div></div>
+  ${toolbar('os','Buscar folio, cliente, equipo…',
+    `<select data-q="os-est"><option value="">Todos los estados</option>${Object.entries(EST).map(([k,v])=>`<option value="${k}" ${f===k?'selected':''}>${v.n}</option>`).join('')}</select>
+     <span class="hint" style="margin-left:auto">${rows.length} órdenes</span>`)}
+  <div class="card">${tabla('os',cols,rows,o=>o.id,o=>hallazgos(o).length>=3?'danger':'')}</div>`;
+}
+
+function vInformes(){
+  const inf=S.ordenes.filter(o=>o.informe.generado);
+  const cols=[
+    {h:'Folio',c:'k',v:o=>o.folio},
+    {h:'Cliente',v:o=>esc(cli(o).n),raw:o=>cli(o).n},
+    {h:'Visita',v:o=>fmt(o.f),sv:o=>o.f},
+    {h:'Generado',v:o=>fmt(o.informe.generado)+' <span class="pill p-brass">auto</span>',sv:o=>o.informe.generado},
+    {h:'Enviado',v:o=>o.informe.enviado?fmt(o.informe.enviado):'<span class="pill p-warn">pendiente</span>',sv:o=>o.informe.enviado||'zzz'},
+    {h:'Días visita→envío',c:'num',v:o=>{if(!o.informe.enviado)return '—';const d=days(o.f,o.informe.enviado);
+      return `<span class="pill ${d>cli(o).sla?'p-crit':'p-good'}">${d} d</span>`},sv:o=>o.informe.enviado?days(o.f,o.informe.enviado):99},
+    {h:'Plazo contrato',c:'num',v:o=>cli(o).sla+' d',sv:o=>cli(o).sla},
+    {h:'Hallazgos',c:'num',v:o=>hallazgos(o).length||'—',sv:o=>hallazgos(o).length}
+  ];
+  const pend=inf.filter(o=>!o.informe.enviado);
+  const enviados=inf.filter(o=>o.informe.enviado);
+  const enPlazo=enviados.filter(o=>days(o.f,o.informe.enviado)<=cli(o).sla).length;
+  return `<div class="banner brass"><div><b>Cada informe de esta tabla se escribió solo.</b> Antes, armar uno tomaba 100 minutos de digitación entre el checklist, las fotos y el Word. Ahora se genera al cerrar la orden desde la faena, con los mismos datos que el técnico ya capturó.</div></div>
+  <div class="kpis">
+    <div class="kpi g"><span class="lbl">Informes generados</span><span class="v">${inf.length}</span><span class="d">100% automáticos</span></div>
+    <div class="kpi ${pend.length>4?'w':''}"><span class="lbl">Pendientes de envío</span><span class="v">${pend.length}</span><span class="d">esperan visto bueno</span></div>
+    <div class="kpi g"><span class="lbl">Dentro de plazo</span><span class="v">${pct(enviados.length?enPlazo/enviados.length:0)}</span><span class="d">antes: 34%</span></div>
+    <div class="kpi g"><span class="lbl">HH liberadas</span><span class="v">${Math.round(inf.length*100/60)}<span style="font-size:.5em"> h</span></span><span class="d">100 min por informe</span></div>
+  </div>
+  ${toolbar('in','Buscar informe o cliente…','<span class="hint" style="margin-left:auto">Clic para ver el documento generado</span>')}
+  <div class="card">${tabla('in',cols,inf,o=>o.id,o=>!o.informe.enviado&&days(o.informe.generado,S.hoy)>1?'danger':'')}</div>`;
+}
+
+function vContratos(){
+  const cs=S.clientes.map(c=>{
+    const os=S.ordenes.filter(o=>o.cli===c.id);
+    const cerr=os.filter(o=>o.est==='cerrada');
+    const ok=cerr.filter(o=>o.informe.enviado&&days(o.f,o.informe.enviado)<=c.sla).length;
+    return {...c,os:os.length,vencido:days(c.ultima,S.hoy)>FREC[c.frec],
+      dias:days(c.ultima,S.hoy),cumpl:cerr.length?ok/cerr.length:1,
+      facturado:cerr.reduce((a,o)=>a+valorOS(o),0)};
+  });
+  const cols=[
+    {h:'Cliente',v:c=>esc(c.n),raw:c=>c.n},
+    {h:'Faena',v:c=>esc(c.faena),raw:c=>c.faena},
+    {h:'Comuna',v:c=>c.com,raw:c=>c.com},
+    {h:'Frecuencia',v:c=>`<span class="pill p-gray">${c.frec}</span>`,raw:c=>c.frec},
+    {h:'Última visita',c:'num',v:c=>`<span class="pill ${c.vencido?'p-crit':c.dias>FREC[c.frec]*0.8?'p-warn':'p-good'}">${c.dias} d</span>`,sv:c=>c.dias},
+    {h:'Plazo informe',c:'num',v:c=>c.sla+' d',sv:c=>c.sla},
+    {h:'Cumplimiento',c:'num',v:c=>`<span class="pill ${c.cumpl<.8?'p-crit':c.cumpl<.95?'p-warn':'p-good'}">${pct(c.cumpl)}</span>`,sv:c=>c.cumpl},
+    {h:'Órdenes',c:'num',v:c=>c.os,sv:c=>c.os},
+    {h:'Facturado',c:'num',v:c=>K(c.facturado),sv:c=>c.facturado}
+  ];
+  const venc=cs.filter(c=>c.vencido);
+  return `<div class="kpis">
+    <div class="kpi"><span class="lbl">Contratos activos</span><span class="v">${cs.length}</span><span class="d">mantención programada</span></div>
+    <div class="kpi ${venc.length?'c':'g'}"><span class="lbl">Con visita vencida</span><span class="v">${venc.length}</span><span class="d">el sistema los detecta solo</span></div>
+    <div class="kpi"><span class="lbl">Facturado del período</span><span class="v">${K(cs.reduce((a,c)=>a+c.facturado,0))}</span><span class="d">órdenes cerradas</span></div>
+    <div class="kpi g"><span class="lbl">Cumplimiento medio</span><span class="v">${pct(cs.reduce((a,c)=>a+c.cumpl,0)/cs.length)}</span><span class="d">plazo de entrega de informes</span></div>
+  </div>
+  ${venc.length?`<div class="banner bad"><div><b>${venc.length} contratos con la mantención vencida.</b> Antes esto se notaba cuando el cliente llamaba a reclamar. La regla lo detecta comparando la última visita contra la frecuencia pactada y propone la orden.</div></div>`:''}
+  ${toolbar('co','Buscar cliente, faena o comuna…')}
+  <div class="card">${tabla('co',cols,cs,null,c=>c.vencido?'danger':'')}</div>`;
+}
+
+function vMateriales(){
+  const cons={};
+  S.ordenes.filter(o=>o.est!=='programada').forEach(o=>o.mats.forEach(m=>cons[m.sku]=(cons[m.sku]||0)+m.c));
+  const cols=[
+    {h:'SKU',c:'k',v:m=>m.sku},
+    {h:'Material',v:m=>esc(m.n),raw:m=>m.n},
+    {h:'Stock',c:'num',v:m=>`<span class="pill ${m.stock<m.min?'p-crit':m.stock<m.min*1.5?'p-warn':'p-good'}">${m.stock}</span>`,sv:m=>m.stock},
+    {h:'Mínimo',c:'num',v:m=>m.min,sv:m=>m.min},
+    {h:'Consumo terreno',c:'num',v:m=>cons[m.sku]||0,sv:m=>cons[m.sku]||0},
+    {h:'Costo',c:'num',v:m=>CLP(m.costo),sv:m=>m.costo},
+    {h:'Precio',c:'num',v:m=>CLP(m.precio),sv:m=>m.precio},
+    {h:'Valor stock',c:'num',v:m=>K(m.stock*m.costo),sv:m=>m.stock*m.costo}
+  ];
+  const bajo=S.materiales.filter(m=>m.stock<m.min);
+  return `<div class="banner"><div><b>El cuaderno de bodega se eliminó.</b> Cuando el técnico registra un material en la faena, el descuento ocurre al cerrar la orden. Era el paso 14 del proceso antiguo y consumía 15 minutos por visita.</div></div>
+  <div class="kpis">
+    <div class="kpi"><span class="lbl">SKU en bodega</span><span class="v">${S.materiales.length}</span><span class="d">materiales de mantención</span></div>
+    <div class="kpi"><span class="lbl">Valor inventario</span><span class="v">${K(S.materiales.reduce((a,m)=>a+m.stock*m.costo,0))}</span><span class="d">a costo</span></div>
+    <div class="kpi ${bajo.length?'c':'g'}"><span class="lbl">Bajo mínimo</span><span class="v">${bajo.length}</span><span class="d">compra sugerida automática</span></div>
+    <div class="kpi"><span class="lbl">Consumo del período</span><span class="v">${Object.values(cons).reduce((a,b)=>a+b,0)}</span><span class="d">unidades desde terreno</span></div>
+  </div>
+  ${toolbar('ma','Buscar material o SKU…')}
+  <div class="card">${tabla('ma',cols,S.materiales,null,m=>m.stock<m.min?'danger':'')}</div>`;
+}
+
+function vProceso(){
+  const elim=PROC_ANTES.filter(p=>p.kill);
+  const tElim=elim.reduce((a,p)=>a+p.t,0);
+  return `<div class="banner brass"><div><b>Esta es la fase E1 y el arquetipo D, hechos producto.</b> El mapa de la izquierda se levantó acompañando cuatro visitas completas con cronómetro. Los pasos tachados no se automatizaron: <b>se eliminaron</b>. Es la intervención más barata y la de mayor retorno, y no requiere una línea de código.</div></div>
+  <div class="kpis">
+    <div class="kpi"><span class="lbl">Pasos antes</span><span class="v">${PROC_ANTES.length}</span><span class="d">${tAntes} min por orden</span></div>
+    <div class="kpi g"><span class="lbl">Pasos después</span><span class="v">${PROC_DESPUES.length}</span><span class="d">${tDespues} min por orden</span></div>
+    <div class="kpi c"><span class="lbl">Pasos eliminados</span><span class="v">${elim.length}</span><span class="d">${tElim} min que no aportaban valor</span></div>
+    <div class="kpi g"><span class="lbl">Ahorro por orden</span><span class="v">${tAntes-tDespues}<span style="font-size:.5em"> min</span></span><span class="d">${Math.round((tAntes-tDespues)*S.ordenes.length/60)} h en ${S.ordenes.length} órdenes</span></div>
+  </div>
+  <div class="proc">
+    <div class="pcol"><span class="lbl">Antes · ${PROC_ANTES.length} pasos · ${tAntes} min</span>
+      ${PROC_ANTES.map((p,i)=>`<div class="pstep ${p.kill?'kill':''}">
+        <span class="n">${String(i+1).padStart(2,'0')}</span>
+        <span class="tt"><b>${esc(p.n)}</b>${p.why?`<span>${esc(p.why)}</span>`:''}</span>
+        <span class="tm">${p.t} min</span></div>`).join('')}
+    </div>
+    <div class="pcol"><span class="lbl">Después · ${PROC_DESPUES.length} pasos · ${tDespues} min</span>
+      ${PROC_DESPUES.map((p,i)=>`<div class="pstep ${p.auto?'auto':''}">
+        <span class="n">${String(i+1).padStart(2,'0')}</span>
+        <span class="tt"><b>${esc(p.n)}</b>${p.auto?'<span>lo hace el sistema, sin persona</span>':''}</span>
+        <span class="tm">${p.t?p.t+' min':'0 min'}</span></div>`).join('')}
+    </div>
+  </div>
+  <div class="card"><div class="card-h"><h3>Por qué se eliminó cada paso</h3></div><div class="card-b">
+    <div class="bars">${elim.map(p=>`<div class="bar wide"><span class="nm">${esc(p.n)}</span><div class="tr"><div class="fl c" style="width:${p.t/45*100}%"></div></div><span class="vv">${p.t} min</span></div>`).join('')}</div>
+    <p class="hint" style="margin-top:12px">Los ${elim.length} comparten la misma causa: <b>el dato se capturaba en un lugar y se volvía a escribir en otro</b>. Capturarlo bien una vez, en origen, elimina todos los pasos que existían sólo para moverlo.</p>
+  </div></div>`;
+}
+
+function vAutos(){
+  const tot=S.reglas.reduce((a,r)=>a+r.disparos,0);
+  return `<div class="banner"><div><b>Mismo motor de reglas que los tres casos anteriores.</b> Aquí actúa después de la higiene: primero se eliminaron los seis pasos inútiles, y sólo entonces se automatizó lo que quedaba. Automatizar antes de limpiar habría dejado desperdicio corriendo más rápido.</div></div>
+  <div class="kpis">
+    <div class="kpi"><span class="lbl">Reglas activas</span><span class="v">${S.reglas.filter(r=>r.on).length}<span style="font-size:.5em">/${S.reglas.length}</span></span><span class="d">configurables sin programar</span></div>
+    <div class="kpi g"><span class="lbl">Ejecuciones</span><span class="v">${tot}</span><span class="d">tareas que nadie hizo</span></div>
+    <div class="kpi g"><span class="lbl">HH liberadas</span><span class="v">${S.hhAhorradas.toFixed(1)}<span style="font-size:.5em"> h</span></span><span class="d">sólo por informes automáticos</span></div>
+    <div class="kpi"><span class="lbl">Días simulados</span><span class="v">${S.dia}</span><span class="d">reloj de la demo</span></div>
+  </div>
+  <div class="rules">${S.reglas.map(r=>`<div class="rule ${r.on?'':'off'}">
+    <button class="sw" role="switch" aria-checked="${r.on}" data-rule="${r.id}" aria-label="Activar ${esc(r.n)}"></button>
+    <div class="body"><h4>${esc(r.n)}</h4>
+      <div class="logic"><b>CUANDO</b> ${r.cuando} <b>ENTONCES</b> ${r.entonces}</div>
+      <div class="meta"><span>Valor: ${esc(r.ahorro)}</span><span>·</span><span>Ejecutada ${r.disparos} ${r.disparos===1?'vez':'veces'}</span></div></div>
+    <span class="pill ${r.on?'p-good':'p-gray'}">${r.on?'activa':'apagada'}</span></div>`).join('')}</div>`;
+}
+function alertHTML(a){
+  const m={crit:['crit','!'],warn:['','!'],info:['info','i'],good:['good','✓']};
+  const [cls,ch]=m[a.nivel]||['','!'];
+  return `<div class="alert ${cls} ${a.leida?'read':''}" data-alert="${a.id}"><span class="ic">${ch}</span>
+    <span class="tx"><b>${esc(a.titulo)}</b><span>${esc(a.detalle)}</span></span>
+    <span class="hint mono" style="font-size:.66rem">${fmt(a.f)}</span></div>`;
+}
+function vAlertas(){
+  const nl=S.alertas.filter(a=>!a.leida);
+  return `<div class="tools"><span class="hint">${S.alertas.length} alertas · ${nl.length} sin leer. Generadas por el motor de reglas sobre lo que capturan las cuadrillas en faena.</span>
+  <div style="flex:1"></div><button class="btn sm" id="marcar">Marcar todas como leídas</button></div>
+  <div class="card"><div class="card-b"><div class="alerts">${S.alertas.length?S.alertas.map(alertHTML).join(''):'<div class="empty">Sin alertas</div>'}</div></div></div>`;
+}
+function vBitacora(){
+  const T={auto:['p-brass','AUTO'],sis:['p-gray','SIS'],os:['p-acc','OS']};
+  const cols=[
+    {h:'Fecha',c:'k',v:b=>fmt(b.f),sv:b=>b.f},
+    {h:'Tipo',v:b=>`<span class="pill ${(T[b.tipo]||T.sis)[0]}">${(T[b.tipo]||T.sis)[1]}</span>`,raw:b=>b.tipo},
+    {h:'Evento',v:b=>esc(b.txt)},
+    {h:'Referencia',c:'k',v:b=>b.ref||'—'},
+    {h:'Quién',v:b=>esc(b.quien),raw:b=>b.quien}
+  ];
+  return `<div class="banner"><div>Las marcadas <b>AUTO</b> las hizo el sistema. En este caso son sobre todo informes que se escribieron solos: cada uno equivale a 100 minutos de oficina que dejaron de existir.</div></div>
+  ${toolbar('bi','Buscar en la bitácora…')}<div class="card">${tabla('bi',cols,S.bitacora,null)}</div>`;
+}
+
+/* ---- detalle de orden ---- */
+function abrirOS(id){
+  const o=S.ordenes.find(x=>x.id===id); if(!o) return; S.sel=id;
+  const c=cli(o), h=hallazgos(o);
+  $('#ph').textContent=o.folio+' · '+c.n;
+  $('#phs').textContent=c.faena+' · '+o.equipo+' · '+fmtD(o.f);
+  const editable=o.est==='en_terreno'||o.est==='ejecutada'||o.est==='programada';
+  $('#pb').innerHTML=`
+    <div style="display:flex;gap:7px;flex-wrap:wrap"><span class="pill ${EST[o.est].p}">${EST[o.est].n}</span>
+      <span class="pill ${o.tipo==='correctiva'?'p-warn':'p-info'}">${o.tipo}</span>
+      ${h.length>=3?`<span class="pill p-crit">${h.length} no conformidades</span>`:''}</div>
+    <dl class="dl">
+      <dt>Cuadrilla</dt><dd>${esc(cuad(o).n)}</dd>
+      <dt>Técnicos</dt><dd style="font-size:.78rem">${esc(cuad(o).tec.join(', '))}</dd>
+      <dt>Horas en faena</dt><dd class="mono">${o.horas} h</dd>
+      <dt>Frecuencia contrato</dt><dd>${c.frec}</dd>
+      <dt>Plazo del informe</dt><dd class="mono">${c.sla} días hábiles</dd>
+    </dl>
+    <div class="sect"><span class="lbl">Checklist de mantención (capturado en faena)</span>
+      <div class="chk">${o.chk.map((x,i)=>`<div class="chkrow ${x.ok===true?'ok':x.ok===false?'bad':''}" ${editable?`data-chk="${i}"`:''}>
+        <span class="chkbox">${x.ok===true?'✓':x.ok===false?'✕':''}</span>
+        <span>${esc(x.n)}</span>
+        <span class="pill ${x.ok===true?'p-good':x.ok===false?'p-crit':'p-gray'}">${x.ok===true?'conforme':x.ok===false?'no conforme':'pendiente'}</span></div>`).join('')}</div>
+      ${editable?'<p class="hint">Haz clic en un ítem para cambiar su estado. Con 3 o más no conformidades el sistema avisa al cliente el mismo día.</p>':''}
+    </div>
+    <div class="sect"><span class="lbl">Materiales utilizados</span>
+      ${o.mats.length?`<div class="chk">${o.mats.map(m=>{const mm=S.materiales.find(x=>x.sku===m.sku)||{n:m.sku,precio:0};
+        return `<div class="chkrow" style="cursor:default"><span class="chkbox" style="border:none;background:none;color:var(--accent)">${m.c}×</span><span>${esc(mm.n)}</span><span class="mono" style="font-size:.76rem">${CLP(mm.precio*m.c)}</span></div>`}).join('')}</div>`:'<p class="hint">Sin materiales registrados.</p>'}
+    </div>
+    <div class="sect"><span class="lbl">Registro fotográfico</span>
+      <div class="fotos">${Array.from({length:o.fotos},(_,i)=>`<div class="foto">IMG_${String(i+1).padStart(3,'0')}</div>`).join('')}</div>
+      <p class="hint">Adjuntadas desde el dispositivo en faena. Antes se descargaban y pegaban a mano: 20 min por informe.</p>
+    </div>
+    <div class="tot"><span>Valor de la orden</span><span class="v">${CLP(valorOS(o))}</span></div>
+    <div class="sect"><span class="lbl">Historial</span>
+      <div class="tl">${o.notas.slice().reverse().map(n=>`<div class="it"><span class="t">${fmt(n.f)}</span>${esc(n.t)}</div>`).join('')}</div></div>`;
+  const acc=[];
+  if(o.est==='programada') acc.push('<button class="btn pri" data-act="terreno">Iniciar en faena</button>');
+  if(o.est==='en_terreno'||o.est==='programada') acc.push('<button class="btn gd" data-act="ejecutar">Cerrar orden en faena</button>');
+  if(o.informe.generado) acc.push('<button class="btn" data-act="ver-informe">Ver informe</button>');
+  if(o.est==='informe') acc.push('<button class="btn pri" data-act="enviar">Enviar al cliente</button>');
+  acc.push('<button class="btn" data-act="cerrar">Cerrar</button>');
+  $('#pf').innerHTML=acc.join('');
+  open();
+}
+function verInforme(id){
+  const o=S.ordenes.find(x=>x.id===id); if(!o) return; S.sel=id;
+  const c=cli(o), h=hallazgos(o), ok=o.chk.filter(x=>x.ok===true);
+  $('#ph').textContent='Informe '+o.folio;
+  $('#phs').textContent=c.n+' · '+fmtD(o.f);
+  $('#pb').innerHTML=`<div class="doc">
+    <div class="doc-h">
+      <div class="l"><h4>Servicios Elqui SpA</h4><p>Mantención industrial electromecánica<br>77.220.145-6 · Ruta 41 km 12, Vicuña</p></div>
+      <div class="r">INFORME TÉCNICO<br><b style="color:var(--accent)">${o.folio}</b><br>${fmtD(o.f)}<br>${o.tipo}</div>
+    </div>
+    <dl class="dl" style="font-size:.79rem">
+      <dt>Cliente</dt><dd>${esc(c.n)}</dd>
+      <dt>Faena</dt><dd>${esc(c.faena)}, ${c.com}</dd>
+      <dt>Equipo intervenido</dt><dd>${esc(o.equipo)}</dd>
+      <dt>Cuadrilla</dt><dd>${esc(cuad(o).n)}</dd>
+      <dt>Horas de intervención</dt><dd class="mono">${o.horas} h</dd>
+    </dl>
+    <div><span class="lbl">1 · Resultado del checklist</span>
+      <table style="margin-top:7px"><thead><tr><th>Ítem verificado</th><th style="text-align:right">Resultado</th></tr></thead><tbody>
+      ${o.chk.map(x=>`<tr><td>${esc(x.n)}</td><td style="text-align:right"><span class="pill ${x.ok?'p-good':'p-crit'}">${x.ok?'conforme':'no conforme'}</span></td></tr>`).join('')}
+      </tbody></table></div>
+    ${h.length?`<div><span class="lbl">2 · No conformidades detectadas</span>
+      <table style="margin-top:7px"><tbody>${h.map((x,i)=>`<tr><td style="width:26px" class="mono">${i+1}</td><td>${esc(x.n)}</td></tr>`).join('')}</tbody></table></div>`:''}
+    ${o.mats.length?`<div><span class="lbl">${h.length?3:2} · Materiales utilizados</span>
+      <table style="margin-top:7px"><thead><tr><th>Material</th><th style="text-align:right">Cant.</th><th style="text-align:right">Valor</th></tr></thead><tbody>
+      ${o.mats.map(m=>{const mm=S.materiales.find(x=>x.sku===m.sku)||{n:m.sku,precio:0};
+        return `<tr><td>${esc(mm.n)}</td><td class="num">${m.c}</td><td class="num">${CLP(mm.precio*m.c)}</td></tr>`}).join('')}
+      </tbody></table></div>`:''}
+    <div><span class="lbl">Registro fotográfico</span>
+      <div class="fotos" style="margin-top:7px">${Array.from({length:Math.min(4,o.fotos)},(_,i)=>`<div class="foto">IMG_${String(i+1).padStart(3,'0')}</div>`).join('')}</div></div>
+    <p class="note">Documento generado automáticamente por el sistema al cerrar la orden de servicio en faena, el ${fmtD(o.informe.generado)}. Antes, este mismo informe se digitaba en Word a partir del checklist de papel y tomaba <b>100 minutos</b> por orden, con una demora promedio de <b>9,4 días</b> hasta llegar al cliente.${o.informe.enviado?' Enviado el '+fmtD(o.informe.enviado)+' ('+days(o.f,o.informe.enviado)+' días desde la visita, plazo pactado '+c.sla+').':' <b>Pendiente de envío.</b>'}</p>
+  </div>`;
+  const acc=['<button class="btn" data-act="volver">← Volver a la orden</button>'];
+  if(!o.informe.enviado) acc.push('<button class="btn pri" data-act="enviar">Enviar al cliente</button>');
+  $('#pf').innerHTML=acc.join('');
+  open();
+}
+function open(){$('#panel').classList.add('on');$('#scrim').classList.add('on')}
+function close(){$('#panel').classList.remove('on');$('#scrim').classList.remove('on');S.sel=null}
+
+const VIEWS={panel:vPanel,programa:vPrograma,terreno:vTerreno,informes:vInformes,contratos:vContratos,materiales:vMateriales,proceso:vProceso,autos:vAutos,alertas:vAlertas,bitacora:vBitacora};
+const TITLES={panel:['Panel','Cuadrillas, informes y cumplimiento de contrato'],programa:['Programa','Asignación semanal de cuadrillas'],terreno:['Órdenes de servicio','Lo que se captura en faena'],informes:['Informes','Generados solos al cerrar la orden'],contratos:['Contratos','Mantención programada y cumplimiento'],materiales:['Materiales','Consumo descontado desde terreno'],proceso:['Proceso','Los seis pasos que se eliminaron'],autos:['Automatizaciones','Las reglas que corren sobre el proceso limpio'],alertas:['Alertas','Todo lo que el sistema detectó'],bitacora:['Bitácora','Registro completo de actividad']};
+function render(){
+  if(!ROLES[S.role].ver.includes(S.view)) S.view=ROLES[S.role].ver[0];
+  navRender();
+  $$('.view').forEach(v=>v.classList.remove('on'));
+  const el=$('#v-'+S.view); el.classList.add('on'); el.innerHTML=VIEWS[S.view]();
+  $('#vt').textContent=TITLES[S.view][0]; $('#vs').textContent=TITLES[S.view][1];
+  $('#hoy').textContent=fmtL(S.hoy);
+}
+document.addEventListener('click',e=>{
+  const t=e.target;
+  const nb=t.closest('nav button'); if(nb){S.view=nb.dataset.v;render();return}
+  if(t.closest('#pclose')||t.closest('#scrim')){close();return}
+  const sm=t.closest('[data-sem]'); if(sm){const v=+sm.dataset.sem;
+    S.semana=v===0?S.hoy:addD(S.semana,v);render();return}
+  const th=t.closest('th[data-t]'); if(th){const id=th.dataset.t,i=+th.dataset.i,s=S.sort[id]||{};
+    S.sort[id]=(s.k===i)?{k:i,d:!s.d}:{k:i,d:false};render();return}
+  const tr=t.closest('tr[data-row]'); if(tr){const id=tr.dataset.row;
+    if(S.view==='informes') verInforme(id); else abrirOS(id); return}
+  const os=t.closest('[data-os]'); if(os){abrirOS(os.dataset.os);return}
+  const ck=t.closest('[data-chk]'); if(ck&&S.sel){const o=S.ordenes.find(x=>x.id===S.sel);
+    const i=+ck.dataset.chk, x=o.chk[i];
+    x.ok = x.ok===null?true : x.ok===true?false : null;
+    if(o.est==='programada') o.est='en_terreno';
+    o._r3=false; abrirOS(o.id); return}
+  const sw=t.closest('.sw'); if(sw){const r=S.reglas.find(x=>x.id===sw.dataset.rule);r.on=!r.on;
+    log('sis','Regla "'+r.n+'" '+(r.on?'activada':'apagada'));toast('Regla '+(r.on?'activada':'apagada'),r.n);if(r.on)evaluar();render();return}
+  const al=t.closest('[data-alert]'); if(al){const a=S.alertas.find(x=>x.id===al.dataset.alert);a.leida=!a.leida;render();return}
+  if(t.closest('#marcar')){S.alertas.forEach(a=>a.leida=true);render();return}
+  if(t.closest('#simBtn')){simular();return}
+  const ac=t.closest('[data-act]'); if(!ac)return;
+  const o=S.ordenes.find(x=>x.id===S.sel);
+  switch(ac.dataset.act){
+    case 'terreno': o.est='en_terreno'; o.notas.push({f:S.hoy,t:'Cuadrilla llegó a faena'});
+      log('os','Inicio en faena — '+o.folio,o.folio); toast('En faena',o.folio+' · '+cuad(o).n);
+      abrirOS(o.id); render(); break;
+    case 'ejecutar': {
+      o.chk.forEach(x=>{if(x.ok===null)x.ok=true});
+      o.est='ejecutada';
+      if(o.f>S.hoy){ o.f=S.hoy; o.notas.push({f:S.hoy,t:'Visita adelantada: la cuadrilla ejecutó hoy'}); }
+      o.mats.forEach(m=>{const mm=S.materiales.find(x=>x.sku===m.sku); if(mm){mm.stock=Math.max(0,mm.stock-m.c);mm._r5=false}});
+      const c=S.clientes.find(x=>x.id===o.cli); if(c){c.ultima=S.hoy;c._r4=false}
+      o.notas.push({f:S.hoy,t:'Orden cerrada desde la faena. Materiales descontados de bodega automáticamente.'});
+      log('os','Orden ejecutada — '+o.folio,o.folio);
+      const antes=S.reglas.find(r=>r.id==='r1').disparos;
+      evaluar(true);
+      const gen=S.reglas.find(r=>r.id==='r1').disparos>antes;
+      toast(gen?'Informe generado solo':'Orden cerrada',
+        gen?o.folio+' · el informe ya está listo, sin digitación':'Enciende la regla de informe automático para generarlo',gen?'auto':'');
+      if(gen) verInforme(o.id); else abrirOS(o.id);
+      render(); break}
+    case 'ver-informe': verInforme(S.sel); break;
+    case 'volver': abrirOS(S.sel); break;
+    case 'enviar': o.informe.enviado=S.hoy; o.est='cerrada'; o._r2=false;
+      o.notas.push({f:S.hoy,t:'Informe enviado al cliente'});
+      log('os','Informe enviado — '+o.folio+' · '+days(o.f,S.hoy)+' días desde la visita',o.folio);
+      toast('Informe enviado',cli(o).n+' · '+days(o.f,S.hoy)+' días desde la visita (plazo '+cli(o).sla+')','good');
+      close(); render(); break;
+    case 'cerrar': close(); break;
+  }
+});
+document.addEventListener('input',e=>{const q=e.target.closest('[data-q]');
+  if(q){S.q[q.dataset.q]=q.value;const k=q.dataset.q;render();
+    const el=document.querySelector('[data-q="'+k+'"]');if(el&&el.type==='search'){el.focus();el.setSelectionRange(el.value.length,el.value.length)}}});
+document.addEventListener('change',e=>{
+  if(e.target.id==='role'){S.role=e.target.value;log('sis','Cambio de perfil a '+ROLES[S.role].t);
+    toast('Perfil: '+ROLES[S.role].t,ROLES[S.role].n);render();return}
+  const q=e.target.closest('select[data-q]'); if(q){S.q[q.dataset.q]=q.value;render()}});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')close()});
+
+seed(); render();
+setTimeout(()=>toast('Demo lista','Empieza por “Proceso”: ahí están los 6 pasos que se eliminaron','auto'),700);
+})();
+</script>

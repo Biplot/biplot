@@ -4,6 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 32 32%27%3E%3Crect width=%2732%27 height=%2732%27 rx=%277%27 fill=%27%230E2A47%27/%3E%3Ccircle cx=%2723%27 cy=%2711%27 r=%273%27 fill=%27%23FF6B4A%27/%3E%3C/svg%3E">
+<style>.steps li::before{grid-row:span 2}</style>
 <title>Servicios Elqui Terreno</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -261,7 +263,7 @@ td.k{font-family:var(--m);font-size:.76rem;color:var(--accent);font-weight:600;w
 
 <div class="app">
   <aside class="side">
-    <div class="brand"><span class="biz">Servicios Elqui</span><span class="by"><i></i>BIPLOT OS · Demo</span></div>
+    <div class="brand"><span class="biz">Servicios Elqui</span><span class="by"><i></i>BiPlot OS · Demo</span></div>
     <nav id="nav"></nav>
     <div class="side-foot"><div class="rolebox"><span class="lbl">Perfil activo</span>
       <select id="role">
@@ -301,7 +303,7 @@ td.k{font-family:var(--m);font-size:.76rem;color:var(--accent);font-weight:600;w
 <script>
 (function(){
 "use strict";
-/* ===== NÚCLEO BIPLOT ===== */
+/* ===== NÚCLEO BiPlot ===== */
 const $=(s,r)=>(r||document).querySelector(s), $$=(s,r)=>[...(r||document).querySelectorAll(s)];
 const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const CLP=n=>'$'+Math.round(n).toLocaleString('es-CL');
@@ -591,7 +593,7 @@ function vPanel(){
   const mxq=Math.max(1,...porCuad.map(p=>p.v));
   const tiempoInf=cerradas.length?cerradas.reduce((a,o)=>a+(o.informe.enviado?days(o.f,o.informe.enviado):0),0)/cerradas.length:0;
 
-  return `<div class="banner"><div><b>Línea base del diagnóstico (E1)</b> — antes de BIPLOT el informe llegaba al cliente entre 8 y 12 días después de la visita, cada orden pasaba por 100 minutos de digitación en oficina, y ${PROC_ANTES.filter(p=>p.kill).length} de los ${PROC_ANTES.length} pasos del proceso no agregaban ningún valor. El módulo <b>Proceso</b> muestra cuáles se eliminaron.</div></div>
+  return `<div class="banner"><div><b>Línea base del diagnóstico (E1)</b> — antes de BiPlot el informe llegaba al cliente entre 8 y 12 días después de la visita, cada orden pasaba por 100 minutos de digitación en oficina, y ${PROC_ANTES.filter(p=>p.kill).length} de los ${PROC_ANTES.length} pasos del proceso no agregaban ningún valor. El módulo <b>Proceso</b> muestra cuáles se eliminaron.</div></div>
   <div class="kpis">
     <div class="kpi"><span class="lbl">Órdenes activas</span><span class="v">${act.length}</span><span class="d">${hoy.length} programadas hoy</span></div>
     <div class="kpi g"><span class="lbl">Días hasta el informe</span><span class="v">${tiempoInf.toFixed(1)}</span><span class="d"><span class="delta up">antes: 9,4 d</span></span></div>
@@ -642,7 +644,7 @@ function vPrograma(){
     <button class="btn sm" data-sem="0">Hoy</button>
     <div style="flex:1"></div>
     <span class="hint">${hs.reduce((a,b)=>a+b,0)} h programadas · clic en una orden para abrirla</span></div>
-  <div class="banner"><div>Este componente es <b>núcleo BIPLOT reutilizado del caso 03</b>: allá asignaba sillones dentales, aquí asigna cuadrillas en faena. Es el mismo problema — repartir tiempo de un recurso limitado — y no se volvió a construir.</div></div>
+  <div class="banner"><div>Este componente es <b>núcleo BiPlot reutilizado del caso 03</b>: allá asignaba sillones dentales, aquí asigna cuadrillas en faena. Es el mismo problema — repartir tiempo de un recurso limitado — y no se volvió a construir.</div></div>
   <div class="pgwrap">${g}</div>`;
 }
 

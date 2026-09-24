@@ -40,7 +40,7 @@
   function ficha(id, f) {
     var p = PERSONAL[id];
     return '<div class="k-halo"></div>' +
-      '<p class="k-eyebrow">El personal de BiPlot</p>' +
+      '<p class="k-eyebrow">El personal</p>' +
       '<h1 class="k-nombre">' + esc(p.nombre) + '</h1>' +
       '<p class="k-rol">' + esc(p.rol) + '<span class="k-fases">' + p.fases.join(' · ') + '</span></p>' +
       '<p class="k-lema">' + esc(p.lema) + '</p>' +
@@ -48,16 +48,17 @@
       '<div class="k-burbuja">«' + esc(p.frase) + '»</div>' +
       '<svg class="k-placa" viewBox="0 0 300 190" aria-hidden="true">' + E.defs() + E.placaTarjeta(p, true).replace('class="pj pj-', 'class="pj pj-retrato pj-') + '</svg>' +
       '<ul class="k-rasgos">' + p.rasgos.map(function (r) { return '<li>' + esc(r) + '</li>'; }).join('') + '</ul>' +
-      pie(f === '9x16' ? 'Conócelo en <b>biplot.cl/oficina</b>' : null);
+      pie(f === '9x16' ? (p.genero === 'f' ? 'Conócela' : 'Conócelo') + ' en <b>biplot.cl/oficina</b>' : null);
   }
 
   /* ── La oficina ── */
   function oficina(f) {
     var titulo = f === 'og' ? 'La oficina de BiPlot' : 'Pasa.<br>Así trabajamos.';
     return '<div class="k-halo"></div>' +
-      '<p class="k-eyebrow">' + (f === 'og' ? 'biplot.cl/oficina' : 'La oficina de BiPlot') + '</p>' +
+      '<p class="k-eyebrow">' + 'La oficina' + '</p>' +
       '<h1 class="k-titulo">' + titulo + '</h1>' +
-      '<p class="k-bajada">Dos socios y un equipo de siete, en una oficina que puedes recorrer.</p>' +
+      '<p class="k-bajada">Dos socios y siete especialistas dibujados, en una oficina que puedes recorrer.</p>' +
+      (f === 'og' ? '<p class="k-url-og">biplot.cl/oficina</p>' : '') +
       '<svg class="k-escena" id="k-escena" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"></svg>' +
       (f === 'og' ? '' : pie('Recórrela en <b>biplot.cl/oficina</b>'));
   }
@@ -68,7 +69,7 @@
     var filas = f === '9x16'
       ? [[['grilla', -260], ['faro', 0], ['bucle', 260]], [['celda', -175], ['tamandua', 175]], [['lupe', -175], ['pepa', 175]]]
       : [[['bucle', -375], ['grilla', -125], ['faro', 125], ['celda', 375]], [['tamandua', -250], ['lupe', 0], ['pepa', 250]]];
-    var alto = f === '9x16' ? 1040 : 800, esc0 = f === '9x16' ? 0.92 : 0.86, dy = f === '9x16' ? 320 : 330, y0 = f === '9x16' ? 290 : 300;
+    var alto = f === '9x16' ? 1040 : 800, esc0 = f === '9x16' ? 0.92 : 0.86, dy = f === '9x16' ? 290 : 330, y0 = f === '9x16' ? 290 : 300;
     var s = '<svg class="k-grupo" viewBox="-540 0 1080 ' + alto + '" aria-hidden="true">' + E.defs();
     // tarima grande
     var tb = y0 + dy * (filas.length - 1) / 2 + 40, ta = 520, tbb = ta / 2;
@@ -87,7 +88,7 @@
       });
     });
     s += '</svg>';
-    return '<div class="k-halo"></div><p class="k-eyebrow">La oficina de BiPlot</p><h1 class="k-titulo">El personal</h1>' +
+    return '<div class="k-halo"></div><p class="k-eyebrow">La oficina</p><h1 class="k-titulo">El personal</h1>' +
       '<p class="k-bajada">Siete especialistas, uno por parte del trabajo. Los reconoces por su placa.</p>' + s +
       pie(f === '9x16' ? 'Conócelos en <b>biplot.cl/oficina</b>' : null);
   }
@@ -98,7 +99,7 @@
       return '<li><span class="k-cod">' + fa.id + '</span><span class="k-fase"><b>' + esc(fa.nombre) + '</b>' + esc(fa.texto) + '</span><span class="k-quien">' +
         fa.quien.map(function (q) { return '<svg viewBox="-150 -280 300 300" aria-hidden="true">' + E.svg(q) + '</svg>'; }).join('') + '</span></li>';
     }).join('');
-    return '<div class="k-halo"></div><p class="k-eyebrow">El motor de BiPlot</p><h1 class="k-titulo">¿Quién hace qué?</h1>' +
+    return '<div class="k-halo"></div><p class="k-eyebrow">El motor</p><h1 class="k-titulo">¿Quién hace qué?</h1>' +
       '<ol class="k-motor">' + filas + '</ol>' +
       '<p class="k-cierre">Tú hablas con los socios. <span>Ellos arman el proyecto contigo y se lo pasan al equipo.</span></p>' + pie();
   }

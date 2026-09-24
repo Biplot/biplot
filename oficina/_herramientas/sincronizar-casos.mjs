@@ -18,6 +18,10 @@ const origen = path.join(nucleo, '02-casos');
 const destino = path.join(aqui, '..', 'casos');
 if (!fs.existsSync(origen)) { console.error('No encontré ' + origen + ' (usa --nucleo <ruta>)'); process.exit(1); }
 
+// Ícono de pestaña (sin él, /favicon.ico da 404) y un arreglo de estilo que falta en el núcleo:
+// en «Tres actividades concretas» el texto tras <strong> caía en la columna del número (una palabra por línea).
+const ICONO = '<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 32 32%27%3E%3Crect width=%2732%27 height=%2732%27 rx=%277%27 fill=%27%230E2A47%27/%3E%3Ccircle cx=%2723%27 cy=%2711%27 r=%273%27 fill=%27%23FF6B4A%27/%3E%3C/svg%3E">\n';
+const ARREGLOS = '<style>.steps li::before{grid-row:span 2}</style>\n';
 const CASOS = ['01-taller-aguilar', '02-distribuidora-punto-sur', '03-clinica-dental', '04-mantencion-terreno'];
 let n = 0;
 for (const caso of CASOS) {
@@ -28,11 +32,13 @@ for (const caso of CASOS) {
     let html = fs.readFileSync(de, 'utf8');
     // El documento enlaza su demo publicada en claude.ai: aquí apunta a la copia vecina.
     html = html.replace(/https:\/\/claude\.ai\/code\/artifact\/[0-9a-f-]{36}/g, 'demo.html');
+    // La marca se escribe BiPlot (el manual prohíbe BIPLOT); en el núcleo quedan textos antiguos.
+    html = html.replace(/BIPLOT/g, 'BiPlot');
     // Las piezas del núcleo son fragmentos para artifacts (sin doctype ni head): aquí se sirven solas.
     // Sin doctype el navegador entra en modo quirks; se agrega la cabecera mínima y noindex.
     if (!/^\s*<!doctype/i.test(html)) {
       html = '<!doctype html>\n<html lang="es">\n<head>\n<meta charset="utf-8">\n<meta name="viewport" content="width=device-width, initial-scale=1">\n' +
-        '<meta name="robots" content="noindex">\n' + html;
+        '<meta name="robots" content="noindex">\n' + ICONO + ARREGLOS + html;
     } else if (!/name="robots"/.test(html)) {
       html = html.replace(/<head>/i, '<head>\n<meta name="robots" content="noindex">');
     }

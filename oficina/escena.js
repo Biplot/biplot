@@ -362,7 +362,7 @@
     (function () {
       var top = P(17.1, 2.2, 2.2);
       obj(17.1, 2.2, '<line x1="' + r1(top[0]) + '" y1="' + r1(top[1] - 30) + '" x2="' + r1(top[0]) + '" y2="' + r1(top[1]) + '" stroke="' + C.a300 + '" stroke-width="2"/>' +
-        '<g class="saco">' + cilindro(17.1, 2.2, 0.6, 0.32, 1.55, { t: '#2B2B2E', l: C.grafito }) +
+        '<g class="saco">' + cilindro(17.1, 2.2, 0.6, 0.32, 1.55, { t: '#22303F', l: C.grafito }) +
         (function () { var q = P(17.1, 2.2, 1.35), rx = r1(0.32 * TW * Math.SQRT2); return '<rect x="' + r1(q[0] - rx) + '" y="' + r1(q[1] - 4) + '" width="' + r1(rx * 2) + '" height="8" fill="#F2C14E"/>'; })() + '</g>');
     })();
     obj(19, 1.3, caja(18.2, 0.95, 0, 1.5, 0.6, 0.62, { t: C.a600, l: C.a700, r: C.a800 }));
@@ -527,7 +527,7 @@
       var cx = 23.1, cy = 14.2;
       var s = cilindro(cx, cy, 0, 0.42, 2.7, { t: '#2A5A88', l: '#123754' });
       var p = P(cx, cy, 1.9);
-      s += '<g transform="translate(' + r1(p[0] - 17) + ' ' + r1(p[1] - 22) + ') scale(.34)">' + E.isotipo + '</g>';
+      s += '<g transform="translate(' + r1(p[0] - 21) + ' ' + r1(p[1] - 30) + ') scale(.42)">' + E.isotipo + '</g>';
       s += '<text x="' + r1(p[0]) + '" y="' + r1(p[1] + 28) + '" text-anchor="middle" font-weight="700" font-size="12.5"><tspan font-family="Space Mono, monospace" fill="' + C.niebla + '" letter-spacing="-.7">Bi</tspan><tspan font-family="Space Grotesk, sans-serif" fill="' + C.cian + '">Plot</tspan></text>';
       obj(cx, cy, s);
     })();
@@ -544,13 +544,13 @@
     var zonas = [
       { id: 'recepcion', nombre: 'Recepción', caja: [18.0, 14.6, 24, 20, 2.6], foco: [20.8, 16.6, 1.0], zoom: 1.7 },
       { id: 'muro', nombre: 'Muro del personal', caja: [6.8, 15.8, 13.8, 16.5, 2.0], foco: [10.3, 16.2, 1.0], zoom: 1.9 },
-      { id: 'sala-e1', nombre: 'Sala E1', caja: [0, 10.8, 5.4, 15.6, 2.2], foco: [2.7, 13.2, 0.8], zoom: 1.9 },
+      { id: 'sala-e1', nombre: 'Sala de diagnóstico', caja: [0, 10.8, 5.4, 15.6, 2.2], foco: [2.7, 13.2, 0.8], zoom: 1.9 },
       { id: 'estanteria', nombre: 'Estantería del núcleo', caja: [0, 4.7, 4.6, 10.6, 2.6], foco: [1.8, 7.7, 1.2], zoom: 1.8 },
       { id: 'socios', nombre: 'Oficina de los socios', caja: [0, 15.6, 5.4, 20, 2.2], foco: [2.7, 17.8, 0.8], zoom: 1.9 },
       { id: 'nuhome', nombre: 'Nu Home 360', caja: [4, 0, 8, 4.6, 2.3], foco: [6, 2.3, 1.1], zoom: 2.1 },
       { id: 'fundos', nombre: 'Fundos 360', caja: [8, 0, 12, 4.6, 2.3], foco: [10, 2.3, 1.1], zoom: 2.1 },
-      { id: 'haru', nombre: 'Haru Isidora', caja: [12, 0, 16, 4.6, 2.3], foco: [14, 2.3, 1.1], zoom: 2.1 },
-      { id: 'eleven', nombre: 'Eleven Club', caja: [16, 0, 20, 4.6, 2.3], foco: [18, 2.3, 1.1], zoom: 2.1 },
+      { id: 'haru', nombre: 'Haru 360', caja: [12, 0, 16, 4.6, 2.3], foco: [14, 2.3, 1.1], zoom: 2.1 },
+      { id: 'eleven', nombre: 'Eleven 360', caja: [16, 0, 20, 4.6, 2.3], foco: [18, 2.3, 1.1], zoom: 2.1 },
       { id: 'rumbo', nombre: 'Rumbo', caja: [20, 0, 24, 4.6, 2.3], foco: [22, 2.3, 1.1], zoom: 2.1 }
     ];
     zonas.forEach(function (z) {

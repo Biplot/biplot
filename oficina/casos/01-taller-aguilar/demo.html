@@ -4,6 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 32 32%27%3E%3Crect width=%2732%27 height=%2732%27 rx=%277%27 fill=%27%230E2A47%27/%3E%3Ccircle cx=%2723%27 cy=%2711%27 r=%273%27 fill=%27%23FF6B4A%27/%3E%3C/svg%3E">
+<style>.steps li::before{grid-row:span 2}</style>
 <title>Taller Aguilar OS</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -276,7 +278,7 @@ td.k{font-family:var(--m);font-size:.76rem;color:var(--accent);font-weight:600;w
   <aside class="side">
     <div class="brand">
       <span class="biz">Taller Aguilar</span>
-      <span class="by"><i></i>BIPLOT OS · Demo</span>
+      <span class="by"><i></i>BiPlot OS · Demo</span>
     </div>
     <nav id="nav"></nav>
     <div class="side-foot">
@@ -329,7 +331,7 @@ td.k{font-family:var(--m);font-size:.76rem;color:var(--accent);font-weight:600;w
 (function(){
 "use strict";
 /* ==================================================================
-   NÚCLEO BIPLOT — capa reutilizable entre verticales
+   NÚCLEO BiPlot — capa reutilizable entre verticales
    estado · reloj · bitácora · alertas · motor de reglas · render kit
    ================================================================== */
 const $=(s,r)=>(r||document).querySelector(s), $$=(s,r)=>[...(r||document).querySelectorAll(s)];
@@ -606,7 +608,7 @@ function vPanel(){
 
   return `
   <div class="banner">
-    <div><b>Línea base del diagnóstico (E1)</b> — antes de BIPLOT el taller perdía 8 OT/mes sin facturar, tardaba 3,2 días en cerrar una aprobación y no sabía su margen. Los indicadores de abajo se comparan contra esa medición.</div>
+    <div><b>Línea base del diagnóstico (E1)</b> — antes de BiPlot el taller perdía 8 OT/mes sin facturar, tardaba 3,2 días en cerrar una aprobación y no sabía su margen. Los indicadores de abajo se comparan contra esa medición.</div>
   </div>
   <div class="kpis">
     <div class="kpi"><span class="lbl">OT activas</span><span class="v">${act.length}</span><span class="d">${S.ots.length} en total este mes</span></div>
@@ -773,7 +775,7 @@ function vClientes(){
 
 function vAutos(){
   const tot=S.reglas.reduce((a,r)=>a+r.disparos,0);
-  return `<div class="banner"><div><b>El motor de reglas es núcleo BIPLOT</b>, no código del taller. Lo mismo corre en los otros rubros; sólo cambian las condiciones. Enciende o apaga una regla y usa <b>Simular día siguiente</b> para ver el efecto.</div></div>
+  return `<div class="banner"><div><b>El motor de reglas es núcleo BiPlot</b>, no código del taller. Lo mismo corre en los otros rubros; sólo cambian las condiciones. Enciende o apaga una regla y usa <b>Simular día siguiente</b> para ver el efecto.</div></div>
   <div class="kpis">
     <div class="kpi"><span class="lbl">Reglas activas</span><span class="v">${S.reglas.filter(r=>r.on).length}<span style="font-size:.5em">/${S.reglas.length}</span></span><span class="d">configurables sin programar</span></div>
     <div class="kpi g"><span class="lbl">Ejecuciones</span><span class="v">${tot}</span><span class="d">tareas que nadie hizo a mano</span></div>

@@ -19,7 +19,7 @@
     /* El personal. `placa` es la fase que lleva en la credencial; `fases`, todas las que cubre. */
     personal: [
       {
-        id: 'lupe', nombre: 'Lupe', rol: 'Diagnóstico', placa: 'E1', fases: ['E0', 'E1', 'E2', 'E8'],
+        id: 'lupe', nombre: 'Lupe', genero: 'f', rol: 'Diagnóstico', placa: 'E1', fases: ['E0', 'E1', 'E2', 'E8'],
         lema: 'La que pregunta primero.',
         resumen: 'Recibe a cada negocio que llega. Mira cómo se trabaja de verdad —las planillas, los chats, los pasos que nadie cuestiona— y mide cuántas horas se van en cada uno. Con eso elige el camino: primero ordenar, después automatizar y software sólo si hace falta. A los 30, 60 y 90 días vuelve a medir.',
         rasgos: ['Pregunta «¿por qué?» hasta llegar al fondo.', 'Escucha más de lo que habla.', 'No sale de una reunión sin una cifra.'],
@@ -28,7 +28,7 @@
         ahora: ['Atendiendo a quien acaba de llegar.', 'Midiendo cuántas horas se van en una planilla.', 'Armando la radiografía de un negocio.']
       },
       {
-        id: 'celda', nombre: 'Celda', rol: 'Datos', placa: 'E3', fases: ['E3', 'E4'],
+        id: 'celda', nombre: 'Celda', genero: 'f', rol: 'Datos', placa: 'E3', fases: ['E3', 'E4'],
         lema: 'La que ordena los datos.',
         resumen: 'Abre los Excel, los CSV y las exportaciones que nadie quiere abrir. Encuentra duplicados, vacíos y fórmulas rotas, arma el modelo de datos y deja escrito quién puede ver qué. Mientras los datos reales no estén cargados, no se construye nada.',
         rasgos: ['Ve un duplicado a diez filas de distancia.', 'Le tiene alergia a «final_final_v3.xlsx».', 'Es feliz cuando todo cuadra.'],
@@ -37,7 +37,7 @@
         ahora: ['Limpiando una planilla con tres hojas repetidas.', 'Cruzando dos listas de clientes.', 'Dibujando el modelo de datos.']
       },
       {
-        id: 'grilla', nombre: 'Grilla', rol: 'Diseño', placa: 'E2', fases: ['E2', 'E5'],
+        id: 'grilla', nombre: 'Grilla', genero: 'f', rol: 'Diseño', placa: 'E2', fases: ['E2', 'E5'],
         lema: 'La que dibuja antes de construir.',
         resumen: 'Convierte el diagnóstico en una maqueta que se puede tocar antes de que exista una línea de código. Diseña cada pantalla para quien la va a usar —en el celular en terreno o en el escritorio de la gerencia— y cuida que se entienda al primer vistazo.',
         rasgos: ['Todo cae en su grilla de 72 píxeles.', 'Si hay que explicarlo, lo vuelve a dibujar.', 'Prueba cada botón con el pulgar.'],
@@ -46,7 +46,7 @@
         ahora: ['Dibujando la maqueta de un cotizador.', 'Probando un botón con el pulgar.', 'Alineando todo a la grilla.']
       },
       {
-        id: 'bucle', nombre: 'Bucle', rol: 'Desarrollo', placa: 'E5', fases: ['E5'],
+        id: 'bucle', nombre: 'Bucle', genero: 'm', rol: 'Desarrollo', placa: 'E5', fases: ['E5'],
         lema: 'El que construye por rebanadas.',
         resumen: 'Construye el sistema en rebanadas finas: cada una funciona sola y se puede mostrar. Parte de lo que el equipo ya tiene resuelto, así cada proyecto arranca más adelante que el anterior.',
         rasgos: ['Escribe con seis brazos, pero entrega de a una rebanada.', 'Prefiere reutilizar antes que reinventar.', 'No suelta el café.'],
@@ -55,7 +55,7 @@
         ahora: ['Construyendo la rebanada 3.', 'Conectando el módulo de cobranza.', 'Rellenando el café.']
       },
       {
-        id: 'tamandua', nombre: 'Tamandúa', rol: 'Validación', placa: 'E6', fases: ['E6'],
+        id: 'tamandua', nombre: 'Tamandúa', genero: 'm', rol: 'Validación', placa: 'E6', fases: ['E6'],
         lema: 'El que se come los bichos.',
         resumen: 'Antes de que algo llegue al cliente, lo prueba en celular, tablet y dos tamaños de escritorio, con cada perfil de usuario y en tema claro y oscuro. Se come los errores —los bichos— antes de que alguien más los vea.',
         rasgos: ['Si se puede romper, lo rompe primero.', 'Revisa en cuatro pantallas a la vez.', 'Trabaja con linterna: los bichos se esconden.'],
@@ -64,7 +64,7 @@
         ahora: ['Probando una pantalla a 375 píxeles.', 'Revisando qué ve cada perfil.', 'Comiéndose un bicho.']
       },
       {
-        id: 'faro', nombre: 'Faro', rol: 'Puesta en marcha', placa: 'E7', fases: ['E7'],
+        id: 'faro', nombre: 'Faro', genero: 'm', rol: 'Puesta en marcha', placa: 'E7', fases: ['E7'],
         lema: 'El que se queda hasta que se usa.',
         resumen: 'Publica el sistema, lo instala en el día a día del cliente y enseña a cada perfil a usarlo, con su manual. No da el trabajo por terminado cuando se publica: lo da por terminado cuando la gente lo usa sin tener que llamarlo.',
         rasgos: ['Tiene paciencia infinita para enseñar.', 'Su luz se enciende cuando algo sale a producción.', 'Anda con el manual bajo el brazo.'],
@@ -73,7 +73,7 @@
         ahora: ['Subiendo una entrega a producción.', 'Enseñando a usar el sistema en terreno.', 'Escribiendo el manual de cada perfil.']
       },
       {
-        id: 'pepa', nombre: 'Pepa', rol: 'Cosecha', placa: 'E9', fases: ['E9'],
+        id: 'pepa', nombre: 'Pepa', genero: 'f', rol: 'Cosecha', placa: 'E9', fases: ['E9'],
         lema: 'La que guarda lo que sirve.',
         resumen: 'Cuando un proyecto cierra, recorre la oficina y se lleva lo que le sirve al próximo cliente: componentes, reglas, textos y plantillas. Sólo guarda lo que ya se usó en dos proyectos distintos. Por eso cada sistema nuevo parte con ventaja.',
         rasgos: ['Lo que sirve dos veces, lo guarda.', 'Lo que no, lo bota sin pena.', 'Sabe dónde está todo en la estantería.'],

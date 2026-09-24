@@ -54,7 +54,8 @@
 .f-og .k-eyebrow { left: 64px; top: 64px; font-size: 20px; }
 .f-og .k-titulo { left: 60px; top: 110px; width: 470px; font-size: 76px; line-height: .98; }
 .f-og .k-bajada { left: 64px; top: 300px; width: 380px; font-size: 29px; }
-.f-og .k-eyebrow, .f-og .k-titulo, .f-og .k-bajada { z-index: 2; }
+.f-og .k-eyebrow, .f-og .k-titulo, .f-og .k-bajada, .k-url-og { z-index: 2; }
+.k-url-og { left: 64px; top: 470px; font: 600 28px/1 var(--bp-f-display); color: #D5E2EE; }
 .f-og .k-escena { left: 450px; top: 0; width: 750px; height: 630px; }
 .f-og .k-halo { right: -300px; top: -200px; }
 

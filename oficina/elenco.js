@@ -349,18 +349,21 @@
   }
 
   // Credencial grande (placa) para paneles y fichas: 300 × 190.
-  function placaTarjeta(p, retrato) {
+  function placaTarjeta(p, retrato, op) {
     var cabeza = { lupe: [0, -125, .9], celda: [10, -110, .75], grilla: [0, -170, .95], bucle: [0, -150, .78], tamandua: [20, -150, .82], faro: [0, -190, .8], pepa: [0, -165, .82] }[p.id] || [0, -120, .8];
     return '<g class="placa-grande">' +
       '<rect x="0" y="0" width="300" height="190" rx="16" fill="' + C.niebla + '"/>' +
       '<path d="M0 44 V16 a16 16 0 0 1 16 -16 H284 a16 16 0 0 1 16 16 V44 Z" fill="' + C.a800 + '"/>' +
-      '<g transform="translate(14 8) scale(.28)">' + ISO + '</g>' +
+      (op && op.isoSimple
+        // Bajo 28 px el manual pide priorizar el cuadrado y el punto coral
+        ? '<rect x="14" y="8" width="28" height="28" rx="7" fill="url(#bp-sq)" stroke="#7fd8cf" stroke-width=".8"/><circle cx="33.5" cy="17.5" r="3.4" fill="#FF6B4A"/>'
+        : '<g transform="translate(14 8) scale(.28)">' + ISO + '</g>') +
       '<text x="50" y="30" font-family="Space Mono, monospace" font-weight="700" font-size="18" fill="' + C.niebla + '" letter-spacing="-1">Bi<tspan font-family="Space Grotesk, sans-serif" fill="' + C.cian + '" letter-spacing="0">Plot</tspan></text>' +
       '<text x="284" y="29" text-anchor="end" font-family="Space Grotesk, sans-serif" font-weight="600" font-size="11" letter-spacing="3" fill="' + C.a300 + '">PERSONAL</text>' +
       '<rect x="16" y="58" width="92" height="116" rx="10" fill="' + C.a800 + '"/>' +
       '<g transform="translate(' + (62 + cabeza[0] * cabeza[2] * .3) + ' ' + (160 - (cabeza[1] + 120) * .3) + ') scale(' + (cabeza[2] * .52) + ')">' + (retrato ? '<g class="pj pj-' + p.id + '">' + DIBUJOS[p.id]() + '</g>' : '') + '</g>' +
       '<text x="124" y="92" font-family="Space Grotesk, sans-serif" font-weight="700" font-size="30" fill="' + C.a800 + '" letter-spacing="-.5">' + p.nombre + '</text>' +
-      '<text x="124" y="118" font-family="Space Grotesk, sans-serif" font-weight="600" font-size="15" fill="' + C.c700 + '">' + p.rol + '</text>' +
+      '<text x="124" y="118" font-family="Space Grotesk, sans-serif" font-weight="600" font-size="15" fill="' + '#0B776D">' + p.rol + '</text>' +
       '<rect x="124" y="136" width="58" height="30" rx="8" fill="' + C.cian + '"/>' +
       '<text x="153" y="157" text-anchor="middle" font-family="Space Mono, monospace" font-weight="700" font-size="17" fill="' + C.a800 + '">' + p.placa + '</text>' +
       '<path d="M196 160 L214 146 L232 150 L252 134 L270 138" stroke="' + C.a300 + '" stroke-width="2.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>' +

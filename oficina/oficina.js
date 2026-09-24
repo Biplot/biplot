@@ -50,7 +50,7 @@
       if (ancho) m.der = r.right - pr.left + 8; else m.aba = r.bottom - pr.top;
     }
     var guia = $('#guia'); if (guia && !guia.hidden && !m.aba) m.aba = r.bottom - guia.getBoundingClientRect().top + 8;
-    var intro = $('#intro'); if (intro && !intro.hidden && !m.aba) m.aba = r.bottom - intro.getBoundingClientRect().top + 8;
+    var intro = $('#intro'); if (intro && !intro.hidden && !m.aba && window.innerWidth < 900) m.aba = r.bottom - intro.getBoundingClientRect().top + 8;
     return m;
   }
   function zAjuste() {
@@ -97,7 +97,7 @@
   function irA(obj, dur) {
     if (obj.tipo === 'actor') {
       var a = esc3.actores[obj.id], p = P(a.x, a.y, 0.9);
-      volar(p[0], p[1], zPara(window.innerWidth < 700 ? 330 : 360), dur);
+      volar(p[0], p[1], Math.min(zPara(window.innerWidth < 700 ? 330 : 360), 2.3), dur);
     } else {
       var zn = zonaPorId(obj.id); if (!zn) return;
       var q = P(zn.foco[0], zn.foco[1], zn.foco[2]);
@@ -247,11 +247,11 @@
 
   /* ── Menú: recorre la oficina ── */
   var SALAS_MENU = [
-    ['recepcion', 'Recepción', 'Donde todo parte'], ['sala-e1', 'Sala E1', 'Cómo trabajamos'],
+    ['recepcion', 'Recepción', 'Donde todo parte'], ['sala-e1', 'Sala de diagnóstico', 'Cómo trabajamos (E1)'],
     ['estanteria', 'Estantería del núcleo', 'Casos de referencia'], ['muro', 'Muro del personal', 'Los siete'],
     ['socios', 'Oficina de los socios', 'Quién te atiende']
   ];
-  var PROY_MENU = [['nuhome', 'Nu Home 360'], ['fundos', 'Fundos 360'], ['haru', 'Haru Isidora'], ['eleven', 'Eleven Club'], ['rumbo', 'Rumbo']];
+  var PROY_MENU = [['nuhome', 'Nu Home 360'], ['fundos', 'Fundos 360'], ['haru', 'Haru 360'], ['eleven', 'Eleven 360'], ['rumbo', 'Rumbo']];
   function construirMenu() {
     var h = '<h2 class="menu-t" id="recorrer-t">Recorre la oficina</h2>' +
       '<button type="button" class="menu-guia" data-guia="1"><span class="ico" aria-hidden="true">' + icono('ruta') + '</span>Hacer el recorrido guiado</button>' +
@@ -289,9 +289,12 @@
   function alternarMenu(abrirlo) {
     var cerrado = menu.classList.contains('cerrado');
     if (abrirlo === undefined) abrirlo = cerrado;
+    var angosto = window.innerWidth < 900;
+    if (abrirlo && angosto) { if (!panel.hidden) cerrarPanel(); if (!guia.hidden) { guia.hidden = true; resaltar(null); } cerrarIntro(); }
     menu.classList.toggle('cerrado', !abrirlo);
     $('#recorrer-toggle').setAttribute('aria-expanded', abrirlo ? 'true' : 'false');
-    guardar('menu', abrirlo ? '1' : '0');
+    $('#recorrer-toggle span').textContent = abrirlo && angosto ? 'Cerrar' : 'Recorrer';
+    if (!angosto) guardar('menu', abrirlo ? '1' : '0');
   }
 
   /* ── Panel ── */
@@ -301,7 +304,8 @@
     invocador = boton || document.activeElement;
     abierto = obj;
     panelCuerpo.innerHTML = obj.tipo === 'actor' ? htmlPersonaje(obj.id) : htmlZona(obj.id);
-    panel.hidden = false;
+    panel.hidden = false; document.body.classList.add('panel-abierto');
+    $('#panel-nombre').textContent = obj.tipo === 'actor' ? PERSONAL[obj.id].rol + ' · ' + PERSONAL[obj.id].placa : zonaPorId(obj.id).nombre;
     panel.setAttribute('aria-label', obj.tipo === 'actor' ? PERSONAL[obj.id].nombre : zonaPorId(obj.id).nombre);
     panel.scrollTop = 0; panelCuerpo.scrollTop = 0;
     activarMedios();
@@ -312,13 +316,14 @@
   }
   function cerrarPanel() {
     detenerMedios();
-    panel.hidden = true; abierto = null; resaltar(null);
+    panel.hidden = true; abierto = null; resaltar(null); document.body.classList.remove('panel-abierto');
     if (invocador && invocador.focus && document.contains(invocador)) invocador.focus({ preventScroll: true });
     aplicar();
   }
   $('#panel-cerrar').addEventListener('click', cerrarPanel);
   document.addEventListener('keydown', function (e) {
     if (e.key !== 'Escape') return;
+    if (window.innerWidth < 900 && !menu.classList.contains('cerrado')) { alternarMenu(false); $('#recorrer-toggle').focus(); return; }
     if ($('#lightbox') && !$('#lightbox').hidden) { cerrarLightbox(); return; }
     if (!panel.hidden) cerrarPanel();
     else if (!$('#guia').hidden) terminarGuia();
@@ -367,7 +372,7 @@
     var fases = D.fases.filter(function (f) { return f.quien.indexOf(id) > -1; });
     var ahora = p.ahora[Math.floor(Math.random() * p.ahora.length)];
     return '<div class="ficha-hero"><svg class="ficha-pj" viewBox="-140 -275 280 290" role="img" aria-label="' + esc(p.nombre + ': ' + p.look) + '">' + E.svg(id) + '</svg>' +
-      '<svg class="ficha-placa" viewBox="0 0 300 190" aria-hidden="true">' + E.placaTarjeta(p, true).replace('class="pj pj-', 'class="pj pj-retrato pj-') + '</svg></div>' +
+      '<svg class="ficha-placa" viewBox="0 0 300 190" aria-hidden="true">' + E.placaTarjeta(p, true, { isoSimple: true }).replace('class="pj pj-', 'class="pj pj-retrato pj-') + '</svg></div>' +
       '<p class="bp-etiqueta">' + esc(p.rol) + ' · ' + p.fases.join(' · ') + '</p>' +
       '<h2 id="panel-titulo" tabindex="-1">' + esc(p.nombre) + '</h2>' +
       '<p class="lema">' + esc(p.lema) + '</p>' +
@@ -377,7 +382,7 @@
       '<blockquote class="frase">«' + esc(p.frase) + '»</blockquote>' +
       '<h3>En el motor</h3><ul class="fases-mini">' + fases.map(function (f) { return '<li><span class="cod">' + f.id + '</span>' + esc(f.nombre) + '</li>'; }).join('') + '</ul>' +
       (proys.length ? '<h3>Trabajó en</h3><ul class="chips">' + proys.map(function (pr) { return '<li><a href="#" data-abrir="zona:' + pr.id + '">' + esc(pr.nombre) + '</a></li>'; }).join('') + '</ul>' : '') +
-      '<p class="look"><b>Cómo reconocerlo:</b> ' + esc(p.look) + '</p>';
+      '<p class="look"><b>Cómo ' + (p.genero === 'f' ? 'reconocerla' : 'reconocerlo') + ':</b> ' + esc(p.look) + '</p>';
   }
 
   function htmlZona(id) {
@@ -393,18 +398,18 @@
         (pr.nota ? '<p class="nota">' + esc(pr.nota) + '</p>' : '') +
         '<h3>Quién trabajó aquí</h3>' + chipsEquipo(pr.equipo);
     }
-    var cta = '<a class="bp-btn" href="' + esc(D.cta.url) + '" target="_blank" rel="noopener">Escríbenos por WhatsApp<span class="ico" aria-hidden="true">' + icono('afuera') + '</span><span class="sr">(se abre en otra pestaña)</span></a>';
+    var cta = '<a class="bp-btn" href="' + esc(D.cta.url) + '" target="_blank" rel="noopener">Agenda tu diagnóstico<span class="ico" aria-hidden="true">' + icono('afuera') + '</span><span class="sr">(se abre en otra pestaña)</span></a>';
     if (id === 'recepcion') {
       return '<div class="media"><video class="panel-video" muted loop playsinline preload="none" poster="../assets/casos/teaser-biplot-h.jpg" data-src="../assets/casos/teaser-biplot-h.mp4" aria-label="Teaser de BiPlot"></video>' +
         '<button type="button" class="media-grande" data-grande="../assets/casos/teaser-biplot-h.mp4" data-grande-v="../assets/casos/teaser-biplot-v.mp4">' + icono('play') + 'Ver con sonido</button></div>' +
         '<p class="bp-etiqueta">Recepción</p><h2 id="panel-titulo" tabindex="-1">Pasa, esta es la oficina</h2>' +
-        '<p>Somos dos socios. Detrás hay un equipo de siete: cada uno lleva una parte del trabajo, desde el primer diagnóstico hasta guardar lo que sirve para el próximo cliente.</p>' +
+        '<p>Somos dos socios. El resto del equipo lo ves aquí dibujado: siete especialistas, cada uno con una parte del trabajo, desde el primer diagnóstico hasta guardar lo que sirve para el próximo cliente.</p>' +
         '<p>Aquí te recibe Lupe. Antes de hablar de software, pregunta cómo trabajas hoy.</p>' +
         chipsEquipo(['lupe']) +
         '<h3>Cómo moverte</h3><ul class="rasgos"><li>Arrastra para moverte y usa la rueda o los botones para acercarte.</li><li>Toca a alguien del personal o una sala para ver más.</li><li>Con teclado: el menú «Recorre la oficina», las flechas y las teclas + y −.</li></ul>';
     }
     if (id === 'sala-e1') {
-      return vistaSala('sala-e1') + '<p class="bp-etiqueta">Sala E1 · Cómo trabajamos</p><h2 id="panel-titulo" tabindex="-1">Diez fases, siete especialistas</h2>' +
+      return vistaSala('sala-e1') + '<p class="bp-etiqueta">Sala de diagnóstico · E1</p><h2 id="panel-titulo" tabindex="-1">Diez fases, siete especialistas</h2>' +
         '<p>Todo proyecto pasa por el mismo motor. Primero entendemos tu negocio. Después elegimos lo justo. A veces la respuesta no es más software.</p>' +
         '<ol class="motor">' + D.fases.map(function (f) {
           return '<li><span class="cod">' + f.id + '</span><div><b>' + esc(f.nombre) + '</b><span>' + esc(f.texto) + '</span></div><span class="quien">' +
@@ -460,7 +465,7 @@
   /* ── Recorrido guiado ── */
   var GUIA = [
     ['zona', 'recepcion', 'Recepción', 'Entras y te recibe Lupe. Antes de hablar de software, pregunta cómo trabajas hoy.'],
-    ['zona', 'sala-e1', 'Sala E1', 'Aquí se hace el diagnóstico: el proceso real, los dolores en horas y pesos, y la línea base contra la que se mide todo.'],
+    ['zona', 'sala-e1', 'Sala de diagnóstico', 'Aquí se hace el diagnóstico: el proceso real, los dolores en horas y pesos, y la línea base contra la que se mide todo.'],
     ['actor', 'celda', 'Celda · Datos', 'Abre tus planillas y exportaciones, encuentra lo que no cuadra y deja los datos listos.'],
     ['actor', 'grilla', 'Grilla · Diseño', 'Dibuja la maqueta antes de construir, para que la pruebes con tu equipo.'],
     ['actor', 'bucle', 'Bucle · Desarrollo', 'Construye por rebanadas: entregas cortas que funcionan solas.'],
@@ -469,8 +474,8 @@
     ['zona', 'estanteria', 'Estantería del núcleo', 'Pepa guarda aquí lo que sirve para el próximo cliente. También están los casos de referencia.'],
     ['zona', 'nuhome', 'Sala Nu Home 360', 'Casas modulares: del primer contacto a la entrega, en una sola plataforma.'],
     ['zona', 'fundos', 'Sala Fundos 360', 'Venta de parcelas: contacto, reserva, escritura y posventa, conectados.'],
-    ['zona', 'haru', 'Sala Haru Isidora', 'Un restaurante con ventas, cocina, delivery y caja en un solo sistema.'],
-    ['zona', 'eleven', 'Sala Eleven Club', 'Una propuesta para que un gimnasio gane socios y los retenga.'],
+    ['zona', 'haru', 'Sala Haru 360', 'Un restaurante con ventas, cocina, delivery y caja en un solo sistema.'],
+    ['zona', 'eleven', 'Sala Eleven 360', 'Una propuesta para que un gimnasio gane socios y los retenga.'],
     ['zona', 'rumbo', 'Sala Rumbo', 'Nuestra app para ordenar la vida personal.'],
     ['zona', 'socios', 'Oficina de los socios', 'Y aquí te atienden los socios. ¿Conversamos?']
   ];

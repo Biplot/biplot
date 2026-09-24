@@ -4,6 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 32 32%27%3E%3Crect width=%2732%27 height=%2732%27 rx=%277%27 fill=%27%230E2A47%27/%3E%3Ccircle cx=%2723%27 cy=%2711%27 r=%273%27 fill=%27%23FF6B4A%27/%3E%3C/svg%3E">
+<style>.steps li::before{grid-row:span 2}</style>
 <title>Punto Sur Control</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -231,7 +233,7 @@ td.k{font-family:var(--m);font-size:.76rem;color:var(--accent);font-weight:600;w
 
 <div class="app">
   <aside class="side">
-    <div class="brand"><span class="biz">Distribuidora Punto Sur</span><span class="by"><i></i>BIPLOT OS · Demo</span></div>
+    <div class="brand"><span class="biz">Distribuidora Punto Sur</span><span class="by"><i></i>BiPlot OS · Demo</span></div>
     <nav id="nav"></nav>
     <div class="side-foot"><div class="rolebox"><span class="lbl">Perfil activo</span>
       <select id="role">
@@ -272,7 +274,7 @@ td.k{font-family:var(--m);font-size:.76rem;color:var(--accent);font-weight:600;w
 <script>
 (function(){
 "use strict";
-/* ===== NÚCLEO BIPLOT (idéntico al caso 01) ===== */
+/* ===== NÚCLEO BiPlot (idéntico al caso 01) ===== */
 const $=(s,r)=>(r||document).querySelector(s), $$=(s,r)=>[...(r||document).querySelectorAll(s)];
 const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const CLP=n=>(n<0?'-$':'$')+Math.abs(Math.round(n)).toLocaleString('es-CL');
@@ -563,7 +565,7 @@ function vPanel(){
   const catA=Object.entries(cats).map(([n,x])=>({n,ve:x.ve,mg:x.ve?(x.ve-x.co)/x.ve:0})).sort((a,b)=>b.ve-a.ve);
   const mxcat=Math.max(...catA.map(c=>c.ve));
 
-  return `<div class="banner"><div><b>Línea base del diagnóstico (E1)</b> — antes de BIPLOT la gerencia veía la venta a fin de mes y nada más: el margen real no se conocía, la cartera vencida se sabía cuando la contadora mandaba la planilla, y los productos vendidos a pérdida llevaban meses así. Ninguna de estas cifras existía.</div></div>
+  return `<div class="banner"><div><b>Línea base del diagnóstico (E1)</b> — antes de BiPlot la gerencia veía la venta a fin de mes y nada más: el margen real no se conocía, la cartera vencida se sabía cuando la contadora mandaba la planilla, y los productos vendidos a pérdida llevaban meses así. Ninguna de estas cifras existía.</div></div>
   <div class="kpis">
     <div class="kpi"><span class="lbl">Venta del mes</span><span class="v">${K(ve)}</span><span class="d"><span class="delta up">+9%</span> vs. mes anterior</span></div>
     <div class="kpi ${mg<.18?'w':'g'}"><span class="lbl">Margen real</span><span class="v">${pct(mg)}</span><span class="d">antes: se estimaba 28%</span></div>
@@ -695,7 +697,7 @@ function vInventario(){
 
 function vFuentes(){
   const totF=S.fuentes.reduce((a,f)=>a+f.filas,0), okF=S.fuentes.reduce((a,f)=>a+f.ok,0);
-  return `<div class="banner"><div><b>Esta es la fase E3 del pipeline hecha producto.</b> El negocio no cambió cómo trabaja: sigue facturando en su ERP y comprando con su planilla. BIPLOT lee esas fuentes, las cruza y calcula lo que ninguna de ellas podía responder por separado. Sin esta capa, todo lo demás del sistema es decoración.</div></div>
+  return `<div class="banner"><div><b>Esta es la fase E3 del pipeline hecha producto.</b> El negocio no cambió cómo trabaja: sigue facturando en su ERP y comprando con su planilla. BiPlot lee esas fuentes, las cruza y calcula lo que ninguna de ellas podía responder por separado. Sin esta capa, todo lo demás del sistema es decoración.</div></div>
   <div class="kpis">
     <div class="kpi"><span class="lbl">Fuentes conectadas</span><span class="v">${S.fuentes.length}</span><span class="d">sin cambiar el ERP existente</span></div>
     <div class="kpi"><span class="lbl">Filas leídas</span><span class="v">${totF.toLocaleString('es-CL')}</span><span class="d">en la última corrida</span></div>

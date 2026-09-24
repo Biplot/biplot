@@ -32,9 +32,9 @@ tiene una "Oficina de los socios" vacía y el texto dice que a ellos se les cono
 ## Qué hay en la oficina
 
 Recepción (Lupe atiende), muro del personal, cuatro estaciones de trabajo (Celda, Grilla, Bucle y Tamandúa), el tubo
-"A producción" de Faro, la sala E1 con el motor en la pizarra, la estantería del núcleo (Pepa, los cuatro casos de
+"A producción" de Faro, la sala de diagnóstico (E1) con el motor en la pizarra, la estantería del núcleo (Pepa, los cuatro casos de
 referencia, el Recetario y "Seis décadas"), la oficina de los socios, un café con el reloj en hora de Chile y cinco
-salas de proyecto: **Nu Home 360, Fundos 360, Haru Isidora, Eleven Club y Rumbo**. Tamandúa lleva una entrega de
+salas de proyecto: **Nu Home 360, Fundos 360, Haru 360** (Haru Isidora), **Eleven 360** (Eleven Club) **y Rumbo**. Tamandúa lleva una entrega de
 Bucle a Faro, que la sube por el tubo; Lupe va y vuelve de la sala E1; Pepa se lleva pepas de las estaciones.
 
 Material de Collahuasi (Pica Florece u otro) no está incluido: requiere confirmación de Hernán.
@@ -69,8 +69,9 @@ Grotesk y Space Mono). Los videos se cargan sólo al abrir el panel de su sala.
   cambia el id en `SALAS`, sus muebles y su entrada en `datos.js`; para sumar una sexta hay que ensanchar la planta
   (`ANCHO`).
 - **Casos de referencia**: la fuente es `biplot-nucleo/02-casos`. Si cambian allá, correr
-  `node oficina/_herramientas/sincronizar-casos.mjs` (copia, reemplaza los enlaces a claude.ai por la demo local y
-  marca las copias con `noindex`).
+  `node oficina/_herramientas/sincronizar-casos.mjs` (copia, reemplaza los enlaces a claude.ai por la demo local,
+  escribe BiPlot donde el núcleo todavía dice BIPLOT, agrega el ícono de pestaña, corrige la lista de pasos del
+  documento —en el núcleo el texto cae en la columna del número— y marca las copias con `noindex`).
 
 ## Probar
 
@@ -101,7 +102,7 @@ queda fuera de las franjas de 250 px de arriba y abajo.
 
 | Pieza | Archivos | Texto sugerido para la publicación |
 |---|---|---|
-| La oficina | `oficina-4x5.png`, `oficina-9x16.png` | Somos dos socios. Detrás hay un equipo de siete. Pasa a la oficina y conócelos: biplot.cl/oficina |
+| La oficina | `oficina-4x5.png`, `oficina-9x16.png` | Somos dos socios. El resto del equipo lo ves aquí dibujado: siete especialistas. Pasa a la oficina y conócelos: biplot.cl/oficina |
 | El personal | `elenco-4x5.png`, `elenco-9x16.png` | Siete especialistas, uno por parte del trabajo. Los reconoces por su placa. |
 | ¿Quién hace qué? | `motor-4x5.png`, `motor-9x16.png` | Diez fases, siete especialistas. Tú hablas con los socios. |
 | Fichas | `ficha-<nombre>-4x5.png`, `ficha-<nombre>-9x16.png` | Una por integrante: su frase, sus tres rasgos (están en `datos.js`) y biplot.cl/oficina |
@@ -135,6 +136,9 @@ procesos, versiones sin datos reales):
    únicamente con su autorización.
 
 ## Pendiente
+
+- Decidir cómo se nombra al personal de cara al público. Hoy dice "siete especialistas" y la bienvenida aclara
+  que están dibujados ("El resto del equipo lo ves aquí dibujado"), para no dar a entender que son siete personas.
 
 - Confirmar que los clientes autorizan su sala pública (Haru Isidora ya aparece en la portada de biplot.cl; Nu Home,
   Fundos y Eleven, por confirmar).

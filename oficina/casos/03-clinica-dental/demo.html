@@ -4,6 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 32 32%27%3E%3Crect width=%2732%27 height=%2732%27 rx=%277%27 fill=%27%230E2A47%27/%3E%3Ccircle cx=%2723%27 cy=%2711%27 r=%273%27 fill=%27%23FF6B4A%27/%3E%3C/svg%3E">
+<style>.steps li::before{grid-row:span 2}</style>
 <title>Aurora Agenda</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -236,7 +238,7 @@ td.k{font-family:var(--m);font-size:.76rem;color:var(--accent);font-weight:600;w
 
 <div class="app">
   <aside class="side">
-    <div class="brand"><span class="biz">Centro Aurora</span><span class="by"><i></i>BIPLOT OS · Demo</span></div>
+    <div class="brand"><span class="biz">Centro Aurora</span><span class="by"><i></i>BiPlot OS · Demo</span></div>
     <nav id="nav"></nav>
     <div class="side-foot"><div class="rolebox"><span class="lbl">Perfil activo</span>
       <select id="role">
@@ -275,7 +277,7 @@ td.k{font-family:var(--m);font-size:.76rem;color:var(--accent);font-weight:600;w
 <script>
 (function(){
 "use strict";
-/* ===== NÚCLEO BIPLOT ===== */
+/* ===== NÚCLEO BiPlot ===== */
 const $=(s,r)=>(r||document).querySelector(s), $$=(s,r)=>[...(r||document).querySelectorAll(s)];
 const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const CLP=n=>'$'+Math.round(n).toLocaleString('es-CL');
@@ -548,7 +550,7 @@ function vPanel(){
   const porDen=S.dentistas.map(d=>({n:d.n,v:S.citas.filter(c=>c.dent===d.id&&c.f>=S.hoy&&c.est!=='cancelada').length}));
   const mxd=Math.max(1,...porDen.map(p=>p.v));
 
-  return `<div class="banner"><div><b>Línea base del diagnóstico (E1)</b> — antes de BIPLOT recepción dedicaba 31 h/mes a llamar para confirmar, el 22% de las citas terminaba en inasistencia y un sillón que se desocupaba a las 15:00 quedaba vacío el resto del día. La agenda ya existía; lo que faltaba era la capa que la vigila.</div></div>
+  return `<div class="banner"><div><b>Línea base del diagnóstico (E1)</b> — antes de BiPlot recepción dedicaba 31 h/mes a llamar para confirmar, el 22% de las citas terminaba en inasistencia y un sillón que se desocupaba a las 15:00 quedaba vacío el resto del día. La agenda ya existía; lo que faltaba era la capa que la vigila.</div></div>
   <div class="kpis">
     <div class="kpi"><span class="lbl">Citas hoy</span><span class="v">${hoyC.length}</span><span class="d">${pct(ocupacion(S.hoy))} de ocupación</span></div>
     <div class="kpi ${nsRate>.12?'c':'g'}"><span class="lbl">Tasa de inasistencia</span><span class="v">${pct(nsRate)}</span><span class="d"><span class="delta up">−${Math.max(0,22-Math.round(nsRate*100))} pts</span> vs. línea base 22%</span></div>

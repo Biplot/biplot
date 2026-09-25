@@ -731,6 +731,23 @@
       var seen = false;
       try { seen = window.sessionStorage.getItem(hintKey) === "1"; } catch (e) { seen = false; }
       hint.hidden = seen || S.view !== "plano" || !mm("(pointer: coarse)").matches;
+      if (!hint.hidden) armHint();
+    }
+    // El aviso no tapa lotes por mucho rato: se desvanece a los 5 s de estar a la vista
+    var hintArmed = false;
+    function armHint() {
+      if (hintArmed || !("IntersectionObserver" in window)) return;
+      hintArmed = true;
+      var io = new IntersectionObserver(function (en) {
+        if (!en[0].isIntersecting) return;
+        io.disconnect();
+        window.setTimeout(function () {
+          if (hint.hidden) return;
+          hint.classList.add("is-fading");
+          window.setTimeout(function () { hint.classList.remove("is-fading"); hideHint(); }, reduced ? 0 : 400);
+        }, 5000);
+      }, { threshold: .6 });
+      io.observe(canvas);
     }
 
     function renderList() {

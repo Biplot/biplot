@@ -467,7 +467,7 @@ input[type="range"]:focus-visible { outline: 2px solid var(--gold); outline-offs
 .st input:focus-visible + span { outline: 2px solid var(--gold); outline-offset: 2px; }
 .st-disponible { --sw: #E6D2AC; }
 .st-reservada { --sw: repeating-linear-gradient(135deg, #CFC7B8 0 2px, #EFEBE2 2px 4px); }
-.st-vendida { --sw: #4A5F50; }
+.st-vendida { --sw: #A8A8A8; }
 .range { display: grid; gap: .1rem; min-width: 210px; flex: 1 1 210px; max-width: 320px; }
 .range label { font-size: .8rem; font-weight: 700; color: var(--cream-70); }
 .range output { font-size: .8rem; font-weight: 700; color: var(--gold); font-variant-numeric: tabular-nums; }
@@ -495,7 +495,7 @@ input[type="range"]:focus-visible { outline: 2px solid var(--gold); outline-offs
 .sw { width: 12px; height: 12px; border-radius: 3px; display: inline-block; }
 .sw-disponible { background: #E6D2AC; }
 .sw-reservada { background: repeating-linear-gradient(135deg, #BDB4A4 0 2px, #EFEBE2 2px 4px); }
-.sw-vendida { background: #4A5F50; }
+.sw-vendida { background: #A8A8A8; }
 .sw-fav { background: var(--gold); border-radius: 50%; box-shadow: 0 0 0 2px var(--n050), 0 0 0 3px var(--gold-ink); }
 .plan-tip {
   position: absolute; z-index: 4; pointer-events: none;
@@ -537,36 +537,49 @@ input[type="range"]:focus-visible { outline: 2px solid var(--gold); outline-offs
 .lot:focus { outline: none; }
 .lot.is-active { fill-opacity: 1; stroke: #FFFFFF; stroke-width: 3; }
 .lot.is-dim { opacity: .22; pointer-events: none; }
-.pl-badge { fill: #3B4948; stroke: rgba(255, 255, 255, .28); stroke-width: 1; pointer-events: none; }
-polygon.pl-badge { fill: #B7B7B7; stroke: none; }
+.pl-badge.pl-badge-v { fill: rgba(40, 44, 40, .28); stroke: #FFFFFF; stroke-width: 1.5; vector-effect: non-scaling-stroke; }
+.lot-v { font-weight: 800; }
+.lot-sub { font-family: var(--sans); font-weight: 700; fill: #FFFFFF; text-anchor: middle; dominant-baseline: central; pointer-events: none; paint-order: stroke; stroke: rgba(40, 44, 40, .5); stroke-width: 2px; transition: opacity .3s; }
+.pl-badge { fill: #24312A; stroke: rgba(255, 255, 255, .45); stroke-width: 1; vector-effect: non-scaling-stroke; pointer-events: none; }
 .lot-num { font-family: var(--sans); font-weight: 700; fill: #FFFFFF; text-anchor: middle; dominant-baseline: central; pointer-events: none; transition: opacity .3s; }
 .lot-num.is-dim, .lot-sub.is-dim { opacity: .3; }
 .lot-fav { fill: var(--gold); stroke: #0A140E; stroke-width: 1.4; pointer-events: none; opacity: 0; transform-box: fill-box; transform-origin: center; transform: scale(.4); transition: opacity .3s, transform .45s var(--ease-out); }
 .lot-fav.is-on { opacity: 1; transform: scale(1); }
 .lot-ring { fill: none; stroke: var(--gold); stroke-width: 2.5; stroke-dasharray: 7 5; vector-effect: non-scaling-stroke; pointer-events: none; animation: ants 1.2s linear infinite; }
+/* Formato estándar de planos: mismas piezas en todos los proyectos */
+.pl-predio { fill: #A2A3A1; }
+.pl-limite { fill: none; stroke: rgba(255, 255, 255, .75); stroke-width: 1.6; vector-effect: non-scaling-stroke; }
 .pl-servidumbre { fill: #F3D3AE; stroke: #5E4E3C; stroke-width: .9; stroke-dasharray: 2 2; }
-.pl-camino { fill: none; stroke: #BDBDBD; stroke-width: 4.5; stroke-linejoin: round; stroke-linecap: square; }
-.pl-principal { fill: none; stroke: #E0342C; stroke-width: 7; }
-.pl-eje-borde { fill: none; stroke: #5E4E3C; stroke-width: 25; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 3 3; }
-.pl-eje { fill: none; stroke: #F3D3AE; stroke-width: 22; stroke-linecap: round; stroke-linejoin: round; }
+.pl-via-borde { fill: none; stroke: #5E4E3C; stroke-width: 9; stroke-dasharray: 2 2; stroke-linejoin: round; }
+.pl-via { fill: none; stroke: #F3D3AE; stroke-width: 7; stroke-linejoin: round; stroke-linecap: square; }
+.pl-principal-borde { fill: none; stroke: #5E4E3C; stroke-width: 15; stroke-dasharray: 3 2; }
+.pl-principal { fill: none; stroke: #EFE6D2; stroke-width: 12.5; }
+.pl-agua { stroke: rgba(255, 255, 255, .55); stroke-width: .8; }
 
-/* Leyenda de precios, como en los masterplan */
-.plan-legend { padding: .9rem 1rem 1rem; background: #EFEBE2; color: var(--g900); border-top: 1px solid rgba(10, 20, 14, .12); }
-.plan-legend .pl-title { display: inline-block; margin-bottom: .7rem; padding: .35rem .75rem; border-radius: 3px; background: #A51E1A; color: #FFFFFF; font: 700 .72rem/1 var(--serif); font-size: .95rem; letter-spacing: .06em; text-transform: uppercase; }
+/* Leyenda estándar de los planos */
+.plan-legend { display: grid; gap: .85rem; padding: 1rem 1.1rem 1.1rem; background: #EFEBE2; color: var(--g900); border-top: 1px solid rgba(10, 20, 14, .12); }
 .plan-legend ul { display: flex; flex-wrap: wrap; gap: .55rem 1.3rem; }
 .plan-legend li { display: flex; align-items: center; gap: .5rem; font-size: .84rem; font-weight: 600; color: var(--n600); font-variant-numeric: tabular-nums; }
-.plan-legend s { color: #6B665D; }
-.plan-legend b { color: #A51E1A; font-weight: 700; font-size: .95rem; }
+.pl-head { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: .6rem 1rem; padding-bottom: .8rem; border-bottom: 1px solid rgba(10, 20, 14, .12); }
+.pl-kicker { font: 700 .64rem/1 var(--sans); letter-spacing: .22em; text-transform: uppercase; color: var(--gold-ink); }
+.pl-name { margin-top: .3rem; font: 600 1.45rem/1.05 var(--serif); color: var(--g900); }
+.pl-stats { display: flex; flex-wrap: wrap; gap: .35rem; }
+.pl-stats span { padding: .32rem .7rem; border-radius: 999px; background: #FFFFFF; font-size: .76rem; font-weight: 600; color: var(--n600); box-shadow: inset 0 0 0 1px rgba(10, 20, 14, .08); }
+.plan-legend .pl-stats b { color: var(--g900); font-weight: 800; font-size: .84rem; }
+.pl-prices { display: flex; flex-wrap: wrap; align-items: center; gap: .7rem 1.4rem; }
+.plan-legend .pl-title { display: inline-block; padding: .38rem .8rem; border-radius: 3px; background: #A51E1A; color: #FFFFFF; font: 700 .95rem/1 var(--serif); letter-spacing: .06em; text-transform: uppercase; }
+.pl-price { display: inline-flex; align-items: baseline; gap: .35rem; }
+.plan-legend s { color: #6B665D; font-size: .8rem; }
+.plan-legend b { color: #A51E1A; font-weight: 700; font-size: .98rem; }
+.plan-legend small { font-size: .72rem; font-weight: 700; color: var(--n600); }
+.plan-legend small.is-out { padding: .12rem .45rem; border-radius: 3px; background: rgba(10, 20, 14, .08); letter-spacing: .06em; text-transform: uppercase; font-size: .64rem; }
+.pl-symbols li { font-size: .8rem; }
 .plan-legend .sw { width: 16px; height: 16px; border-radius: 50%; background: var(--c); flex: none; }
-.plan-legend .sw.hex { border-radius: 0; clip-path: polygon(25% 3%, 75% 3%, 100% 50%, 75% 97%, 25% 97%, 0 50%); }
-.plan-legend .sw-agua { width: 22px; height: 5px; border-radius: 3px; }
-.plan-legend .sw-servidumbre { width: 22px; height: 9px; border-radius: 2px; background: #F3D3AE; border: 1px dashed #5E4E3C; }
-.pl-badge-v { fill: rgba(40, 44, 40, .28); stroke: #FFFFFF; stroke-width: 1.6; }
-.lot-v { font-weight: 800; }
-.lot-sub { font: 700 10px var(--sans); fill: #FFFFFF; text-anchor: middle; dominant-baseline: central; pointer-events: none; paint-order: stroke; stroke: rgba(40, 44, 40, .45); stroke-width: 2px; }
-.plan-legend .sw-v { display: inline-grid; place-items: center; width: 18px; height: 18px; background: var(--c); color: #FFFFFF; font: 800 .62rem/1 var(--sans); font-style: normal; box-shadow: inset 0 0 0 1.5px #FFFFFF; }
-.plan-legend .sw-principal { width: 22px; height: 6px; border-radius: 2px; background: #E0342C; }
+.plan-legend .sw-v { display: inline-grid; place-items: center; width: 18px; height: 18px; background: #A8A8A8; color: #FFFFFF; font: 800 .62rem/1 var(--sans); font-style: normal; box-shadow: inset 0 0 0 1.5px #FFFFFF, 0 0 0 1px rgba(10, 20, 14, .12); }
 .plan-legend .sw-reservada { border-radius: 3px; background: repeating-linear-gradient(135deg, #8C8474 0 2px, #E9E3D7 2px 5px); }
+.plan-legend .sw-servidumbre { width: 24px; height: 9px; border-radius: 2px; background: #F3D3AE; border: 1px dashed #5E4E3C; }
+.plan-legend .sw-principal { width: 24px; height: 11px; border-radius: 2px; background: #EFE6D2; border: 1px dashed #5E4E3C; }
+.plan-legend .sw-agua { width: 24px; height: 7px; border-radius: 4px; background: #3E9FD6; }
 .plan-legend .sw-fav { width: 12px; height: 12px; background: var(--gold); box-shadow: 0 0 0 2px #EFEBE2, 0 0 0 3px #0A140E; }
 .plan-hint { padding: .5rem 1rem 0; font-size: .8rem; font-weight: 700; color: var(--cream-70); background: #1A2317; }
 .lot-table .t-cat { display: inline-block; width: 10px; height: 10px; margin-right: .45rem; border-radius: 50%; background: var(--c); vertical-align: 0; }
@@ -593,7 +606,7 @@ polygon.pl-badge { fill: #B7B7B7; stroke: none; }
 .lot-table .dot::before { content: ""; width: 9px; height: 9px; border-radius: 50%; background: var(--sw, #E6D2AC); }
 .lot-table .dot.st-disponible { --sw: #C8A165; }
 .lot-table .dot.st-reservada { --sw: #BDB4A4; }
-.lot-table .dot.st-vendida { --sw: #4A5F50; }
+.lot-table .dot.st-vendida { --sw: #A8A8A8; }
 .lot-table .t-sel { text-align: right; }
 .lot-table .t-sel button { font-weight: 700; font-size: .82rem; color: var(--gold-ink); padding: .3rem .4rem; }
 .lot-table .t-fav { color: var(--gold-ink); }

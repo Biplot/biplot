@@ -481,10 +481,27 @@
     return s.join("");
   }
 
-  function hexPts(x, y, r) {
-    var pts = [];
-    for (var i = 0; i < 6; i++) { var a = Math.PI / 180 * (60 * i - 30); pts.push((x + r * Math.cos(a)).toFixed(1) + "," + (y + r * Math.sin(a)).toFixed(1)); }
-    return pts.join(" ");
+  /* ---- Formato estándar de planos Fundos (igual para todos los proyectos) ----
+     Solo cambian la geometría (lib/planos.js) y las categorías de precio (lib/manifest.js). */
+  var PLANO = {
+    predio: "#A2A3A1",     // base del predio bajo los lotes
+    vendida: "#A8A8A8",    // lotes vendidos
+    marcaVendida: "V",     // marca de vendido, como en los masterplan
+    agua: "#3E9FD6"
+  };
+  // Radio de los números según el tamaño típico de lote del plano (legibles sin tapar el lote)
+  function badgeR(lots) {
+    var dims = lots.map(function (o) {
+      var v = (o.d.match(/-?\d+(\.\d+)?/g) || []).map(Number), xs = [], ys = [];
+      for (var i = 0; i + 1 < v.length; i += 2) { xs.push(v[i]); ys.push(v[i + 1]); }
+      return Math.min(Math.max.apply(null, xs) - Math.min.apply(null, xs), Math.max.apply(null, ys) - Math.min.apply(null, ys));
+    }).sort(function (a, b) { return a - b; });
+    var q = dims[Math.floor(dims.length * 0.25)] || 44;
+    return clamp(q * 0.34, 10, 16);
+  }
+  function tituloPrecios(p) {
+    var cats = p.categorias || {};
+    return Object.keys(cats).some(function (k) { return cats[k].lista; }) ? "Precio oferta" : "Precios";
   }
   // Plano con el lenguaje de los masterplan de Fundos: terreno, colores por precio, vendidas y números
   function svgPlan(p) {
@@ -500,7 +517,7 @@
       lots = g.lots.map(function (o) { return { l: o.l, d: o.d, cx: o.cx, cy: o.cy }; });
       calles = [{ tipo: "eje", d: pathD(g.road.points, false) }];
     }
-    var hex = p.etiqueta === "hexagono", R = hex ? 14 : 16, FS = hex ? 12.5 : 13.5;
+    var R = badgeR(lots), FS = +(R * 0.84).toFixed(1), SUB = +(R * 0.62).toFixed(1);
     var cats = p.categorias || {};
     var s = [];
     s.push('<svg class="plan-svg" viewBox="' + vb.join(" ") + '" xmlns="http://www.w3.org/2000/svg" role="group" aria-label="Plano de lotes de ' + esc(p.nombre) + '">');
@@ -509,17 +526,18 @@
       '<feColorMatrix type="matrix" values="0 0 0 0 0.12  0 0 0 0 0.17  0 0 0 0 0.09  1.4 0 0 0 -0.45"/></filter>' +
       '<filter id="pl-grano" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" seed="9"/>' +
       '<feColorMatrix type="matrix" values="0 0 0 0 0.9  0 0 0 0 0.92  0 0 0 0 0.85  0 0 0 0.9 -0.42"/></filter>' +
+      '<filter id="pl-sombra" x="-5%" y="-5%" width="110%" height="110%"><feDropShadow dx="0" dy="3" stdDeviation="5" flood-color="#000" flood-opacity=".45"/></filter>' +
       '<pattern id="lot-hatch" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="7" height="7" fill="#E9E3D7" fill-opacity=".85"/><rect width="2.6" height="7" fill="#8C8474"/></pattern>' +
       (contorno ? '<clipPath id="pl-predio"><path d="' + contorno + '"/></clipPath>' : "") + "</defs>");
     var full = 'x="' + vb[0] + '" y="' + vb[1] + '" width="' + vb[2] + '" height="' + vb[3] + '"';
     s.push('<rect ' + full + ' fill="#1A2317"/><rect ' + full + ' filter="url(#pl-terreno)" opacity=".9"/>');
-    s.push('<g' + (contorno ? ' clip-path="url(#pl-predio)"' : "") + '>' + (p.fondoPredio
-      ? '<rect ' + full + ' fill="' + p.fondoPredio + '"/>'
-      : '<rect ' + full + ' fill="#5E6B4C"/><rect ' + full + ' filter="url(#pl-terreno)"/>') + '<rect ' + full + ' filter="url(#pl-grano)" opacity=".35"/></g>');
+    // Predio: base uniforme con sombra suave y borde, igual en todos los planos
+    if (contorno) s.push('<path class="pl-predio" d="' + contorno + '" filter="url(#pl-sombra)"/>');
+    s.push('<g' + (contorno ? ' clip-path="url(#pl-predio)"' : "") + '><rect ' + full + ' fill="' + PLANO.predio + '"/><rect ' + full + ' filter="url(#pl-grano)" opacity=".35"/></g>');
     s.push('<g class="lots">');
     lots.forEach(function (o) {
       var l = o.l, c = cats[l.cat];
-      var fill = l.estado === "vendida" ? (p.vendidaColor || "#A8AAA5") : (c ? c.color : "#C8A165");
+      var fill = l.estado === "vendida" ? PLANO.vendida : (c ? c.color : "#C8A165");
       var aria = "Lote " + l.n + ", " + ESTADO[l.estado].toLowerCase() + (l.precio ? ", " + clp(l.precio) : "") + ", " + m2(l.m2);
       s.push('<path class="lot st-' + l.estado + '" style="--c:' + fill + '" data-n="' + l.n + '" tabindex="0" role="button" aria-label="' + esc(aria) + '" d="' + o.d + '"/>');
     });
@@ -528,46 +546,54 @@
     lots.forEach(function (o) { if (o.l.estado === "reservada") s.push('<path d="' + o.d + '" fill="url(#lot-hatch)" opacity=".75"/>'); });
     s.push("</g>");
     s.push('<g aria-hidden="true">');
+    agua.forEach(function (a) { s.push('<path class="pl-agua" d="' + a.d + '" fill-rule="evenodd" fill="' + PLANO.agua + '"/>'); });
+    // Todas las vías con el mismo lenguaje: servidumbres en arena con borde punteado
     calles.forEach(function (k) {
       if (k.tipo === "servidumbre") s.push('<path class="pl-servidumbre" d="' + k.d + '" fill-rule="evenodd"/>');
-      else if (k.tipo === "linea") s.push('<path class="pl-camino" d="' + k.d + '"/>');
-      else s.push('<path class="pl-eje-borde" d="' + k.d + '"/><path class="pl-eje" d="' + k.d + '"/>');
+      else s.push('<path class="pl-via-borde" d="' + k.d + '"/><path class="pl-via" d="' + k.d + '"/>');
     });
-    agua.forEach(function (a) { s.push('<path d="' + a.d + '" fill-rule="evenodd" fill="' + (p.agua || "#1E9BE3") + '"/>'); });
-    if (camino) s.push('<path class="pl-principal" d="' + camino + '"/>');
+    if (camino) s.push('<path class="pl-principal-borde" d="' + camino + '"/><path class="pl-principal" d="' + camino + '"/>');
+    if (contorno) s.push('<path class="pl-limite" d="' + contorno + '"/>');
     s.push("</g>");
     s.push('<path class="lot-ring" d="M0 0" style="display:none"/>');
     s.push('<g class="pl-labels" aria-hidden="true">');
     lots.forEach(function (o) {
       var x = o.cx, y = o.cy, n = o.l.n;
-      if (p.vendidaMarca && o.l.estado === "vendida") {
-        // Vendida con la marca del masterplan: "V" en un círculo y el número debajo
-        s.push('<circle class="pl-badge pl-badge-v" data-n="' + n + '" cx="' + x + '" cy="' + y + '" r="' + (R - 2) + '"/>');
-        s.push('<text class="lot-num lot-v" data-n="' + n + '" x="' + x + '" y="' + (y + 0.5) + '" font-size="' + FS + '">' + esc(p.vendidaMarca) + "</text>");
-        s.push('<text class="lot-sub" data-n="' + n + '" x="' + x + '" y="' + (y + R + 5) + '">' + n + "</text>");
+      if (o.l.estado === "vendida") {
+        // Vendida: "V" en un círculo y el número debajo
+        s.push('<circle class="pl-badge pl-badge-v" data-n="' + n + '" cx="' + x + '" cy="' + y + '" r="' + (R - 1.5).toFixed(1) + '"/>');
+        s.push('<text class="lot-num lot-v" data-n="' + n + '" x="' + x + '" y="' + (y + 0.5) + '" font-size="' + FS + '">' + PLANO.marcaVendida + "</text>");
+        s.push('<text class="lot-sub" data-n="' + n + '" x="' + x + '" y="' + (y + R + SUB * 0.75).toFixed(1) + '" font-size="' + SUB + '">' + n + "</text>");
         return;
       }
-      s.push(hex ? '<polygon class="pl-badge" data-n="' + n + '" points="' + hexPts(x, y, R) + '"/>' : '<circle class="pl-badge" data-n="' + n + '" cx="' + x + '" cy="' + y + '" r="' + R + '"/>');
+      s.push('<circle class="pl-badge" data-n="' + n + '" cx="' + x + '" cy="' + y + '" r="' + R.toFixed(1) + '"/>');
       s.push('<text class="lot-num" data-n="' + n + '" x="' + x + '" y="' + (y + 0.5) + '" font-size="' + FS + '">' + n + "</text>");
-      s.push('<circle class="lot-fav" data-n="' + n + '" cx="' + (x + R * 0.8).toFixed(1) + '" cy="' + (y - R * 0.8).toFixed(1) + '" r="' + (hex ? 4.5 : 5.5) + '"/>');
+      s.push('<circle class="lot-fav" data-n="' + n + '" cx="' + (x + R * 0.8).toFixed(1) + '" cy="' + (y - R * 0.8).toFixed(1) + '" r="' + (R * 0.34).toFixed(1) + '"/>');
     });
     s.push("</g></svg>");
     return s.join("");
   }
+  // Leyenda estándar: encabezado con cifras, precios por categoría y simbología
   function legendHtml(p) {
-    var hex = p.etiqueta === "hexagono" ? " hex" : "", cats = p.categorias || {}, P = (B.planos || {})[p.id] || {};
-    var h = ['<p class="pl-title">' + esc(p.leyenda || "Precios") + "</p><ul>"];
+    var cats = p.categorias || {}, P = (B.planos || {})[p.id] || {};
+    var disp = p.lotes.filter(function (l) { return l.estado === "disponible"; });
+    var nVend = p.lotes.filter(function (l) { return l.estado === "vendida"; }).length;
+    var nRes = p.lotes.filter(function (l) { return l.estado === "reservada"; }).length;
+    var h = ['<div class="pl-head"><div><p class="pl-kicker">Plano de loteo</p><p class="pl-name">Fundos de ' + esc(p.nombre) + "</p></div>" +
+      '<p class="pl-stats"><span><b>' + disp.length + "</b> " + (disp.length === 1 ? "disponible" : "disponibles") + "</span>" + (nRes ? "<span><b>" + nRes + "</b> " + (nRes === 1 ? "reservada" : "reservadas") + "</span>" : "") +
+      "<span><b>" + nVend + "</b> " + (nVend === 1 ? "vendida" : "vendidas") + "</span><span><b>" + p.lotes.length + "</b> parcelas</span></p></div>"];
+    h.push('<div class="pl-prices"><p class="pl-title">' + tituloPrecios(p) + "</p><ul>");
     Object.keys(cats).forEach(function (k) {
-      var c = cats[k];
-      h.push('<li><i class="sw' + hex + '" style="--c:' + c.color + '"></i>' + (c.lista ? "<s>" + clp(c.lista) + "</s> " : "") + "<b>" + clp(c.precio) + "</b></li>");
+      var c = cats[k], n = disp.filter(function (l) { return l.cat === k; }).length;
+      h.push('<li><i class="sw" style="--c:' + c.color + '"></i><span class="pl-price">' + (c.lista ? "<s>" + clp(c.lista) + "</s> " : "") + "<b>" + clp(c.precio) + "</b></span>" +
+        (n ? "<small>" + n + (n === 1 ? " disponible" : " disponibles") + "</small>" : '<small class="is-out">Agotado</small>') + "</li>");
     });
-    (P.agua || []).forEach(function (a) { h.push('<li><i class="sw sw-agua" style="--c:' + (p.agua || "#1E9BE3") + '"></i>' + esc(a.nombre) + "</li>"); });
-    if ((P.calles || []).some(function (k) { return k.tipo === "servidumbre"; })) h.push('<li><i class="sw sw-servidumbre"></i>Servidumbre de tránsito</li>');
+    h.push('</ul></div><ul class="pl-symbols">');
+    h.push('<li><i class="sw sw-v">' + PLANO.marcaVendida + "</i>Vendida</li>");
+    if (nRes) h.push('<li><i class="sw sw-reservada"></i>Reservada</li>');
+    if ((P.calles || []).length) h.push('<li><i class="sw sw-servidumbre"></i>Servidumbre de tránsito</li>');
     if (P.caminoPrincipal) h.push('<li><i class="sw sw-principal"></i>Camino principal</li>');
-    if (p.lotes.some(function (l) { return l.estado === "reservada"; })) h.push('<li><i class="sw sw-reservada"></i>Reservadas</li>');
-    h.push(p.vendidaMarca
-      ? '<li><i class="sw sw-v" style="--c:' + (p.vendidaColor || "#A8AAA5") + '">' + esc(p.vendidaMarca) + '</i>Vendidas</li>'
-      : '<li><i class="sw' + hex + '" style="--c:' + (p.vendidaColor || "#A8AAA5") + '"></i>Vendidas</li>');
+    (P.agua || []).forEach(function (a) { h.push('<li><i class="sw sw-agua"></i>' + esc(a.nombre) + "</li>"); });
     h.push('<li><i class="sw sw-fav"></i>Tu favorito</li></ul>');
     return h.join("");
   }

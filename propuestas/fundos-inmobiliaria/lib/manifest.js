@@ -64,8 +64,7 @@
         // Ej.: "https://youtu.be/XXXXXXXXXXX" · "https://vimeo.com/123456789" · "assets/video/malalcahuello.mp4"
         video: "",
         logo: "assets/img/logo-malalcahuello.webp",
-        // Colores y precios del masterplan "Precios lista"
-        leyenda: "Precios lista",
+        // Categorías de precio: colores y valores de cada masterplan (lista = precio anterior tachado)
         categorias: {
           oro:     { color: "#B79E2E", lista: 30990000, precio: 20990000 },
           celeste: { color: "#2A97C4", lista: 28990000, precio: 18990000 },
@@ -73,9 +72,6 @@
           verde:   { color: "#6C9A47", lista: 19990000, precio: 9990000 },
           lila:    { color: "#B463D6", lista: 10990000, precio: 7990000 }
         },
-        vendidaColor: "#A8AAA5",
-        etiqueta: "circulo",
-        agua: "#1E9BE3",
         lotes: lotes([
           [1, null, V], [2, null, V], [3, null, V], [4, null, V], [5, "celeste", D], [6, "oro", D],
           [7, "oro", D], [8, "oro", D], [9, null, V], [10, null, V], [11, null, V], [12, null, V],
@@ -108,17 +104,12 @@
         video: "",
         logo: "assets/img/logo-marchigue.webp",
         sectores: [],
-        // Colores y precios del masterplan "Precio oferta"
-        leyenda: "Precio oferta",
+        // Categorías de precio: colores y valores de cada masterplan (lista = precio anterior tachado)
         categorias: {
           lima:  { color: "#BACF16", lista: 15990000, precio: 10990000 },
           verde: { color: "#7FBE62", lista: 13990000, precio: 8990000 },
           azul:  { color: "#01A0CE", lista: 12990000, precio: 7990000 }
         },
-        vendidaColor: "#A8A8A8",
-        vendidaMarca: "V",      // en el masterplan las vendidas llevan una "V"
-        fondoPredio: "#A2A3A1",  // base del predio bajo los lotes (como el masterplan)
-        etiqueta: "circulo",
         lotes: lotes([
           [1, null, V], [2, null, V], [3, null, V], [4, null, V], [5, null, V], [6, null, V],
           [7, null, V], [8, null, V], [9, null, V], [10, null, V], [11, null, V], [12, null, V],
@@ -153,7 +144,7 @@
         // Ej.: "https://youtu.be/XXXXXXXXXXX" · "https://vimeo.com/123456789" · "assets/video/malalcahuello.mp4"
         video: "",
         sectores: [],
-        leyenda: "Precios",
+        // Categorías de precio: colores y valores de cada masterplan (lista = precio anterior tachado)
         categorias: {
           amarillo:    { color: "#C9C43A", precio: 27990000 },
           verdeClaro:  { color: "#35A83A", precio: 35990000 },
@@ -161,9 +152,6 @@
           verdeOscuro: { color: "#2F5E2C", precio: 45990000 },
           morado:      { color: "#6A67C9", precio: 50990000 }
         },
-        vendidaColor: "#141414",
-        etiqueta: "hexagono",
-        agua: "#2B3BFF",
         lotes: lotes([
           [1, "verdeOscuro", D], [2, "morado", D], [3, "morado", D], [4, "verdeOscuro", D], [5, "morado", D], [6, "verdeOscuro", D],
           [7, "verdeOscuro", D], [8, "morado", D], [9, "verdeOscuro", D], [10, "verdeClaro", D], [11, "celeste", D], [12, "verdeClaro", D],

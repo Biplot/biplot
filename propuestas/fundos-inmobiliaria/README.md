@@ -18,8 +18,7 @@ Sitio estático (HTML, CSS y JavaScript, sin build ni dependencias). Funciona ab
 | **Proyectos comparables** | Misma ficha para los tres: desde, superficie, reserva y disponibilidad. Ficha ampliada con destacados, cercanías y mapa. |
 | **Recorrido virtual 360°** ★ | Los tours de cada proyecto se ven dentro de la página: una lente "Entrar" abre el recorrido como un portal, se cambia de proyecto sin salir, hay pantalla completa y, al terminar, "Ver lotes", "Agendar visita" o "Compartir" por WhatsApp. Accesos desde el hero, cada tarjeta ("Recorrido 360°"), el plano (botón 360°) y la ficha del proyecto. Enlace directo: `#recorrido-puerto-varas`. |
 | **Plano interactivo de lotes** ★ | La función estrella. Estado, precio y superficie de cada lote. Filtros por estado, precio y sector; vista de lista ordenable; favoritos que se envían por WhatsApp; enlace directo a un lote (`#lote-malalcahuello-12`); "Reservar este lote" precarga el formulario. En un lote vendido, sugiere el disponible más parecido. |
-| **Videos** | Video de portada en el hero (sobre la ilustración, con botón de pausa) y un visor de video por proyecto (YouTube, Vimeo o archivo propio). Aparecen solos al cargar el enlace en `lib/manifest.js`. |
-| **Santo Domingo (preventa)** | Cuarto proyecto con su logo, en tarjeta ancha de "Preventa": inscripción directa, pestaña en el plano y opción en el buscador y el formulario. |
+| **Videos (listo para usar)** | Soporte para video de portada en el hero y visor de video por proyecto (YouTube, Vimeo o archivo propio). No se muestra nada hasta cargar un video en `lib/manifest.js`. |
 | **Cómo comprar en 6 pasos** | El mismo embudo de Fundos 360° (reserva → validación → gastos → escritura → inscripción en el CBR), explicado sin letra chica. |
 | **Mi compra (Fundos 360°)** | Portal del comprador: avance de su compra, documentos y próximos hitos. Diferencia real frente a la competencia. |
 | **Simulador** | Contado o financiamiento, con reparto visual de la compra y envío de la simulación por WhatsApp. |
@@ -42,9 +41,8 @@ Todo lo editable está en `lib/manifest.js`.
 - [ ] **Destacados y cercanías:** las distancias se miden desde cada pueblo, no desde el proyecto. Reemplazar por los tiempos reales.
 - [ ] **Mi compra:** es un módulo nuevo que se propone sobre Fundos 360°. Hoy la sección lo muestra como vista previa.
 - [ ] **Fotos:** las ilustraciones son intencionales, pero se pueden sumar fotos de dron reales en la ficha de cada proyecto.
-- [ ] **Equipo:** nombre y cargo de cada persona (hoy dice "Nombre Apellido"), y si cada una tendrá su propio WhatsApp. Las fotos se tomaron de capturas del sitio actual: conviene reemplazarlas por los archivos originales.
-- [ ] **Santo Domingo:** región, descripción, distancias y si el tamaño de las parcelas es el mismo. Todo lo publicado es provisorio.
-- [ ] **Videos:** enviar los archivos o enlaces (ver "Videos" más abajo).
+- [ ] **Equipo:** hoy se muestra como "Equipo comercial". Si se quiere, sumar nombre y cargo de cada persona y su propio WhatsApp. Las fotos se tomaron de capturas del sitio actual: conviene reemplazarlas por los archivos originales.
+- [ ] **Videos:** la propuesta no incluye videos. El sitio ya está preparado: basta con subir el archivo o pegar el enlace (ver "Videos" más abajo).
 - [ ] **Concurso:** el sitio actual tiene una página de concurso; se puede sumar como banner o sección cuando esté definido.
 - [ ] **Al publicarlo en el dominio de Fundos:** quitar la etiqueta "Propuesta" del menú, quitar `noindex` y cambiar la URL de `og:image`.
 

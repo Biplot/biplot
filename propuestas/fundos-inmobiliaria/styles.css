@@ -1135,10 +1135,6 @@ body.tour-lock { overflow: hidden; }
 .vd-blocked { padding: .4rem 1.3rem 1.6rem; color: var(--cream-80); font-size: .92rem; }
 .vd-blocked a { color: var(--gold); font-weight: 700; text-decoration: underline; text-underline-offset: 3px; }
 
-/* ---------------- SANTO DOMINGO (preventa) ---------------- */
-.project-soon .project-logo { width: 168px; height: auto; margin-bottom: .1rem; }
-.project-soon .project-actions .btn { flex: 1 1 auto; }
-
 /* ---------------- NOSOTROS: foto y equipo ---------------- */
 .about-photo { position: relative; }
 .about-photo img { display: block; width: 100%; height: auto; aspect-ratio: 943 / 646; object-fit: cover; border-radius: var(--r-lg); box-shadow: var(--shadow-card); }
@@ -1179,8 +1175,6 @@ body.tour-lock { overflow: hidden; }
   .about-photo figcaption { position: absolute; left: -1.5rem; bottom: -2rem; max-width: 330px; margin: 0; }
 }
 @media (min-width: 960px) {
-  .projects .project-soon { grid-column: 1 / -1; grid-template-columns: 1.35fr 1fr; grid-template-rows: none; }
-  .project-soon .project-art { aspect-ratio: auto; min-height: 380px; }
   .about .values { grid-template-columns: repeat(4, 1fr); }
   .team { grid-template-columns: .8fr 2fr; align-items: end; gap: 3rem; }
   .team-list { grid-template-columns: 1fr 1fr 1.05fr; gap: 1.4rem; }
@@ -1191,7 +1185,7 @@ body.tour-lock { overflow: hidden; }
 @media (max-width: 539px) {
   .lot-table .t-sector, .lot-table .t-m2 { display: none; }
   .lot-table th, .lot-table td { padding-inline: .6rem; }
-  .tabs { display: grid; grid-template-columns: repeat(2, 1fr); width: 100%; border-radius: 14px; }
+  .tabs { display: grid; grid-template-columns: repeat(3, 1fr); width: 100%; border-radius: 14px; }
   .tab { flex-direction: column; justify-content: center; gap: .2rem; padding: .55rem .35rem; border-radius: 10px; font-size: .84rem; line-height: 1.15; white-space: normal; text-align: center; }
   .status-filter { gap: .3rem; }
   .st span { padding: .38rem .6rem; font-size: .78rem; gap: .35rem; }

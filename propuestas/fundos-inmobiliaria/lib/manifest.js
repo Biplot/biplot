@@ -174,22 +174,6 @@
           [73, "verdeClaro", D], [74, "verdeClaro", D], [75, "celeste", D], [76, "celeste", D], [77, "celeste", D], [78, "celeste", D],
           [79, null, V]
         ])
-      },
-      {
-        id: "santo-domingo",
-        nombre: "Santo Domingo",
-        estado: "preventa",
-        region: "Valparaíso",
-        zona: "Costa central",
-        resumen: "Naturaleza privilegiada, costa exclusiva, vida extraordinaria. Nuestro próximo proyecto, cerca del mar.",
-        descripcion: "Fundos de Santo Domingo: naturaleza privilegiada, costa exclusiva y vida extraordinaria. Nuestro próximo proyecto en la costa central, pensado para una casa de playa, un refugio de fin de semana o vivir con el mar cerca. Inscríbete en la preventa y recibe el plano y los precios de lanzamiento antes que nadie.",
-        destacados: ["Costa central de Chile", "Precios de lanzamiento para inscritos", "Plano y precios antes de su publicación", "Acompañamiento hasta la inscripción en el CBR"],
-        cercanias: [["San Antonio", "10 km"], ["Reserva Nacional El Yali", "20 km"], ["Santiago", "115 km"]],
-        cercaniasNota: "Distancias aproximadas desde la comuna de Santo Domingo. Se confirmarán con la ubicación del proyecto.",
-        mapa: "https://www.google.com/maps/search/?api=1&query=Santo+Domingo%2C+Valpara%C3%ADso%2C+Chile",
-        video: "",
-        logo: "assets/img/logo-santo-domingo.webp",
-        lotes: []
       }
     ],
 

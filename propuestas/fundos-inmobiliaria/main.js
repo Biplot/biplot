@@ -189,7 +189,12 @@
       hero.addEventListener("pointerleave", function () { tx = 0; ty = 0; kick(); });
     }
     window.addEventListener("scroll", kick, { passive: true });
-    window.addEventListener("resize", kick);
+    // Medidas fuera del cuadro de animación: frame() solo escribe, nunca fuerza un layout
+    var svgH = 900, heroH = 1;
+    function measure() { svgH = svg.getBoundingClientRect().height || 900; heroH = hero.offsetHeight || 1; }
+    measure();
+    if ("ResizeObserver" in window) new ResizeObserver(function () { measure(); kick(); }).observe(hero);
+    else window.addEventListener("resize", function () { measure(); kick(); });
     if ("IntersectionObserver" in window) {
       new IntersectionObserver(function (en) { visible = en[0].isIntersecting; if (visible) kick(); }).observe(hero);
     }
@@ -200,7 +205,7 @@
       cx += (tx - cx) * 0.07;
       cy += (ty - cy) * 0.07;
       var sy = Math.max(0, window.scrollY);
-      var k = 900 / ((svg.getBoundingClientRect().height) || 900); // px → unidades del viewBox
+      var k = 900 / svgH; // px → unidades del viewBox
       layers.forEach(function (L) {
         var x = -cx * L.d * 38;
         var y = -cy * L.d * 10 + sy * (1 - L.d) * 0.3 * k;
@@ -208,7 +213,7 @@
       });
       if (inner) {
         inner.style.transform = "translate3d(0," + (sy * -0.12).toFixed(1) + "px,0)";
-        inner.style.opacity = String(clamp(1 - sy / (hero.offsetHeight * 0.8), 0, 1));
+        inner.style.opacity = String(clamp(1 - sy / (heroH * 0.8), 0, 1));
       }
       if (Math.abs(tx - cx) > 0.002 || Math.abs(ty - cy) > 0.002 || sy !== lastY) { lastY = sy; kick(); }
     }
@@ -365,20 +370,14 @@
     var cats = p.categorias || {};
     var s = [];
     s.push('<svg class="plan-svg" viewBox="' + vb.join(" ") + '" data-base="' + vb.join(" ") + '" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg" role="group" aria-label="Plano de lotes de ' + esc(p.nombre) + '. Usa las flechas para moverte entre lotes y Enter para ver el detalle.">');
+    // Sin filtros SVG: se recalculaban en cada cuadro de zoom. El terreno es un fondo CSS (.plan-canvas).
     s.push('<defs>' +
-      '<filter id="pl-terreno" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency="0.018" numOctaves="4" seed="4"/>' +
-      '<feColorMatrix type="matrix" values="0 0 0 0 0.12  0 0 0 0 0.17  0 0 0 0 0.09  1.4 0 0 0 -0.45"/></filter>' +
-      '<filter id="pl-grano" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" seed="9"/>' +
-      '<feColorMatrix type="matrix" values="0 0 0 0 0.9  0 0 0 0 0.92  0 0 0 0 0.85  0 0 0 0.9 -0.42"/></filter>' +
-      '<filter id="pl-sombra" x="-5%" y="-5%" width="110%" height="110%"><feDropShadow dx="0" dy="3" stdDeviation="5" flood-color="#000" flood-opacity=".45"/></filter>' +
       '<pattern id="lot-hatch" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="7" height="7" fill="#E9E3D7" fill-opacity=".85"/><rect width="2.6" height="7" fill="#8C8474"/></pattern>' +
       (contorno ? '<clipPath id="pl-predio"><path d="' + contorno + '"/></clipPath>' : "") + "</defs>");
     var full = 'x="' + vb[0] + '" y="' + vb[1] + '" width="' + vb[2] + '" height="' + vb[3] + '"';
-    var wide = 'x="' + (vb[0] - vb[2]) + '" y="' + (vb[1] - vb[3]) + '" width="' + (vb[2] * 3) + '" height="' + (vb[3] * 3) + '"';
-    s.push('<rect ' + wide + ' fill="#1A2317"/><rect ' + wide + ' filter="url(#pl-terreno)" opacity=".9"/>');
-    // Predio: base uniforme con sombra suave y borde, igual en todos los planos
-    if (contorno) s.push('<path class="pl-predio" d="' + contorno + '" filter="url(#pl-sombra)"/>');
-    s.push('<g' + (contorno ? ' clip-path="url(#pl-predio)"' : "") + '><rect ' + full + ' fill="' + PLANO.predio + '"/><rect ' + full + ' filter="url(#pl-grano)" opacity=".35"/></g>');
+    // Predio: base uniforme con un halo oscuro (trazo de grosor fijo en pantalla) y borde, igual en todos los planos
+    if (contorno) s.push('<path class="pl-halo pl-halo-a" d="' + contorno + '"/><path class="pl-halo pl-halo-b" d="' + contorno + '"/><path class="pl-predio" d="' + contorno + '"/>');
+    s.push('<g' + (contorno ? ' clip-path="url(#pl-predio)"' : "") + '><rect ' + full + ' fill="' + PLANO.predio + '"/></g>');
     s.push('<g class="lots">');
     lots.forEach(function (o) {
       var l = o.l, c = cats[l.cat];
@@ -552,6 +551,7 @@
       var W = canvas.clientWidth || 1;
       var H = W * b[3] / b[2];
       if (isSmall()) H = clamp(H * 1.5, 260, Math.min(window.innerHeight * 0.6, 460));
+      else H = Math.min(H, Math.max(240, window.innerHeight - navBottom() - 120));   // el plano completo cabe en la pantalla
       if (!reset && Z.W === W && Z.H) H = Z.H;    // la barra del navegador móvil cambia innerHeight: la altura no salta
       canvas.style.height = Math.round(H) + "px";
       Z.W = W; Z.H = H;
@@ -568,6 +568,8 @@
             Z.cy = pts.reduce(function (t, q) { return t + q[1]; }, 0) / pts.length;
           }
         }
+        var qs = S.sel != null && pt(S.sel);   // si hay un lote elegido, sigue a la vista
+        if (qs) { Z.cx = qs[0]; Z.cy = qs[1]; }
       }
       applyView();
     }
@@ -1084,10 +1086,12 @@
     }
 
     /* ---- Proyecto activo ---- */
+    var built = false;
     function setProject(id, opts) {
       opts = opts || {};
       var p = proyecto(id);
       if (!p) return;
+      built = true;
       S.id = id;
       if (!opts.keepFilters) {                     // al cambiar de proyecto todos los filtros vuelven a cero
         S.est = { disponible: true, reservada: true, vendida: true };
@@ -1134,7 +1138,7 @@
       t.setAttribute("aria-controls", "plan-tabpanel");
       var p = proyecto(t.getAttribute("data-tab"));
       if (p && p.lotes.length && !$("small", t)) t.insertAdjacentHTML("beforeend", '<small aria-hidden="true">' + disponibles(p).length + ' disp.</small><span class="sr-only">, ' + disponibles(p).length + " disponibles</span>");
-      t.addEventListener("click", function () { setProject(t.getAttribute("data-tab")); });
+      t.addEventListener("click", function () { switchTo(t.getAttribute("data-tab")); });
       t.addEventListener("keydown", function (e) {
         var nx = null;
         if (e.key === "ArrowRight" || e.key === "ArrowLeft") nx = tabs[(i + (e.key === "ArrowRight" ? 1 : tabs.length - 1)) % tabs.length];
@@ -1143,9 +1147,22 @@
         if (!nx) return;
         e.preventDefault();
         nx.focus();
-        setProject(nx.getAttribute("data-tab"));
+        switchTo(nx.getAttribute("data-tab"));
       });
     });
+    var switchR = 0;
+    function switchTo(id) {
+      tabs.forEach(function (x) {
+        var on = x.getAttribute("data-tab") === id;
+        x.setAttribute("aria-selected", on ? "true" : "false");
+        x.setAttribute("tabindex", on ? "0" : "-1");
+      });
+      canvas.classList.add("is-switching");
+      window.cancelAnimationFrame(switchR);
+      switchR = window.requestAnimationFrame(function () {
+        window.setTimeout(function () { canvas.classList.remove("is-switching"); setProject(id); }, 0);
+      });
+    }
     var tabpanel = $("[data-tabpanel]", root) || stage;
     tabpanel.id = "plan-tabpanel";
     tabpanel.setAttribute("role", "tabpanel");
@@ -1301,7 +1318,11 @@
     });
     if (d.close) d.close.addEventListener("click", function () { closeSheet(); });
     document.addEventListener("keydown", function (e) { if (e.key === "Escape") closeSheet(); });
-    desktop.addEventListener && desktop.addEventListener("change", function () { closeSheet(true); layoutPlan(true); });
+    desktop.addEventListener && desktop.addEventListener("change", function () {
+      closeSheet(true);
+      layoutPlan(false);
+      if (S.sel != null) reveal(S.sel);
+    });
     favList.addEventListener("click", function (e) {
       var b = e.target.closest("[data-fav]");
       if (!b) return;
@@ -1329,7 +1350,7 @@
     });
 
     /* ---- API para otros módulos ---- */
-    Plan.show = function (id) { if (id !== S.id) setProject(id); };
+    Plan.show = function (id) { if (id !== S.id || !built) setProject(id); };
     Plan.current = function () { return S.id; };
     Plan.apply = function (o) {
       S.est = o.soloDisponibles ? { disponible: true, reservada: false, vendida: false } : { disponible: true, reservada: true, vendida: true };
@@ -1358,7 +1379,17 @@
       return true;
     }
     window.addEventListener("hashchange", function () { fromHash(false); });
-    if (!fromHash(true)) setProject(S.id);
+    if (!fromHash(true)) {
+      // Sin enlace a un lote, el plano se arma al acercarse a la pantalla o cuando el navegador está libre:
+      // la carga inicial no espera por él
+      var build = function () { if (!built) setProject(S.id); };
+      if ("IntersectionObserver" in window) {
+        var bio = new IntersectionObserver(function (en) { if (en[0].isIntersecting) { bio.disconnect(); build(); } }, { rootMargin: "1200px 0px" });
+        bio.observe(root);
+      }
+      if ("requestIdleCallback" in window) window.requestIdleCallback(build, { timeout: 3000 });
+      else window.setTimeout(build, 1500);
+    }
   }
 
 
@@ -1580,11 +1611,23 @@
       form.classList.remove("is-prefilled");
       void form.offsetWidth;
       form.classList.add("is-prefilled");
-      window.setTimeout(function () {
-        form.classList.remove("is-prefilled");
-        if (fineHover) el.nombre.focus({ preventScroll: true });
-      }, 1600);
+      // Un solo temporizador aunque se precargue varias veces seguidas
+      window.clearTimeout(prefillT);
+      prefillT = window.setTimeout(function () { form.classList.remove("is-prefilled"); }, 1600);
+      // Con mouse, el cursor queda en "Nombre" al terminar el desplazamiento, salvo que la persona ya esté escribiendo
+      if (!fineHover) return;
+      window.clearTimeout(focusT);
+      if (onScrollEnd) window.removeEventListener("scrollend", onScrollEnd);
+      onScrollEnd = function () {
+        window.removeEventListener("scrollend", onScrollEnd);
+        window.clearTimeout(focusT);
+        var ae = document.activeElement;
+        if (!ae || ae === document.body || !form.contains(ae)) el.nombre.focus({ preventScroll: true });
+      };
+      if ("onscrollend" in window) window.addEventListener("scrollend", onScrollEnd);
+      focusT = window.setTimeout(onScrollEnd, 1600);
     };
+    var prefillT = 0, focusT = 0, onScrollEnd = null;
   }
 
   /* =============================================================
@@ -1673,7 +1716,7 @@
       var src = art(p.id), box = $(".tour-pick-art", a);
       if (src && box) box.appendChild(src.cloneNode(true));
       a.addEventListener("click", function (e) {
-        if (blocked) return; // sin marco: el enlace abre el recorrido en otra pestaña
+        if (blocked) { select(p.id, false); return; } // sin marco: el enlace abre el recorrido en otra pestaña y la sección se pone al día
         e.preventDefault();
         select(p.id, state() === "live" || state() === "loading");
       });
@@ -1699,6 +1742,7 @@
         var share = $("[data-tour-share]", root);
         if (share) share.href = "https://wa.me/?text=" + encodeURIComponent("Mira el recorrido 360° de " + p.nombre + " de Fundos Inmobiliaria: " + p.tour);
       }
+      if (go && !changed && (state() === "live" || state() === "loading")) return; // ya está abierto: no se recarga
       if (go) enter();
       else if (changed) leave();
     }
@@ -1901,13 +1945,14 @@
     // Portada: video de fondo sobre la ilustración (que queda como respaldo)
     var hv = B.videoPortada || {}, hero = $("[data-hero]"), heroArt = hero && $(".hero-art", hero);
     var conn = navigator.connection || {};
-    var light = conn.saveData || /(^|-)2g$/.test(conn.effectiveType || "");
+    // Sin video con ahorro de datos o conexiones más lentas que 4G
+    var light = conn.saveData || (!!conn.effectiveType && conn.effectiveType !== "4g");
     if ((hv.mp4 || hv.webm) && heroArt && !reduced && !light) {
       var v = document.createElement("video"), toggle = $("[data-hero-video-toggle]");
       v.className = "hero-video";
       v.muted = true; v.loop = true; v.autoplay = true; v.playsInline = true;
       v.setAttribute("muted", ""); v.setAttribute("playsinline", ""); v.setAttribute("aria-hidden", "true");
-      v.preload = "auto";
+      v.preload = "metadata";
       if (hv.poster) v.poster = hv.poster;
       [["webm", "video/webm"], ["mp4", "video/mp4"]].forEach(function (t) {
         if (!hv[t[0]]) return;
@@ -1922,8 +1967,15 @@
       heroArt.insertBefore(v, $(".hero-grain", heroArt));
       var pr = v.play();
       if (pr && pr.catch) pr.catch(function () {});
+      // Fuera de pantalla no se decodifica; al volver sigue, salvo que la persona lo haya pausado
+      var userPaused = false;
+      if ("IntersectionObserver" in window) new IntersectionObserver(function (en) {
+        if (en[0].isIntersecting) { if (!userPaused) { var q = v.play(); if (q && q.catch) q.catch(function () {}); } }
+        else v.pause();
+      }).observe(hero);
       if (toggle) toggle.addEventListener("click", function () {
         var paused = !v.paused;
+        userPaused = paused;
         if (paused) v.pause(); else v.play();
         toggle.setAttribute("aria-label", paused ? "Reproducir el video de portada" : "Pausar el video de portada");
         $("use", toggle).setAttribute("href", paused ? "#i-play" : "#i-pause");
@@ -2025,7 +2077,19 @@
   /* =============================================================
      Arranque
      ============================================================= */
+  /* =============================================================
+     Animaciones continuas: en pausa mientras no se ven (ahorra CPU y batería)
+     ============================================================= */
+  function initOffscreen() {
+    if (!("IntersectionObserver" in window)) return;
+    var io = new IntersectionObserver(function (en) {
+      en.forEach(function (x) { x.target.classList.toggle("is-offscreen", !x.isIntersecting); });
+    }, { rootMargin: "80px 0px" });
+    $$(".hero, .ticker, .tour-stage, .phone, .plan-canvas").forEach(function (el) { io.observe(el); });
+  }
+
   function boot() {
+    window.__fundosBoot = true;
     document.documentElement.classList.add("js");
     safe(initContact, "initContact");
     safe(initNav, "initNav");
@@ -2041,6 +2105,7 @@
     safe(initDialog, "initDialog");
     safe(initMobileBar, "initMobileBar");
     safe(initFaq, "initFaq");
+    safe(initOffscreen, "initOffscreen");
     $$('input[type="range"]').forEach(paintRange);
   }
 

@@ -52,7 +52,8 @@ index.html        Todo el contenido (se lee completo sin JavaScript)
 styles.css        Tokens del manual + estilos, mobile-first
 main.js           Interacciones: plano, filtros, favoritos, simulador, formulario, paralaje
 lib/manifest.js   Datos: contacto, proyectos, lotes, financiamiento
-assets/img/       Isotipo (del manual), logos de proyectos, fotos (nosotros y equipo), favicon y og-fundos.jpg
+assets/img/       Isotipo (del manual, también en 174 px para el menú), logos de proyectos, fotos (nosotros y equipo), favicon y og-fundos.jpg
+assets/fonts/     Cormorant Garamond y Mulish (woff2, latín)
 assets/video/     Videos propios (portada y proyectos), si se usan archivos en vez de YouTube
 .htaccess         Caché para hosting Apache/Hostinger
 ```
@@ -61,7 +62,7 @@ assets/video/     Videos propios (portada y proyectos), si se usan archivos en v
 
 Todo se configura en `lib/manifest.js`; si un campo queda vacío, no aparece nada.
 
-- **Video de portada (hero):** `videoPortada: { mp4: "assets/video/portada.mp4", webm: "", poster: "" }`. Debe ser un archivo propio (no YouTube): sin sonido, 10 a 20 segundos, H.264 a 1920 px y menos de 8 MB. Se reproduce en silencio y en bucle, con botón de pausa; no se carga con ahorro de datos ni con movimiento reducido, y mientras carga se ve la ilustración.
+- **Video de portada (hero):** `videoPortada: { mp4: "assets/video/portada.mp4", webm: "", poster: "" }`. Debe ser un archivo propio (no YouTube): sin sonido, 10 a 20 segundos, H.264 a 1920 px y menos de 8 MB. Se reproduce en silencio y en bucle, con botón de pausa; no se carga con ahorro de datos, en conexiones más lentas que 4G ni con movimiento reducido; se pausa cuando sale de pantalla, y mientras carga se ve la ilustración.
 - **Video de cada proyecto:** `video: "https://youtu.be/XXXXXXXXXXX"` (también `youtube.com/watch?v=…`, `shorts/…`, Vimeo o `assets/video/archivo.mp4`). Aparece el botón "Ver video" en la tarjeta y en la ficha, y se abre en un visor dentro de la página.
 - Para un video largo o con sonido, conviene YouTube o Vimeo: no consume el ancho de banda del hosting y se adapta a la conexión de cada persona.
 
@@ -86,7 +87,8 @@ Los tres planos (**Malalcahuello**, **Marchigüe** y **Puerto Varas**) replican 
 
 - Paleta y tipografías del manual. Se agregaron dos tonos derivados solo para texto pequeño sobre fondo claro, para cumplir contraste AA: dorado `#7A5D33` y neutro `#5E584E`.
 - El isotipo se extrajo del PDF del manual, con transparencia, y se usa sin alterar.
-- Sin librerías: JavaScript propio en patrón IIFE, `defer` y cada módulo aislado con `safe()`. Solo se carga Google Fonts.
-- Al subir cambios de CSS/JS, actualiza el `?v=AAAAMMDD` en `index.html`.
+- Sin librerías ni servicios externos: JavaScript propio en patrón IIFE, `defer` y cada módulo aislado con `safe()`. Las tipografías (Cormorant Garamond y Mulish, licencia OFL) se sirven desde `assets/fonts/`, precargadas y con respaldos del sistema ajustados a sus medidas, así el texto aparece de inmediato y no salta al cargar.
+- Al subir cambios de CSS/JS, actualiza el `?v=AAAAMMDD` en `index.html`: el `.htaccess` guarda esos archivos por un año. `lib/manifest.js` (precios y disponibilidad) es la excepción: se revalida en cada visita, así que un cambio de precios se ve de inmediato.
+- Rendimiento: el plano se arma cuando se acerca a la pantalla, sin filtros SVG (el zoom va fluido en el celular); las animaciones continuas se pausan fuera de pantalla y el video de portada no se descarga en conexiones lentas.
 - Con *movimiento reducido* activo se apagan el paralaje, las entradas animadas, el cinturón de valores, los trazos y las transiciones del plano. El cinturón también se pausa al pasar el cursor.
 - El formulario hoy abre WhatsApp. En producción conviene enviar también cada solicitud al módulo **Leads** de Fundos 360°.

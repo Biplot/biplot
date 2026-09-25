@@ -21,13 +21,14 @@
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"RealEstateAgent","name":"Fundos Inmobiliaria","url":"https://www.fundosinmobiliaria.com/","slogan":"La tierra como punto de partida.","areaServed":["Malalcahuello","Marchigüe","Puerto Varas"],"address":{"@type":"PostalAddress","addressCountry":"CL"}}
 </script>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Mulish:wght@400;600;700&display=swap">
-<link rel="stylesheet" href="styles.css?v=20260925o">
-<script defer src="lib/manifest.js?v=20260925o"></script>
-<script defer src="lib/planos.js?v=20260925o"></script>
-<script defer src="main.js?v=20260925o"></script>
+<script>document.documentElement.classList.add("js");setTimeout(function(){if(!window.__fundosBoot)document.documentElement.classList.remove("js")},8000)</script>
+<link rel="preload" href="assets/fonts/cormorant-garamond.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/fonts/cormorant-garamond-italic.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/fonts/mulish.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="styles.css?v=20260925p">
+<script defer src="lib/manifest.js?v=20260925p"></script>
+<script defer src="lib/planos.js?v=20260925p"></script>
+<script defer src="main.js?v=20260925p"></script>
 </head>
 <body>
 <a class="skip-link" href="#contenido">Saltar al contenido</a>
@@ -170,7 +171,7 @@
 <header class="nav" data-nav>
   <div class="nav-left">
     <a class="brand" href="#inicio" aria-label="Fundos Inmobiliaria, inicio">
-      <img src="assets/img/isotipo.webp" alt="" width="58" height="42" decoding="async">
+      <img src="assets/img/isotipo-174.webp" srcset="assets/img/isotipo-174.webp 174w, assets/img/isotipo.webp 480w" sizes="58px" alt="" width="58" height="42" decoding="async">
       <span class="brand-word" aria-hidden="true">Fundos<small>Inmobiliaria</small></span>
     </a>
     <!-- Quitar al publicar en el dominio de Fundos -->
@@ -197,7 +198,7 @@
   <div class="menu-inner">
     <h2 class="sr-only" id="menu-title">Menú</h2>
     <div class="menu-top">
-      <img src="assets/img/isotipo.webp" alt="" width="52" height="38" decoding="async">
+      <img src="assets/img/isotipo-174.webp" srcset="assets/img/isotipo-174.webp 174w, assets/img/isotipo.webp 480w" sizes="52px" alt="" width="52" height="38" decoding="async">
       <button class="icon-btn" type="button" aria-label="Cerrar menú" data-menu-close><svg class="i" aria-hidden="true"><use href="#i-close"/></svg></button>
     </div>
     <nav class="menu-links" aria-label="Menú móvil">
@@ -305,7 +306,7 @@
 
 <!-- ============================== BUSCADOR ============================== -->
 <div class="finder-wrap" id="buscador">
-  <form class="finder" role="search" aria-label="Buscar parcelas" data-finder novalidate>
+  <form class="finder" role="search" aria-label="Buscar parcelas" action="#plano" data-finder novalidate>
     <div class="finder-field">
       <label for="f-destino">Destino</label>
       <select id="f-destino" name="destino">
@@ -800,7 +801,7 @@
     <div class="phone reveal" aria-label="Vista previa de la sección Mi compra" role="img">
       <div class="phone-screen" aria-hidden="true">
         <div class="ph-top">
-          <img src="assets/img/isotipo.webp" alt="" width="34" height="25" decoding="async" loading="lazy">
+          <img src="assets/img/isotipo-174.webp" alt="" width="34" height="25" decoding="async" loading="lazy">
           <span>Mi compra</span>
         </div>
         <div class="ph-card">
@@ -836,6 +837,7 @@
     </header>
 
     <div class="sim reveal" role="group" aria-labelledby="sim-title" data-sim>
+      <noscript><p class="sim-noscript">Activa JavaScript para simular tu compra, o escríbenos por WhatsApp y te enviamos una simulación a tu medida.</p></noscript>
       <div class="sim-controls">
         <div class="field">
           <label for="s-proyecto">Proyecto</label>
@@ -909,7 +911,7 @@
         <p>Nacimos para hacer ese camino más simple. Sabemos que comprar un terreno puede parecer complejo y lleno de incertidumbre; por eso construimos una experiencia distinta: transparente en cada etapa, cercana en el trato y respaldada por tecnología que te permite avanzar con seguridad y confianza.</p>
       </div>
       <figure class="about-photo reveal">
-        <img src="assets/img/nosotros-rio.webp" alt="Río de aguas claras entre árboles nativos" width="943" height="646" loading="lazy" decoding="async">
+        <img src="assets/img/nosotros-rio-720.webp" srcset="assets/img/nosotros-rio-720.webp 720w, assets/img/nosotros-rio.webp 943w" sizes="(min-width: 960px) 584px, 92vw" alt="Río de aguas claras entre árboles nativos" width="943" height="646" loading="lazy" decoding="async">
         <figcaption>“Si sueñas con vivir más cerca de la naturaleza, aquí encontrarás el camino más seguro para lograrlo.”</figcaption>
       </figure>
     </div>
@@ -1107,7 +1109,7 @@
 <footer class="footer">
   <div class="container footer-grid">
     <div class="footer-brand">
-      <img src="assets/img/isotipo.webp" alt="Fundos Inmobiliaria" width="96" height="69" loading="lazy" decoding="async">
+      <img src="assets/img/isotipo-174.webp" srcset="assets/img/isotipo-174.webp 174w, assets/img/isotipo.webp 480w" sizes="96px" alt="Fundos Inmobiliaria" width="96" height="69" loading="lazy" decoding="async">
       <p class="footer-claim">La tierra como <em>punto de partida.</em></p>
     </div>
     <nav class="footer-col" aria-label="Proyectos">

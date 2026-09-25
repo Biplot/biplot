@@ -6,6 +6,14 @@
 /* =============================================================
    1. Tokens
    ============================================================= */
+/* Tipografías del manual, servidas desde el propio sitio (sin esperar a Google Fonts).
+   Los "Fallback" imitan sus medidas con fuentes del sistema: el texto no salta al cargar. */
+@font-face { font-family: "Cormorant Garamond"; font-style: normal; font-weight: 300 700; font-display: swap; src: url("assets/fonts/cormorant-garamond.woff2") format("woff2"); }
+@font-face { font-family: "Cormorant Garamond"; font-style: italic; font-weight: 500; font-display: swap; src: url("assets/fonts/cormorant-garamond-italic.woff2") format("woff2"); }
+@font-face { font-family: "Mulish"; font-style: normal; font-weight: 200 1000; font-display: swap; src: url("assets/fonts/mulish.woff2") format("woff2"); }
+@font-face { font-family: "Cormorant Fallback"; src: local("Times New Roman"), local("TimesNewRomanPSMT"), local("Liberation Serif"); size-adjust: 96.55%; ascent-override: 95.7%; descent-override: 29.73%; line-gap-override: 0%; }
+@font-face { font-family: "Mulish Fallback"; src: local("Arial"), local("ArialMT"), local("Liberation Sans"), local("Helvetica"); size-adjust: 103.38%; ascent-override: 97.21%; descent-override: 24.18%; line-gap-override: 0%; }
+
 :root {
   /* Verdes — superficies oscuras y acciones primarias */
   --g900: #0A140E;
@@ -32,8 +40,8 @@
   --line-dark: rgba(247, 245, 240, .14);
   --line-light: rgba(10, 20, 14, .12);
 
-  --serif: "Cormorant Garamond", "Cormorant", Garamond, "Times New Roman", serif;
-  --sans: "Mulish", -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+  --serif: "Cormorant Garamond", "Cormorant Fallback", Garamond, "Times New Roman", serif;
+  --sans: "Mulish", "Mulish Fallback", -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
 
   --ease-out: cubic-bezier(.16, 1, .3, 1);
   --ease-soft: cubic-bezier(.25, .46, .45, .94);
@@ -514,6 +522,11 @@ input[type="range"]:focus-visible { outline: 2px solid var(--gold); outline-offs
 .plan-stage { position: relative; align-self: start; background: #1A2317; border-radius: var(--r-md); overflow: hidden; overflow: clip; min-width: 0; color: var(--g900); }
 .plan-view { position: relative; overflow: hidden; overflow: clip; min-width: 0; }
 .plan-canvas { position: relative; overflow: hidden; overflow: clip; min-width: 0; touch-action: pan-y; -webkit-user-select: none; user-select: none; min-height: 200px; }
+/* Terreno: una textura que se dibuja una sola vez, no en cada cuadro de zoom */
+.plan-canvas { background: #1A2317 url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='420' height='420'%3E%3Cfilter id='n' x='0' y='0' width='100%25' height='100%25'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.014' numOctaves='4' seed='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='matrix' values='0 0 0 0 0.12  0 0 0 0 0.17  0 0 0 0 0.09  1.4 0 0 0 -0.45'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' fill='%231A2317'/%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.9'/%3E%3C/svg%3E") 0 0 / 420px 420px; }
+.pl-halo { fill: none; stroke: #000; vector-effect: non-scaling-stroke; stroke-linejoin: round; transform: translateY(2px); pointer-events: none; }
+.pl-halo-a { stroke-width: 14; stroke-opacity: .12; }
+.pl-halo-b { stroke-width: 6; stroke-opacity: .22; }
 .plan-canvas svg { display: block; width: 100%; height: 100%; }
 .plan-canvas.is-zoomed { cursor: grab; }
 .plan-canvas.is-dragging { cursor: grabbing; }
@@ -1475,6 +1488,29 @@ body.tour-lock { overflow: hidden; }
 .st input:not(:checked) + span { border-style: dashed; text-decoration: line-through; text-decoration-color: rgba(247, 245, 240, .45); }
 .plan-cats, .tour-picker { scroll-padding-inline: .8rem 3rem; }
 
+/* ---------------- Rendimiento (auditoría) ---------------- */
+.is-offscreen, .is-offscreen *, .is-offscreen *::before, .is-offscreen *::after { animation-play-state: paused !important; }
+/* Con el recorrido abierto, los adornos del portal quedan quietos detrás del visor */
+.tour-dot { animation: none; }
+.tour-stage[data-state="live"] .tour-dot { animation: tourLive 2s infinite; }
+.tour-stage[data-state="live"] .tour-ring, .tour-stage[data-state="live"] .tour-lens::before, .tour-stage[data-state="live"] .tour-poster svg { animation-play-state: paused; }
+.tour-drag .i { animation-iteration-count: 6; }
+.plan-canvas.is-switching svg { opacity: .55; transition: opacity .12s; }
+
+/* ---------------- Sin JavaScript ---------------- */
+/* Navegación visible y sin controles que no responden */
+html:not(.js) .nav-toggle { display: none; }
+html:not(.js) .nav { background: rgba(10, 20, 14, .97); }
+@media (max-width: 1279px) {
+  html:not(.js) .nav-links { display: flex; position: absolute; left: 0; right: 0; top: 100%; overflow-x: auto; gap: 1.3rem; padding: .55rem var(--gutter); background: rgba(10, 20, 14, .96); border-bottom: 1px solid var(--line-dark); }
+}
+html:not(.js) .plan-bar .tabs, html:not(.js) .view-toggle, html:not(.js) .plan-filters, html:not(.js) .plan-cats,
+html:not(.js) .lot-panel, html:not(.js) .plan-legend, html:not(.js) .skip-plan, html:not(.js) .tour-picker,
+html:not(.js) .sim-controls, html:not(.js) .sim-bar, html:not(.js) .sim-result dl, html:not(.js) .sim-note, html:not(.js) [data-s-send] { display: none; }
+html:not(.js) .plan-body { grid-template-columns: minmax(0, 1fr); }
+@media (max-width: 1279px) { html:not(.js) .hero-inner { padding-top: 3rem; } html:not(.js) { scroll-padding-top: calc(var(--nav-h) + 3.2rem); } }
+.sim-noscript { padding: 1.4rem 1.2rem; border-radius: var(--r-md); background: var(--n100); color: var(--g900); font-weight: 600; }
+
 /* ---------------- Anchos límite (QA) ---------------- */
 .finder-field { grid-template-columns: minmax(0, 1fr); }
 .finder-field select { width: 100%; min-width: 0; text-overflow: ellipsis; }
@@ -1576,6 +1612,7 @@ h2 em { text-wrap: balance; }
   .stars .tw, .hero-scroll .i, .phone, .lot-ring { animation: none; }
   .hero-video { transition: none; }
   .hero-tour-orb::after, .tour-poster svg, .tour-ring, .tour-lens::before, .tour-dot, .tour-drag .i { animation: none; }
+  .tour-stage[data-state="live"] .tour-dot, .faq details[open] p { animation: none; }
   .tour-frame { transition: none; }
   .ticker-track { animation: none; }
   .hero-scene .rise, .hero-title .line > span, .hero-kicker, .hero-sub, .hero-actions, .hero-tour, .finder,

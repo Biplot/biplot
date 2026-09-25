@@ -107,7 +107,7 @@
         resumen: "Bosque, lago y el volcán Osorno en el horizonte. Vida de sur con Puerto Montt y el aeropuerto a unos 20 km.",
         descripcion: "Nuestro próximo proyecto, en el entorno del lago Llanquihue y con el volcán Osorno en el horizonte. Las personas inscritas en la preventa reciben el plano y los precios de lanzamiento antes de su publicación.",
         destacados: ["Vista al volcán Osorno", "Entorno de bosque y lago", "Puerto Montt y aeropuerto cerca", "Precios de lanzamiento para inscritos"],
-        cercanias: [["Puerto Montt", "20 km"], ["Aeropuerto El Tepual", "20 km"], ["Frutillar", "27 km"]],
+        cercanias: [["Puerto Montt", "20 km"], ["Aeropuerto El Tepual", "20 km"], ["Frutillar", "32 km"]],
         cercaniasNota: "Distancias aproximadas desde Puerto Varas.",
         mapa: "https://www.google.com/maps/search/?api=1&query=Puerto+Varas%2C+Los+Lagos%2C+Chile",
         sectores: [],

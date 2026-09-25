@@ -38,7 +38,7 @@ Todo lo editable está en `lib/manifest.js`.
 - [ ] **Destacados y cercanías:** las distancias se miden desde cada pueblo, no desde el proyecto. Reemplazar por los tiempos reales.
 - [ ] **Mi compra:** es un módulo nuevo que se propone sobre Fundos 360°. Hoy la sección lo muestra como vista previa.
 - [ ] **Fotos:** las ilustraciones son intencionales, pero se pueden sumar fotos de dron reales en la ficha de cada proyecto.
-- [ ] **Al publicarlo en el dominio de Fundos:** quitar `noindex` y cambiar la URL de `og:image`.
+- [ ] **Al publicarlo en el dominio de Fundos:** quitar la etiqueta "Propuesta" del menú, quitar `noindex` y cambiar la URL de `og:image`.
 
 ## Estructura
 

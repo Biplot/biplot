@@ -502,7 +502,12 @@
     function lotOf(p, n) { for (var i = 0; i < p.lotes.length; i++) if (p.lotes[i].n === n) return p.lotes[i]; return null; }
     function passes(l) { return !!S.est[l.estado] && l.precio <= S.max && (S.sector === "" || String(l.sector) === S.sector); }
     function isFav(id, n) { return favs.indexOf(id + ":" + n) > -1; }
-    function lotLink(p, l) { return location.href.split("#")[0] + "#lote-" + p.id + "-" + l.n; }
+    // Enlace directo al lote; dentro de un marco (vista previa) se omite
+    function lotLink(p, l) {
+      var framed = true;
+      try { framed = window.self !== window.top; } catch (e) { framed = true; }
+      return framed ? "" : " " + location.href.split("#")[0] + "#lote-" + p.id + "-" + l.n;
+    }
 
     /* ---- Render ---- */
     function renderSvg() {
@@ -611,7 +616,7 @@
       if (l.estado === "disponible") { d.reserve.textContent = "Reservar este lote"; d.reserve.setAttribute("href", "#visita"); }
       else if (l.estado === "reservada") { d.reserve.textContent = "Avísame si se libera"; d.reserve.setAttribute("href", "#visita"); }
       else { d.reserve.textContent = "Ver un lote similar disponible"; d.reserve.setAttribute("href", "#plano"); }
-      d.wa.href = waHref("Hola Fundos, me interesa el lote " + l.n + " de " + p.nombre + " (" + m2(l.m2) + ", " + clp(l.precio) + "). ¿Me pueden dar más información? " + lotLink(p, l));
+      d.wa.href = waHref("Hola Fundos, me interesa el lote " + l.n + " de " + p.nombre + " (" + m2(l.m2) + ", " + clp(l.precio) + "). ¿Me pueden dar más información?" + lotLink(p, l));
       d.sim.hidden = l.estado === "vendida";
       syncFavButton();
     }
@@ -638,7 +643,9 @@
       var row = $('tr[data-n="' + n + '"]', list);
       if (row) row.classList.add("is-active");
       fillPanel(p, l);
-      if (opts.hash !== false && window.history && history.replaceState) history.replaceState(null, "", "#lote-" + p.id + "-" + n);
+      if (opts.hash !== false) {
+        try { history.replaceState(null, "", "#lote-" + p.id + "-" + n); } catch (e) { /* marco sin historial */ }
+      }
       if (!desktop.matches && opts.sheet !== false) openSheet();
     }
     function openSheet() {
@@ -995,6 +1002,7 @@
     var form = $("[data-visit]");
     if (!form) return;
     var ok = $("[data-visit-ok]", form), fb = $("[data-visit-fallback]", form), again = $("[data-visit-again]", form);
+    var okMsg = $("[data-visit-msg]", form);
     var el = form.elements;
     var today = new Date();
     var pad = function (n) { return (n < 10 ? "0" : "") + n; };
@@ -1049,9 +1057,9 @@
         (fecha ? " el " + fecha : "") + (horario ? " (" + horario + ")" : "") + "." +
         (el.mensaje.value.trim() ? " " + el.mensaje.value.trim() : "") +
         " Mi teléfono: " + el.telefono.value.trim() + ".";
-      var url = waHref(msg);
-      fb.href = url;
-      window.open(url, "_blank", "noopener");
+      // Se muestra el mensaje y se envía con un enlace real (sin ventanas emergentes)
+      fb.href = waHref(msg);
+      if (okMsg) okMsg.textContent = msg;
       ok.hidden = false;
       ok.focus();
     });

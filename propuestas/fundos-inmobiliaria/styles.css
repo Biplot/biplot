@@ -1004,7 +1004,7 @@ html:not(.js) .plan-zoom { display: none; }
 .pdialog[open] { animation: dialogIn .55s var(--ease-out); }
 .pd-art { aspect-ratio: 2 / 1; overflow: hidden; background: var(--g800); }
 .pd-art svg { width: 100%; height: 100%; }
-.pd-close { position: sticky; top: 14px; float: right; margin: 14px 14px -58px 0; z-index: 3; background: rgba(10, 20, 14, .6); color: var(--n050); border-color: rgba(247, 245, 240, .3); }
+.pd-close { position: sticky; top: 14px; display: grid; margin: 14px 14px -58px auto; z-index: 3; background: rgba(10, 20, 14, .6); color: var(--n050); border-color: rgba(247, 245, 240, .3); }
 .pd-body { padding: clamp(1.4rem, 4vw, 2.6rem); }
 .pd-body h2 { font-size: clamp(2.4rem, 5vw, 3.6rem); margin-bottom: 1rem; }
 .pd-desc { color: var(--n600); font-size: 1.05rem; max-width: 62ch; }
@@ -1392,7 +1392,9 @@ body.tour-lock { overflow: hidden; }
 .pd-facts { display: flex; flex-wrap: wrap; gap: .5rem; margin-top: 1.2rem; }
 .pd-facts span { padding: .4rem .8rem; border-radius: 999px; background: var(--n100); font-size: .84rem; font-weight: 600; color: var(--n600); }
 .pd-facts b { color: var(--g900); }
-.pd-actions { position: sticky; bottom: 0; z-index: 2; padding-block: 1rem; margin-bottom: -1rem; background: linear-gradient(transparent, var(--n050) 22%); }
+@media (min-width: 540px) {
+  .pd-actions { position: sticky; bottom: 0; z-index: 2; padding-block: 1rem; margin-bottom: -1rem; background: linear-gradient(transparent, var(--n050) 22%); }
+}
 @media (hover: none) { .on-mouse { display: none; } }
 .sim-lot { font-size: .8rem; font-weight: 700; color: var(--gold-ink); margin-top: .35rem; }
 

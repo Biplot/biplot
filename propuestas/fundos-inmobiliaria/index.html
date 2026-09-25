@@ -24,10 +24,10 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Mulish:wght@400;600;700&display=swap">
-<link rel="stylesheet" href="styles.css?v=20260925i">
-<script defer src="lib/manifest.js?v=20260925i"></script>
-<script defer src="lib/planos.js?v=20260925i"></script>
-<script defer src="main.js?v=20260925i"></script>
+<link rel="stylesheet" href="styles.css?v=20260925j">
+<script defer src="lib/manifest.js?v=20260925j"></script>
+<script defer src="lib/planos.js?v=20260925j"></script>
+<script defer src="main.js?v=20260925j"></script>
 </head>
 <body>
 <a class="skip-link" href="#contenido">Saltar al contenido</a>
@@ -158,6 +158,7 @@
   <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/></symbol>
   <symbol id="i-minus" viewBox="0 0 24 24"><path d="M5 12h14" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/></symbol>
   <symbol id="i-fit" viewBox="0 0 24 24"><path d="M9 4H5a1 1 0 0 0-1 1v4M15 4h4a1 1 0 0 1 1 1v4M9 20H5a1 1 0 0 1-1-1v-4M15 20h4a1 1 0 0 0 1-1v-4" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/><rect x="8.5" y="8.5" width="7" height="7" rx="1" fill="none" stroke="currentColor" stroke-width="1.5"/></symbol>
+  <symbol id="i-sliders" viewBox="0 0 24 24"><path d="M4 7h9M17 7h3M4 17h3M11 17h9" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/><circle cx="15" cy="7" r="2.2" fill="none" stroke="currentColor" stroke-width="1.7"/><circle cx="9" cy="17" r="2.2" fill="none" stroke="currentColor" stroke-width="1.7"/></symbol>
   <symbol id="i-shrink" viewBox="0 0 24 24"><path d="M9 4v5H4M15 4v5h5M9 20v-5H4M15 20v-5h5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></symbol>
   <symbol id="i-external" viewBox="0 0 24 24"><path d="M14 4h6v6M20 4l-8.5 8.5M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></symbol>
   <symbol id="i-play" viewBox="0 0 24 24"><path d="M8 5.5v13l10.5-6.5z" fill="currentColor"/></symbol>
@@ -293,7 +294,7 @@
     </div>
     <a class="hero-tour" href="#recorrido">
       <span class="hero-tour-orb" aria-hidden="true"><svg class="i"><use href="#i-360"/></svg></span>
-      <span>Recorre nuestros proyectos en 360°<small>Sin salir de esta página</small></span>
+      <span>Recorre nuestros proyectos en&nbsp;360°<small>Sin salir de esta página</small></span>
     </a>
   </div>
 
@@ -601,42 +602,54 @@
           <button class="tab" role="tab" type="button" aria-selected="false" data-tab="marchigue">Marchigüe</button>
           <button class="tab" role="tab" type="button" aria-selected="false" data-tab="puerto-varas">Puerto Varas</button>
         </div>
-        <div class="view-toggle" role="group" aria-label="Vista">
-          <button type="button" class="is-on" aria-pressed="true" data-view="plano"><svg class="i" aria-hidden="true"><use href="#i-map"/></svg>Plano</button>
-          <button type="button" aria-pressed="false" data-view="lista"><svg class="i" aria-hidden="true"><use href="#i-list"/></svg>Lista</button>
-          <a class="view-360" href="#recorrido" data-tour-open="plan"><svg class="i" aria-hidden="true"><use href="#i-360"/></svg>360°</a>
+        <div class="plan-bar-end">
+          <div class="view-toggle" role="group" aria-label="Vista">
+            <button type="button" class="is-on" aria-pressed="true" data-view="plano" aria-label="Ver como plano"><svg class="i" aria-hidden="true"><use href="#i-map"/></svg><span>Plano</span></button>
+            <button type="button" aria-pressed="false" data-view="lista" aria-label="Ver como lista"><svg class="i" aria-hidden="true"><use href="#i-list"/></svg><span>Lista</span></button>
+          </div>
+          <a class="plan-360" href="#recorrido" data-tour-open="plan"><svg class="i" aria-hidden="true"><use href="#i-360"/></svg>Tour 360°</a>
         </div>
       </div>
 
       <div class="plan-filters" data-filters>
-        <fieldset class="status-filter">
-          <legend class="sr-only">Estado del lote</legend>
-          <label class="st st-disponible"><input type="checkbox" value="disponible" checked><span>Disponibles</span></label>
-          <label class="st st-reservada"><input type="checkbox" value="reservada" checked><span>Reservados</span></label>
-          <label class="st st-vendida"><input type="checkbox" value="vendida" checked><span>Vendidos</span></label>
-        </fieldset>
-        <div class="range">
-          <div class="range-head"><label for="f-precio">Precio máximo</label> <output for="f-precio" data-price-out>Sin tope</output></div>
-          <input type="range" id="f-precio" min="0" max="100" step="1" value="100" data-price>
+        <div class="plan-filters-head">
+          <p class="plan-summary"><span data-summary aria-live="polite">17 de 58 lotes disponibles · desde $9.990.000</span> <button type="button" class="link-btn" data-clear-filters hidden>Limpiar filtros</button></p>
+          <button type="button" class="filters-toggle" data-filters-toggle aria-expanded="false" aria-controls="plan-filter-fields"><svg class="i" aria-hidden="true"><use href="#i-sliders"/></svg>Filtros<span data-filter-count></span></button>
         </div>
-        <div class="select-sm">
-          <label for="f-sector" class="sr-only">Categoría de precio</label>
-          <select id="f-sector" data-sector><option value="">Todas las categorías</option></select>
+        <div class="filter-fields" id="plan-filter-fields">
+          <fieldset class="status-filter">
+            <legend class="sr-only">Estado del lote</legend>
+            <label class="st st-disponible"><input type="checkbox" value="disponible" checked><span>Disponibles</span></label>
+            <label class="st st-reservada"><input type="checkbox" value="reservada" checked><span>Reservados</span></label>
+            <label class="st st-vendida"><input type="checkbox" value="vendida" checked><span>Vendidos</span></label>
+          </fieldset>
+          <div class="range">
+            <div class="range-head"><label for="f-precio">Precio máximo</label> <output for="f-precio" data-price-out>Sin tope</output></div>
+            <input type="range" id="f-precio" min="0" max="100" step="1" value="100" data-price>
+          </div>
         </div>
-        <p class="plan-summary" aria-live="polite" data-summary>17 de 58 lotes disponibles · desde $9.990.000</p>
       </div>
 
       <div class="plan-body">
         <div class="plan-stage" data-stage>
-          <div class="plan-canvas" data-canvas>
-            <noscript><p class="noscript">Activa JavaScript para recorrer el plano interactivo, o escríbenos por WhatsApp y te enviamos el plano comercial.</p></noscript>
+          <div class="plan-cats" data-cats></div>
+          <a class="skip-plan" href="#plan-panel">Saltar el plano</a>
+          <div class="plan-view">
+            <div class="plan-canvas" data-canvas>
+              <noscript><p class="noscript">Activa JavaScript para recorrer el plano interactivo, o escríbenos por WhatsApp y te enviamos el plano comercial.</p></noscript>
+            </div>
+            <div class="plan-zoom" data-zoom-ui>
+              <button type="button" data-zoom="out" aria-label="Alejar el plano" title="Alejar"><svg class="i" aria-hidden="true"><use href="#i-minus"/></svg></button>
+              <button type="button" data-zoom="in" aria-label="Acercar el plano" title="Acercar"><svg class="i" aria-hidden="true"><use href="#i-plus"/></svg></button>
+              <button type="button" data-zoom="fit" aria-label="Ver el plano completo" title="Ver completo"><svg class="i" aria-hidden="true"><use href="#i-fit"/></svg></button>
+            </div>
+            <p class="plan-hint" data-hint hidden>Toca un lote · pellizca para acercar</p>
+            <div class="plan-empty" data-plan-empty hidden>
+              <p>No hay lotes con estos filtros.</p>
+              <button type="button" class="btn btn-gold btn-sm" data-clear-filters>Limpiar filtros</button>
+            </div>
+            <div class="plan-tip" role="tooltip" data-tip hidden></div>
           </div>
-          <div class="plan-zoom" data-zoom-ui>
-            <button type="button" data-zoom="in" aria-label="Acercar el plano" title="Acercar"><svg class="i" aria-hidden="true"><use href="#i-plus"/></svg></button>
-            <button type="button" data-zoom="out" aria-label="Alejar el plano" title="Alejar"><svg class="i" aria-hidden="true"><use href="#i-minus"/></svg></button>
-            <button type="button" data-zoom="fit" aria-label="Ver el plano completo" title="Ver completo"><svg class="i" aria-hidden="true"><use href="#i-fit"/></svg></button>
-          </div>
-          <p class="plan-hint" data-hint hidden>Pellizca o usa + / − para acercar el plano</p>
           <div class="plan-legend" data-legend></div>
           <div class="plan-list" data-list hidden></div>
           <div class="plan-preventa" data-preventa-panel hidden>
@@ -648,54 +661,63 @@
             </div>
             <div class="pp-art" data-preventa-art aria-hidden="true"></div>
           </div>
-          <div class="plan-tip" role="tooltip" data-tip hidden></div>
+          <p class="sr-only" aria-live="polite" data-plan-live></p>
         </div>
 
-        <aside class="lot-panel" data-panel aria-live="polite" aria-label="Detalle del lote">
+        <div class="sheet-backdrop" data-sheet-backdrop hidden></div>
+        <aside class="lot-panel" id="plan-panel" data-panel aria-label="Detalle del lote" tabindex="-1">
           <div class="lot-empty" data-panel-empty>
             <svg class="i lot-empty-icon" aria-hidden="true"><use href="#i-map"/></svg>
-            <h3>Selecciona un lote</h3>
-            <p>Toca cualquier lote del plano para ver su precio, superficie y disponibilidad.</p>
+            <h3>Elige un lote</h3>
+            <p>Haz clic en cualquier lote del plano para ver su precio, superficie y disponibilidad.</p>
             <dl class="lot-stats" data-panel-stats>
               <div><dt>Disponibles</dt><dd>17</dd></div>
               <div><dt>Desde</dt><dd>$9.990.000</dd></div>
             </dl>
+            <div class="lot-short" data-panel-short></div>
             <div class="lot-help">
               <p>¿Prefieres que te ayudemos a elegir? Cuéntanos qué buscas y te recomendamos lotes.</p>
               <a class="btn btn-ghost btn-sm" href="https://wa.me/56900000000" target="_blank" rel="noopener" data-wa data-wa-msg="Hola Fundos, ¿me ayudan a elegir una parcela?"><svg class="i" aria-hidden="true"><use href="#i-whatsapp"/></svg>Pedir recomendación</a>
             </div>
           </div>
           <div class="lot-detail" data-panel-detail hidden>
+            <button class="sheet-grab" type="button" data-sheet-grab aria-expanded="false" aria-label="Ver más detalle del lote"></button>
             <button class="icon-btn lot-close" type="button" aria-label="Cerrar detalle" data-panel-close><svg class="i" aria-hidden="true"><use href="#i-close"/></svg></button>
             <p class="kicker" data-d-project>Malalcahuello</p>
             <div class="lot-title">
-              <h3 data-d-title>Lote 12</h3>
+              <h3 id="lot-title" data-d-title>Lote</h3>
               <span class="pill" data-d-status>Disponible</span>
             </div>
-            <p class="lot-sector" data-d-sector>Precio lista <s>$30.990.000</s></p>
-            <p class="lot-price" data-d-price>$22.990.000</p>
+            <p class="lot-sector" data-d-sector></p>
+            <p class="lot-price" data-d-price></p>
+            <div class="lot-alts" data-d-alts hidden></div>
+            <div class="lot-actions">
+              <a class="btn btn-gold" href="#visita" data-d-reserve>Reservar este lote</a>
+              <a class="btn btn-ghost" href="https://wa.me/56900000000" target="_blank" rel="noopener" data-d-wa><svg class="i" aria-hidden="true"><use href="#i-whatsapp"/></svg><span>Consultar</span></a>
+              <button class="btn btn-ghost fav-btn" type="button" aria-pressed="false" data-d-fav><svg class="i" aria-hidden="true"><use href="#i-heart"/></svg><span>Guardar</span></button>
+            </div>
+            <p class="lot-toast" role="status" data-d-toast hidden></p>
             <dl class="lot-facts">
               <div><dt>Superficie</dt><dd data-d-m2>5.000 m²</dd></div>
               <div><dt>Reserva</dt><dd data-d-reserva>$1.000.000</dd></div>
-              <div><dt>Saldo a la escritura</dt><dd data-d-saldo>$21.990.000</dd></div>
-              <div><dt>Valor por m²</dt><dd data-d-m2price>$4.598</dd></div>
+              <div><dt>Saldo a la escritura</dt><dd data-d-saldo></dd></div>
+              <div><dt>Valor por m²</dt><dd data-d-m2price></dd></div>
             </dl>
-            <div class="lot-actions">
-              <a class="btn btn-gold" href="#visita" data-d-reserve>Reservar este lote</a>
-              <a class="btn btn-ghost" href="https://wa.me/56900000000" target="_blank" rel="noopener" data-d-wa><svg class="i" aria-hidden="true"><use href="#i-whatsapp"/></svg>Consultar</a>
-              <button class="btn btn-ghost fav-btn" type="button" aria-pressed="false" data-d-fav><svg class="i" aria-hidden="true"><use href="#i-heart"/></svg><span>Guardar</span></button>
-            </div>
             <a class="lot-sim" href="#simulador" data-d-sim>Simular el pago de este lote<svg class="i i-go" aria-hidden="true"><use href="#i-arrow"/></svg></a>
           </div>
         </aside>
       </div>
 
-      <div class="favs" data-favs hidden>
-        <p><svg class="i" aria-hidden="true"><use href="#i-heart"/></svg><strong data-favs-count>0</strong> <span data-favs-label>lotes guardados</span> <span class="favs-list" data-favs-list></span></p>
-        <div class="favs-actions">
-          <a class="btn btn-gold btn-sm" href="https://wa.me/56900000000" target="_blank" rel="noopener" data-favs-send><svg class="i" aria-hidden="true"><use href="#i-whatsapp"/></svg>Enviar por WhatsApp</a>
-          <button class="btn btn-ghost btn-sm" type="button" data-favs-clear>Limpiar</button>
+      <div class="favs" id="plan-favs" data-favs hidden>
+        <div class="favs-main" data-favs-main>
+          <p><svg class="i" aria-hidden="true"><use href="#i-heart"/></svg><strong data-favs-count>0</strong> <span data-favs-label>lotes guardados</span></p>
+          <div class="favs-list" data-favs-list></div>
+          <div class="favs-actions">
+            <a class="btn btn-gold btn-sm" href="https://wa.me/56900000000" target="_blank" rel="noopener" data-favs-send><svg class="i" aria-hidden="true"><use href="#i-whatsapp"/></svg>Enviar por WhatsApp</a>
+            <button class="btn btn-ghost btn-sm" type="button" data-favs-clear>Borrar todos</button>
+          </div>
         </div>
+        <p class="favs-undo" data-favs-undo hidden role="status">Borraste tus favoritos. <button type="button" class="link-btn" data-favs-restore>Deshacer</button></p>
       </div>
       <p class="plan-note">Planos basados en los masterplan de cada proyecto. Precios y disponibilidad referenciales, sujetos a confirmación al momento de reservar.</p>
     </div>
@@ -707,7 +729,7 @@
   <div class="container">
     <header class="section-head reveal">
       <p class="kicker">Cómo comprar</p>
-      <h2 id="pasos-title">Un camino claro, <em>de la visita a la escritura.</em></h2>
+      <h2 id="pasos-title">Un camino claro,<br> <em>de la visita a la escritura.</em></h2>
       <p class="lead">Comprar un terreno puede parecer complejo. Por eso dividimos el proceso en seis etapas, cada una con responsables, documentos y avance a la vista.</p>
     </header>
 

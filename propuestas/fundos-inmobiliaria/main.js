@@ -78,6 +78,7 @@
   var Plan = { apply: function () {}, show: function () {} };
   var Sim = { set: function () {} };
   var Tour = { open: function () {} };
+  var Video = { open: function () {} };
 
   /* =============================================================
      Contacto: un solo lugar para número, correo y horario
@@ -815,12 +816,20 @@
       [viewToggle, statusBox, rangeBox, sectorBox, panel].forEach(function (el) { if (el) el.hidden = pre; });
       if (legend) legend.hidden = pre || S.view !== "plano";
       var ppArt = $("[data-preventa-art]", root);
-      if (pre && ppArt && !ppArt.children.length) {
-        var src = $('.project[data-project="' + id + '"] .project-art svg');
-        if (src) ppArt.appendChild(src.cloneNode(true));
+      if (pre) {
+        var ppKick = $("[data-preventa-kicker]", root), ppBtn = $("[data-preventa]", prev);
+        if (ppKick) ppKick.textContent = "Preventa · " + p.nombre;
+        if (ppBtn) ppBtn.setAttribute("data-preventa", p.id);
+        if (ppArt && ppArt.getAttribute("data-for") !== id) {
+          var src = $('.project[data-project="' + id + '"] .project-art svg');
+          ppArt.innerHTML = "";
+          if (src) ppArt.appendChild(src.cloneNode(true));
+          ppArt.setAttribute("data-for", id);
+        }
       }
       resetPanel();
       if (pre) {
+        if (hint) hint.hidden = true;
         canvas.hidden = true;
         list.hidden = true;
         canvas.innerHTML = "";
@@ -1119,6 +1128,7 @@
     var rules = {
       nombre: function (v) { return v.trim().length >= 2; },
       telefono: function (v) { var d = v.replace(/\D/g, ""); return d.length >= 8 && d.length <= 15; },
+      correo: function (v) { v = v.trim(); return !v || /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v); },
       acepto: function (_, input) { return input.checked; }
     };
     function check(name) {
@@ -1156,7 +1166,8 @@
         (proyectoTxt === "Aún no lo sé" ? "Quiero agendar una visita y conocer sus proyectos" : "Quiero agendar una visita a " + proyectoTxt) +
         (fecha ? " el " + fecha : "") + (horario ? " (" + horario + ")" : "") + "." +
         (el.mensaje.value.trim() ? " " + el.mensaje.value.trim() : "") +
-        " Mi teléfono: " + el.telefono.value.trim() + ".";
+        " Mi teléfono: " + el.telefono.value.trim() + "." +
+        (el.correo && el.correo.value.trim() ? " Mi correo: " + el.correo.value.trim() + "." : "");
       // Se muestra el mensaje y se envía con un enlace real (sin ventanas emergentes)
       fb.href = waHref(msg);
       if (okMsg) okMsg.textContent = msg;
@@ -1188,7 +1199,7 @@
   function initDialog() {
     var dlg = $("[data-pdialog]");
     if (!dlg || typeof dlg.showModal !== "function") return; // sin soporte: los enlaces navegan normal
-    var art = $("[data-pd-art]", dlg);
+    var art = $("[data-pd-art]", dlg), logo = $("[data-pd-logo]", dlg);
     var f = {
       meta: $("[data-pd-meta]", dlg), title: $("[data-pd-title]", dlg), desc: $("[data-pd-desc]", dlg),
       list: $("[data-pd-list]", dlg), near: $("[data-pd-near]", dlg), note: $("[data-pd-near-note]", dlg),
@@ -1203,6 +1214,10 @@
       var src = $('.project[data-project="' + id + '"] .project-art svg');
       art.innerHTML = "";
       if (src) art.appendChild(src.cloneNode(true));
+      if (logo) {
+        logo.hidden = !p.logo;
+        if (p.logo) { logo.src = p.logo; logo.alt = "Fundos de " + p.nombre; }
+      }
       f.meta.textContent = p.region + " · " + p.zona;
       f.title.textContent = p.nombre;
       f.desc.textContent = p.descripcion;
@@ -1213,12 +1228,14 @@
       f.actions.innerHTML = p.estado === "preventa"
         ? '<a class="btn btn-gold" href="#visita" data-act="preventa">Inscribirme en la preventa' + arrow + '</a><a class="btn btn-line" href="' + esc(waHref("Hola Fundos, quiero saber más de la preventa de " + p.nombre + ".")) + '" target="_blank" rel="noopener">Preguntar por WhatsApp</a>'
         : '<a class="btn btn-dark" href="#plano" data-act="plano">Ver lotes disponibles' + arrow + '</a><a class="btn btn-line" href="#visita" data-act="visita">Agendar una visita</a>';
+      if (p.video) f.actions.insertAdjacentHTML("beforeend", '<button class="btn btn-line" type="button" data-act="video"><svg class="i" aria-hidden="true"><use href="#i-play"/></svg>Ver video</button>');
       if (p.tour) f.actions.insertAdjacentHTML("beforeend", '<a class="btn btn-line" href="#recorrido" data-act="tour"><svg class="i" aria-hidden="true"><use href="#i-360"/></svg>Recorrido 360°</a>');
       $$("[data-act]", f.actions).forEach(function (a) {
         a.addEventListener("click", function () {
           var act = a.getAttribute("data-act");
           if (act === "plano") Plan.show(p.id);
           if (act === "tour") Tour.open(p.id, true);
+          if (act === "video") { dlg.close(); Video.open(p.id); return; }
           if (act === "visita") Visit.prefill({ proyecto: p.nombre, mensaje: "" });
           if (act === "preventa") Visit.prefill({ proyecto: p.nombre, mensaje: "Quiero inscribirme en la preventa de " + p.nombre + "." });
           dlg.close();
@@ -1444,6 +1461,106 @@
   }
 
   /* =============================================================
+     Videos: portada del hero y visor para cada proyecto
+     Se configuran en lib/manifest.js (videoPortada y video de cada proyecto)
+     ============================================================= */
+  function videoSource(src) {
+    var m = /(?:youtu\.be\/|youtube(?:-nocookie)?\.com\/(?:watch\?(?:.*&)?v=|embed\/|shorts\/|live\/))([\w-]{11})/.exec(src);
+    if (m) return { frame: "https://www.youtube-nocookie.com/embed/" + m[1] + "?autoplay=1&rel=0&playsinline=1", link: "https://www.youtube.com/watch?v=" + m[1] };
+    m = /vimeo\.com\/(?:video\/)?(\d+)/.exec(src);
+    if (m) return { frame: "https://player.vimeo.com/video/" + m[1] + "?autoplay=1&title=0&byline=0&portrait=0", link: "https://vimeo.com/" + m[1] };
+    return { file: src, link: src };
+  }
+
+  function initVideo() {
+    // Portada: video de fondo sobre la ilustración (que queda como respaldo)
+    var hv = B.videoPortada || {}, hero = $("[data-hero]"), heroArt = hero && $(".hero-art", hero);
+    var conn = navigator.connection || {};
+    var light = conn.saveData || /(^|-)2g$/.test(conn.effectiveType || "");
+    if ((hv.mp4 || hv.webm) && heroArt && !reduced && !light) {
+      var v = document.createElement("video"), toggle = $("[data-hero-video-toggle]");
+      v.className = "hero-video";
+      v.muted = true; v.loop = true; v.autoplay = true; v.playsInline = true;
+      v.setAttribute("muted", ""); v.setAttribute("playsinline", ""); v.setAttribute("aria-hidden", "true");
+      v.preload = "auto";
+      if (hv.poster) v.poster = hv.poster;
+      [["webm", "video/webm"], ["mp4", "video/mp4"]].forEach(function (t) {
+        if (!hv[t[0]]) return;
+        var so = document.createElement("source");
+        so.src = hv[t[0]]; so.type = t[1];
+        v.appendChild(so);
+      });
+      v.addEventListener("playing", function () {
+        hero.classList.add("has-video");
+        if (toggle) toggle.hidden = false;
+      });
+      heroArt.insertBefore(v, $(".hero-grain", heroArt));
+      var pr = v.play();
+      if (pr && pr.catch) pr.catch(function () {});
+      if (toggle) toggle.addEventListener("click", function () {
+        var paused = !v.paused;
+        if (paused) v.pause(); else v.play();
+        toggle.setAttribute("aria-label", paused ? "Reproducir el video de portada" : "Pausar el video de portada");
+        $("use", toggle).setAttribute("href", paused ? "#i-play" : "#i-pause");
+      });
+    }
+
+    // Visor
+    var dlg = $("[data-vdialog]");
+    if (!dlg || typeof dlg.showModal !== "function") return;
+    var box = $("[data-vd-frame]", dlg), title = $("[data-vd-title]", dlg);
+    var blockedMsg = $("[data-vd-blocked]", dlg), link = $("[data-vd-link]", dlg);
+    var loading = false;
+
+    function stop() { box.innerHTML = ""; loading = false; }
+    function open(id) {
+      var p = proyecto(id);
+      if (!p || !p.video) return;
+      var s = videoSource(p.video);
+      title.textContent = p.nombre + " en video";
+      link.href = s.link;
+      blockedMsg.hidden = true;
+      box.hidden = false;
+      stop();
+      if (s.frame) {
+        var f = document.createElement("iframe");
+        f.src = s.frame;
+        f.title = "Video de " + p.nombre;
+        f.setAttribute("allow", "autoplay; fullscreen; picture-in-picture; encrypted-media");
+        f.setAttribute("allowfullscreen", "");
+        f.setAttribute("referrerpolicy", "strict-origin-when-cross-origin");
+        loading = true;
+        box.appendChild(f);
+      } else {
+        var v = document.createElement("video");
+        v.src = s.file; v.controls = true; v.autoplay = true; v.playsInline = true;
+        v.setAttribute("playsinline", "");
+        box.appendChild(v);
+      }
+      dlg.showModal();
+    }
+    Video.open = open;
+    // Si el sitio no permite incrustar reproductores externos, se ofrece el enlace
+    document.addEventListener("securitypolicyviolation", function (e) {
+      var d = e.effectiveDirective || e.violatedDirective || "";
+      if (!loading || !dlg.open || !/^(frame|child|default)-src/.test(d)) return;
+      stop();
+      box.hidden = true;
+      blockedMsg.hidden = false;
+    });
+    $("[data-vd-close]", dlg).addEventListener("click", function () { dlg.close(); });
+    dlg.addEventListener("click", function (e) { if (e.target === dlg) dlg.close(); });
+    dlg.addEventListener("close", stop);
+
+    $$("[data-video-open]").forEach(function (b) {
+      var p = proyecto(b.getAttribute("data-video-open"));
+      if (!p || !p.video) return;
+      b.hidden = false;
+      b.addEventListener("click", function () { open(p.id); });
+    });
+  }
+
+  /* =============================================================
      Barra de acción móvil
      ============================================================= */
   function initMobileBar() {
@@ -1484,6 +1601,7 @@
     safe(initSim, "initSim");
     safe(initPlan, "initPlan");
     safe(initTour, "initTour");
+    safe(initVideo, "initVideo");
     safe(initFinder, "initFinder");
     safe(initDialog, "initDialog");
     safe(initMobileBar, "initMobileBar");

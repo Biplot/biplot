@@ -24,10 +24,10 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Mulish:wght@400;600;700&display=swap">
-<link rel="stylesheet" href="styles.css?v=20260925e">
-<script defer src="lib/manifest.js?v=20260925e"></script>
-<script defer src="lib/planos.js?v=20260925e"></script>
-<script defer src="main.js?v=20260925e"></script>
+<link rel="stylesheet" href="styles.css?v=20260925f">
+<script defer src="lib/manifest.js?v=20260925f"></script>
+<script defer src="lib/planos.js?v=20260925f"></script>
+<script defer src="main.js?v=20260925f"></script>
 </head>
 <body>
 <a class="skip-link" href="#contenido">Saltar al contenido</a>
@@ -115,6 +115,15 @@
       <stop offset="1" stop-color="#34432B"/>
     </linearGradient>
     <!-- Escena Puerto Varas -->
+    <linearGradient id="g-sd-sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#C9DADB"/>
+      <stop offset=".55" stop-color="#F1E4CE"/>
+      <stop offset="1" stop-color="#F3D5A8"/>
+    </linearGradient>
+    <linearGradient id="g-sd-sea" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#7C9FA2"/>
+      <stop offset="1" stop-color="#557A7D"/>
+    </linearGradient>
     <linearGradient id="g-pv-sky" x1="0" y1="0" x2="0" y2="1">
       <stop offset="0" stop-color="#F7F5F0"/>
       <stop offset="1" stop-color="#E4DED2"/>
@@ -157,6 +166,8 @@
   <symbol id="i-expand" viewBox="0 0 24 24"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></symbol>
   <symbol id="i-shrink" viewBox="0 0 24 24"><path d="M9 4v5H4M15 4v5h5M9 20v-5H4M15 20v-5h5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></symbol>
   <symbol id="i-external" viewBox="0 0 24 24"><path d="M14 4h6v6M20 4l-8.5 8.5M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-play" viewBox="0 0 24 24"><path d="M8 5.5v13l10.5-6.5z" fill="currentColor"/></symbol>
+  <symbol id="i-pause" viewBox="0 0 24 24"><path d="M8 5.5v13M16 5.5v13" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/></symbol>
 </svg>
 
 <!-- ================================ NAV ================================ -->
@@ -281,17 +292,18 @@
       <span class="line"><span>La tierra como</span></span>
       <span class="line"><span><em>punto de partida.</em></span></span>
     </h1>
-    <p class="hero-sub">Elige tu parcela en Malalcahuello, Marchigüe o Puerto Varas y avanza con un equipo que te acompaña desde la primera visita hasta la inscripción en el Conservador. Sin letra chica.</p>
+    <p class="hero-sub">Elige tu parcela en Malalcahuello, Marchigüe o Puerto Varas —y muy pronto en la costa de Santo Domingo— con un equipo que te acompaña desde la primera visita hasta la inscripción en el Conservador. Sin letra chica.</p>
     <div class="hero-actions">
       <a class="btn btn-gold btn-lg" href="#plano">Ver parcelas disponibles<svg class="i i-go" aria-hidden="true"><use href="#i-arrow"/></svg></a>
       <a class="btn btn-ghost btn-lg" href="#visita"><svg class="i" aria-hidden="true"><use href="#i-calendar"/></svg>Agendar una visita</a>
     </div>
     <a class="hero-tour" href="#recorrido">
       <span class="hero-tour-orb" aria-hidden="true"><svg class="i"><use href="#i-360"/></svg></span>
-      <span>Recorre los tres proyectos en 360°<small>Sin salir de esta página</small></span>
+      <span>Recorre nuestros proyectos en 360°<small>Sin salir de esta página</small></span>
     </a>
   </div>
 
+  <button class="hero-video-toggle" type="button" data-hero-video-toggle aria-label="Pausar el video de portada" hidden><svg class="i" aria-hidden="true"><use href="#i-pause"/></svg></button>
   <a class="hero-scroll" href="#buscador" aria-label="Bajar al buscador"><svg class="i" aria-hidden="true"><use href="#i-down"/></svg></a>
 </section>
 
@@ -305,6 +317,7 @@
         <option value="malalcahuello">Malalcahuello · Araucanía</option>
         <option value="marchigue">Marchigüe · O'Higgins</option>
         <option value="puerto-varas">Puerto Varas · Los Lagos</option>
+        <option value="santo-domingo">Santo Domingo · Valparaíso (preventa)</option>
       </select>
     </div>
     <div class="finder-field">
@@ -345,8 +358,8 @@
   <div class="container">
     <header class="section-head reveal">
       <p class="kicker">Nuestros proyectos</p>
-      <h2 id="proyectos-title">Tres paisajes.<br> <em>Un mismo cuidado.</em></h2>
-      <p class="lead">Parcelas de 5.000 m² en la cordillera de La Araucanía, el valle de Colchagua y el entorno del lago Llanquihue. Elige dónde quieres despertar.</p>
+      <h2 id="proyectos-title">Cuatro paisajes.<br> <em>Un mismo cuidado.</em></h2>
+      <p class="lead">Parcelas en la cordillera de La Araucanía, el valle de Colchagua, el entorno del lago Llanquihue y, muy pronto, la costa de Santo Domingo. Elige dónde quieres despertar.</p>
     </header>
 
     <div class="projects">
@@ -379,6 +392,7 @@
               <path d="M530 328V230h3v98z"/><path d="M503 250Q531 220 559 250Q531 234 503 250zM509 238Q531 212 553 238Q531 224 509 238zM516 227Q531 206 546 227Q531 214 516 227z"/>
             </g>
           </svg>
+          <button class="art-play" type="button" data-video-open="malalcahuello" hidden><span class="art-play-dot"><svg class="i" aria-hidden="true"><use href="#i-play"/></svg></span>Ver video</button>
           <a class="art-360" href="#recorrido" data-tour-open="malalcahuello"><svg class="i" aria-hidden="true"><use href="#i-360"/></svg>Recorrido 360°</a>
           <span class="badge">17 disponibles</span>
         </div>
@@ -428,6 +442,7 @@
               <path d="M0 352C200 336 400 346 600 336V380H0Z" fill="#2B3421"/>
             </g>
           </svg>
+          <button class="art-play" type="button" data-video-open="marchigue" hidden><span class="art-play-dot"><svg class="i" aria-hidden="true"><use href="#i-play"/></svg></span>Ver video</button>
           <a class="art-360" href="#recorrido" data-tour-open="marchigue"><svg class="i" aria-hidden="true"><use href="#i-360"/></svg>Recorrido 360°</a>
           <span class="badge">12 disponibles</span>
         </div>
@@ -473,6 +488,7 @@
               <path d="M20 322C14 306 14 284 20 268C26 284 26 306 20 322ZM42 320C35 300 35 272 42 252C49 272 49 300 42 320ZM64 322C58 306 58 286 64 272C70 286 70 306 64 322ZM520 316C513 296 513 268 520 248C527 268 527 296 520 316ZM544 318C538 302 538 280 544 264C550 280 550 302 544 318ZM566 314C559 294 559 266 566 246C573 266 573 294 566 314ZM588 316C582 300 582 280 588 266C594 280 594 300 588 316Z"/>
             </g>
           </svg>
+          <button class="art-play" type="button" data-video-open="puerto-varas" hidden><span class="art-play-dot"><svg class="i" aria-hidden="true"><use href="#i-play"/></svg></span>Ver video</button>
           <a class="art-360" href="#recorrido" data-tour-open="puerto-varas"><svg class="i" aria-hidden="true"><use href="#i-360"/></svg>Recorrido 360°</a>
           <span class="badge">78 disponibles</span>
         </div>
@@ -491,6 +507,62 @@
           <div class="project-actions">
             <a class="btn btn-dark" href="#plano" data-goto-plan="puerto-varas">Ver lotes<svg class="i i-go" aria-hidden="true"><use href="#i-arrow"/></svg></a>
             <a class="btn btn-line" href="#plano" data-open-project="puerto-varas">Conocer el proyecto</a>
+          </div>
+        </div>
+      </article>
+
+      <!-- Santo Domingo (preventa) -->
+      <article class="project project-soon reveal" data-project="santo-domingo">
+        <div class="project-art">
+          <svg viewBox="0 0 600 380" preserveAspectRatio="xMidYMid slice" aria-hidden="true" focusable="false">
+            <rect width="600" height="380" fill="url(#g-sd-sky)"/>
+            <circle cx="420" cy="196" r="74" fill="#FFF1D6" opacity=".35"/>
+            <circle cx="420" cy="196" r="30" fill="#FBEBCB"/>
+            <g class="pl" style="--d:.2">
+              <rect y="198" width="600" height="84" fill="url(#g-sd-sea)"/>
+              <path d="M350 206h140M368 216h104M386 226h68M400 236h40" stroke="#FFF1D6" stroke-opacity=".7" stroke-width="2" stroke-linecap="round"/>
+              <g stroke="#F7F5F0" stroke-opacity=".5" stroke-linecap="round"><path d="M40 222h70M150 238h90M60 254h60M250 248h60M500 246h60M530 262h40"/></g>
+            </g>
+            <g class="pl" style="--d:.4">
+              <path d="M0 270C90 258 170 264 250 272C330 280 420 268 600 264V380H0Z" fill="#DCCBA8"/>
+              <path d="M0 270C90 258 170 264 250 272C330 280 420 268 600 264" fill="none" stroke="#F7F5F0" stroke-width="2.6" stroke-linecap="round" opacity=".9"/>
+            </g>
+            <g class="pl" style="--d:.65">
+              <path d="M0 302C80 282 180 288 260 300C340 312 420 298 600 292V380H0Z" fill="#8C8C60"/>
+              <path d="M0 302C80 282 180 288 260 300C340 312 420 298 600 292" fill="none" stroke="#E9D2A0" stroke-opacity=".5" stroke-width="1.4"/>
+              <g fill="#2F3B26">
+                <path d="M74 300C73 286 75 274 80 262" fill="none" stroke="#2F3B26" stroke-width="3.2"/>
+                <path d="M42 264C46 251 62 247 80 249C98 245 116 251 118 262C106 269 58 271 42 264Z"/>
+                <path d="M148 298C147 288 149 280 152 272" fill="none" stroke="#2F3B26" stroke-width="2.4"/>
+                <path d="M126 274C130 265 142 262 152 263C164 260 176 265 178 273C168 278 136 279 126 274Z"/>
+              </g>
+            </g>
+            <g class="pl" style="--d:1">
+              <path d="M0 342C200 328 400 336 600 328V380H0Z" fill="#2B3421"/>
+              <rect x="416" y="282" width="20" height="58" rx="2" fill="#CFC6AE"/>
+              <rect x="524" y="282" width="20" height="58" rx="2" fill="#CFC6AE"/>
+              <path d="M416 296h20M416 310h20M416 324h20M524 296h20M524 310h20M524 324h20M426 282v14M534 296v14M422 310v14M538 324v14" stroke="#9E957E" stroke-width="1.2"/>
+              <rect x="412" y="277" width="28" height="6" rx="1.5" fill="#E4DED2"/>
+              <rect x="520" y="277" width="28" height="6" rx="1.5" fill="#E4DED2"/>
+              <rect x="436" y="292" width="88" height="42" fill="#2F3B26"/>
+              <path d="M436 300h88M436 308h88M436 316h88M436 324h88M480 292v42" stroke="#1C2618" stroke-width="1.6"/>
+              <path d="M548 300C560 286 566 268 562 250M556 282c8-2 14-8 16-16M552 268c-8-2-12-8-12-16M562 262c7-3 11-9 11-17" fill="none" stroke="#5E663F" stroke-width="2" stroke-linecap="round"/>
+            </g>
+          </svg>
+          <span class="badge badge-gold">Preventa</span>
+        </div>
+        <div class="project-body">
+          <img class="project-logo" src="assets/img/logo-santo-domingo.webp" alt="Fundos de Santo Domingo" width="309" height="214" loading="lazy" decoding="async">
+          <p class="project-meta"><svg class="i" aria-hidden="true"><use href="#i-pin"/></svg>Valparaíso · Costa central</p>
+          <h3>Santo Domingo</h3>
+          <p class="project-desc">Naturaleza privilegiada, costa exclusiva, vida extraordinaria. Nuestro próximo proyecto, cerca del mar y a un par de horas de Santiago.</p>
+          <ul class="chips">
+            <li>Costa central</li><li>Precios de lanzamiento</li><li>Cupos limitados</li>
+          </ul>
+          <div class="project-actions">
+            <a class="btn btn-gold" href="#visita" data-preventa="santo-domingo">Inscribirme en la preventa<svg class="i i-go" aria-hidden="true"><use href="#i-arrow"/></svg></a>
+            <a class="btn btn-line" href="#plano" data-open-project="santo-domingo">Conocer el proyecto</a>
+            <button class="btn btn-line art-play-btn" type="button" data-video-open="santo-domingo" hidden><svg class="i" aria-hidden="true"><use href="#i-play"/></svg>Ver video</button>
           </div>
         </div>
       </article>
@@ -590,6 +662,7 @@
           <button class="tab" role="tab" type="button" aria-selected="true" data-tab="malalcahuello">Malalcahuello</button>
           <button class="tab" role="tab" type="button" aria-selected="false" data-tab="marchigue">Marchigüe</button>
           <button class="tab" role="tab" type="button" aria-selected="false" data-tab="puerto-varas">Puerto Varas</button>
+          <button class="tab" role="tab" type="button" aria-selected="false" data-tab="santo-domingo">Santo Domingo<small>Preventa</small></button>
         </div>
         <div class="view-toggle" role="group" aria-label="Vista">
           <button type="button" class="is-on" aria-pressed="true" data-view="plano"><svg class="i" aria-hidden="true"><use href="#i-map"/></svg>Plano</button>
@@ -626,10 +699,10 @@
           <div class="plan-list" data-list hidden></div>
           <div class="plan-preventa" data-preventa-panel hidden>
             <div class="pp-copy">
-              <p class="kicker">Preventa · Puerto Varas</p>
+              <p class="kicker" data-preventa-kicker>Preventa · Santo Domingo</p>
               <h3>Sé de los primeros en elegir.</h3>
               <p>Estamos terminando el plano de loteo. Inscríbete y recibe el plano y los precios de lanzamiento antes de su publicación.</p>
-              <a class="btn btn-gold" href="#visita" data-preventa="puerto-varas">Inscribirme en la preventa<svg class="i i-go" aria-hidden="true"><use href="#i-arrow"/></svg></a>
+              <a class="btn btn-gold" href="#visita" data-preventa="santo-domingo">Inscribirme en la preventa<svg class="i i-go" aria-hidden="true"><use href="#i-arrow"/></svg></a>
             </div>
             <div class="pp-art" data-preventa-art aria-hidden="true"></div>
           </div>
@@ -854,35 +927,75 @@
 <!-- ============================== NOSOTROS ============================== -->
 <section class="section light about" id="nosotros" aria-labelledby="nosotros-title">
   <img class="about-mark" src="assets/img/isotipo.webp" alt="" width="480" height="346" loading="lazy" decoding="async">
-  <div class="container about-grid">
-    <div class="about-copy reveal">
-      <p class="kicker">Quiénes somos</p>
-      <h2 id="nosotros-title">Detrás de cada venta <em>hay una historia.</em></h2>
-      <p>En Fundos Inmobiliaria creemos que la tierra no es solo un terreno: es el punto de partida de un sueño. El de despertar rodeado de naturaleza, construir un refugio familiar, emprender un proyecto propio o simplemente vivir con más calma y espacio.</p>
-      <p>Nacimos para hacer ese camino más simple. Somos un equipo apasionado por conectar personas con lugares, y nuestro compromiso es acompañarte desde la primera visita hasta el día en que ese terreno sea oficialmente tuyo.</p>
+  <div class="container">
+    <div class="about-grid">
+      <div class="about-copy reveal">
+        <p class="kicker">Quiénes somos</p>
+        <h2 id="nosotros-title">La tierra como <em>punto de partida de un sueño.</em></h2>
+        <p>En Fundos Inmobiliaria creemos que la tierra no es solo un terreno: es el punto de partida de un sueño. El sueño de despertar rodeado de naturaleza, de construir un refugio familiar, de emprender un proyecto propio o simplemente de vivir con más calma y espacio.</p>
+        <p>Nacimos para hacer ese camino más simple. Sabemos que comprar un terreno puede parecer complejo y lleno de incertidumbre; por eso construimos una experiencia distinta: transparente en cada etapa, cercana en el trato y respaldada por tecnología que te permite avanzar con seguridad y confianza.</p>
+      </div>
+      <figure class="about-photo reveal">
+        <img src="assets/img/nosotros-rio.webp" alt="Río de aguas claras entre árboles nativos" width="943" height="646" loading="lazy" decoding="async">
+        <figcaption>“Si sueñas con vivir más cerca de la naturaleza, aquí encontrarás el camino más seguro para lograrlo.”</figcaption>
+      </figure>
     </div>
+
     <ul class="values">
       <li class="value reveal">
         <span class="value-icon"><svg class="i" aria-hidden="true"><use href="#i-doc"/></svg></span>
         <h3>Transparencia</h3>
-        <p>Te contamos todo, siempre. Precios, planos y el estado de cada lote, a la vista.</p>
+        <p>Te contamos todo, siempre. Sin letra chica, sin sorpresas. Cada terreno, cada documento y cada etapa del proceso a la vista.</p>
       </li>
       <li class="value reveal">
         <span class="value-icon"><svg class="i" aria-hidden="true"><use href="#i-people"/></svg></span>
         <h3>Cercanía</h3>
-        <p>Un ejecutivo te acompaña de la visita a la escritura. Aquí no eres un número, eres un proyecto de vida.</p>
+        <p>Tratamos a cada persona como nos gustaría que nos trataran: con tiempo, escucha y respuestas claras. Aquí no eres un número, eres un proyecto de vida.</p>
       </li>
       <li class="value reveal">
         <span class="value-icon"><svg class="i" aria-hidden="true"><use href="#i-sparkle"/></svg></span>
         <h3>Innovación</h3>
-        <p>Tecnología para simplificar lo complejo: sigues tu compra en línea con Fundos 360°.</p>
+        <p>Usamos la tecnología para simplificar lo complejo, para que comprar tu terreno sea una experiencia ágil, segura y al alcance de todos.</p>
       </li>
       <li class="value reveal">
         <span class="value-icon"><svg class="i" aria-hidden="true"><use href="#i-shield"/></svg></span>
         <h3>Confianza</h3>
-        <p>Cada terreno que ofrecemos está respaldado y verificado. Tu tranquilidad es el centro de todo.</p>
+        <p>Cada terreno que ofrecemos está respaldado y verificado. Tu tranquilidad es el centro de todo lo que hacemos.</p>
       </li>
     </ul>
+
+    <div class="team" id="equipo">
+      <header class="team-head reveal">
+        <p class="kicker">Nuestro equipo</p>
+        <h3 class="team-title">Detrás de cada venta <em>hay una historia.</em></h3>
+        <p>Somos un equipo apasionado por conectar personas con lugares. Te acompañamos desde la primera visita hasta el día en que ese terreno sea oficialmente tuyo, sin letra chica y sin complicaciones.</p>
+      </header>
+      <ul class="team-list">
+        <!-- Reemplazar con nombre y cargo reales de cada integrante -->
+        <li class="member reveal">
+          <img class="member-photo" src="assets/img/equipo-1.webp" alt="Integrante del equipo de Fundos Inmobiliaria" width="402" height="495" loading="lazy" decoding="async">
+          <div class="member-body">
+            <h4>Nombre Apellido</h4>
+            <p>Equipo comercial</p>
+            <a class="member-wa" href="https://wa.me/56900000000" target="_blank" rel="noopener" data-wa data-wa-msg="Hola, quiero hablar con el equipo comercial de Fundos."><svg class="i" aria-hidden="true"><use href="#i-whatsapp"/></svg>Escribir</a>
+          </div>
+        </li>
+        <li class="member reveal">
+          <img class="member-photo" src="assets/img/equipo-2.webp" alt="Integrante del equipo de Fundos Inmobiliaria" width="402" height="495" loading="lazy" decoding="async">
+          <div class="member-body">
+            <h4>Nombre Apellido</h4>
+            <p>Equipo comercial</p>
+            <a class="member-wa" href="https://wa.me/56900000000" target="_blank" rel="noopener" data-wa data-wa-msg="Hola, quiero hablar con el equipo comercial de Fundos."><svg class="i" aria-hidden="true"><use href="#i-whatsapp"/></svg>Escribir</a>
+          </div>
+        </li>
+        <li class="member member-cta reveal">
+          <svg class="i member-cta-icon" aria-hidden="true"><use href="#i-calendar"/></svg>
+          <h4>Conversemos <em>cuando te acomode.</em></h4>
+          <p>En terreno o por videollamada: te mostramos el proyecto, resolvemos tus dudas y te ayudamos a elegir.</p>
+          <a class="btn btn-gold" href="#visita">Agendar con el equipo<svg class="i i-go" aria-hidden="true"><use href="#i-arrow"/></svg></a>
+        </li>
+      </ul>
+    </div>
   </div>
 </section>
 
@@ -963,6 +1076,11 @@
           <p class="error" data-error-for="v-telefono">Ingresa un teléfono válido.</p>
         </div>
       </div>
+      <div class="field">
+        <label for="v-correo">Correo <small>(opcional)</small></label>
+        <input id="v-correo" name="correo" type="email" autocomplete="email" placeholder="tucorreo@ejemplo.cl">
+        <p class="error" data-error-for="v-correo">Revisa tu correo.</p>
+      </div>
       <div class="form-row">
         <div class="field">
           <label for="v-proyecto">Proyecto</label>
@@ -970,6 +1088,7 @@
             <option value="Malalcahuello">Malalcahuello</option>
             <option value="Marchigüe">Marchigüe</option>
             <option value="Puerto Varas">Puerto Varas</option>
+            <option value="Santo Domingo">Santo Domingo (preventa)</option>
             <option value="Aún no lo sé">Aún no lo sé</option>
           </select>
         </div>
@@ -1023,6 +1142,7 @@
       <a href="#plano" data-goto-plan="malalcahuello">Malalcahuello</a>
       <a href="#plano" data-goto-plan="marchigue">Marchigüe</a>
       <a href="#plano" data-goto-plan="puerto-varas">Puerto Varas</a>
+      <a href="#plano" data-goto-plan="santo-domingo">Santo Domingo</a>
     </nav>
     <nav class="footer-col" aria-label="Tu compra">
       <h2>Tu compra</h2>
@@ -1054,11 +1174,22 @@
 <!-- Botón flotante WhatsApp (escritorio) -->
 <a class="wa-float" href="https://wa.me/56900000000" target="_blank" rel="noopener" aria-label="Escríbenos por WhatsApp" data-wa><svg class="i" aria-hidden="true"><use href="#i-whatsapp"/></svg></a>
 
+<!-- Visor de video -->
+<dialog class="vdialog" id="video" aria-labelledby="vd-title" data-vdialog>
+  <div class="vd-head">
+    <h2 id="vd-title" data-vd-title>Video</h2>
+    <button class="icon-btn" type="button" aria-label="Cerrar video" data-vd-close><svg class="i" aria-hidden="true"><use href="#i-close"/></svg></button>
+  </div>
+  <div class="vd-frame" data-vd-frame></div>
+  <p class="vd-blocked" data-vd-blocked hidden>Esta vista previa no permite reproducir videos de otros sitios. <a href="#" target="_blank" rel="noopener" data-vd-link>Ver el video en una pestaña nueva</a></p>
+</dialog>
+
 <!-- Ficha de proyecto -->
 <dialog class="pdialog" id="proyecto" aria-labelledby="pd-title" data-pdialog>
   <div class="pd-art" data-pd-art></div>
   <button class="icon-btn pd-close" type="button" aria-label="Cerrar" data-pd-close><svg class="i" aria-hidden="true"><use href="#i-close"/></svg></button>
   <div class="pd-body">
+    <img class="pd-logo" src="assets/img/isotipo.webp" alt="" width="309" height="214" data-pd-logo hidden>
     <p class="kicker" data-pd-meta></p>
     <h2 id="pd-title" data-pd-title>Proyecto</h2>
     <p class="pd-desc" data-pd-desc></p>

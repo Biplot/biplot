@@ -18,10 +18,12 @@ Sitio estático (HTML, CSS y JavaScript, sin build ni dependencias). Funciona ab
 | **Proyectos comparables** | Misma ficha para los tres: desde, superficie, reserva y disponibilidad. Ficha ampliada con destacados, cercanías y mapa. |
 | **Recorrido virtual 360°** ★ | Los tours de cada proyecto se ven dentro de la página: una lente "Entrar" abre el recorrido como un portal, se cambia de proyecto sin salir, hay pantalla completa y, al terminar, "Ver lotes", "Agendar visita" o "Compartir" por WhatsApp. Accesos desde el hero, cada tarjeta ("Recorrido 360°"), el plano (botón 360°) y la ficha del proyecto. Enlace directo: `#recorrido-puerto-varas`. |
 | **Plano interactivo de lotes** ★ | La función estrella. Estado, precio y superficie de cada lote. Filtros por estado, precio y sector; vista de lista ordenable; favoritos que se envían por WhatsApp; enlace directo a un lote (`#lote-malalcahuello-12`); "Reservar este lote" precarga el formulario. En un lote vendido, sugiere el disponible más parecido. |
+| **Videos** | Video de portada en el hero (sobre la ilustración, con botón de pausa) y un visor de video por proyecto (YouTube, Vimeo o archivo propio). Aparecen solos al cargar el enlace en `lib/manifest.js`. |
+| **Santo Domingo (preventa)** | Cuarto proyecto con su logo, en tarjeta ancha de "Preventa": inscripción directa, pestaña en el plano y opción en el buscador y el formulario. |
 | **Cómo comprar en 6 pasos** | El mismo embudo de Fundos 360° (reserva → validación → gastos → escritura → inscripción en el CBR), explicado sin letra chica. |
 | **Mi compra (Fundos 360°)** | Portal del comprador: avance de su compra, documentos y próximos hitos. Diferencia real frente a la competencia. |
 | **Simulador** | Contado o financiamiento, con reparto visual de la compra y envío de la simulación por WhatsApp. |
-| **Quiénes somos + valores** | Textos y valores del manual (transparencia, cercanía, innovación, confianza). |
+| **Quiénes somos, valores y equipo** | Textos y valores del sitio actual, foto real del río y el equipo con foto en arco y botón de WhatsApp para cada persona. |
 | **Preguntas frecuentes** | Rol propio, construcción, reserva, gastos, plazos, financiamiento, visitas. |
 | **Agenda tu visita** | Formulario validado que abre WhatsApp con el mensaje listo: nombre, proyecto, fecha, horario y lote. |
 
@@ -40,6 +42,10 @@ Todo lo editable está en `lib/manifest.js`.
 - [ ] **Destacados y cercanías:** las distancias se miden desde cada pueblo, no desde el proyecto. Reemplazar por los tiempos reales.
 - [ ] **Mi compra:** es un módulo nuevo que se propone sobre Fundos 360°. Hoy la sección lo muestra como vista previa.
 - [ ] **Fotos:** las ilustraciones son intencionales, pero se pueden sumar fotos de dron reales en la ficha de cada proyecto.
+- [ ] **Equipo:** nombre y cargo de cada persona (hoy dice "Nombre Apellido"), y si cada una tendrá su propio WhatsApp. Las fotos se tomaron de capturas del sitio actual: conviene reemplazarlas por los archivos originales.
+- [ ] **Santo Domingo:** región, descripción, distancias y si el tamaño de las parcelas es el mismo. Todo lo publicado es provisorio.
+- [ ] **Videos:** enviar los archivos o enlaces (ver "Videos" más abajo).
+- [ ] **Concurso:** el sitio actual tiene una página de concurso; se puede sumar como banner o sección cuando esté definido.
 - [ ] **Al publicarlo en el dominio de Fundos:** quitar la etiqueta "Propuesta" del menú, quitar `noindex` y cambiar la URL de `og:image`.
 
 ## Estructura
@@ -49,9 +55,18 @@ index.html        Todo el contenido (se lee completo sin JavaScript)
 styles.css        Tokens del manual + estilos, mobile-first
 main.js           Interacciones: plano, filtros, favoritos, simulador, formulario, paralaje
 lib/manifest.js   Datos: contacto, proyectos, lotes, financiamiento
-assets/img/       Isotipo (del manual), favicon y og-fundos.jpg para compartir
+assets/img/       Isotipo (del manual), logos de proyectos, fotos (nosotros y equipo), favicon y og-fundos.jpg
+assets/video/     Videos propios (portada y proyectos), si se usan archivos en vez de YouTube
 .htaccess         Caché para hosting Apache/Hostinger
 ```
+
+### Videos
+
+Todo se configura en `lib/manifest.js`; si un campo queda vacío, no aparece nada.
+
+- **Video de portada (hero):** `videoPortada: { mp4: "assets/video/portada.mp4", webm: "", poster: "" }`. Debe ser un archivo propio (no YouTube): sin sonido, 10 a 20 segundos, H.264 a 1920 px y menos de 8 MB. Se reproduce en silencio y en bucle, con botón de pausa; no se carga con ahorro de datos ni con movimiento reducido, y mientras carga se ve la ilustración.
+- **Video de cada proyecto:** `video: "https://youtu.be/XXXXXXXXXXX"` (también `youtube.com/watch?v=…`, `shorts/…`, Vimeo o `assets/video/archivo.mp4`). Aparece el botón "Ver video" en la tarjeta y en la ficha, y se abre en un visor dentro de la página.
+- Para un video largo o con sonido, conviene YouTube o Vimeo: no consume el ancho de banda del hosting y se adapta a la conexión de cada persona.
 
 ### Recorridos 360°
 

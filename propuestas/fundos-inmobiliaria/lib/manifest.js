@@ -28,6 +28,12 @@
       horario: "Lunes a sábado, 9:00 a 19:00"   // Confirmar
     },
 
+    // Video de portada del hero (opcional). Un archivo liviano, sin sonido, de 10 a 20 segundos:
+    // assets/video/portada.mp4 (H.264, 1920 px, menos de 8 MB) y, si se puede, una versión .webm.
+    // Mientras esté vacío se muestra la ilustración animada. Con "ahorro de datos" o movimiento
+    // reducido activos, tampoco se carga.
+    videoPortada: { mp4: "", webm: "", poster: "" },
+
     // Monto de reserva por lote (dato de Fundos 360°)
     reserva: 1000000,
 
@@ -54,6 +60,10 @@
         mapa: "https://www.google.com/maps/search/?api=1&query=Malalcahuello%2C+Araucan%C3%ADa%2C+Chile",
         // Recorrido virtual 360° (se incrusta en la sección #recorrido)
         tour: "https://cmaulenb.github.io/fundoslonquimaynieve/",
+        // Video del proyecto (opcional): enlace de YouTube o Vimeo, o un archivo en assets/video/.
+        // Ej.: "https://youtu.be/XXXXXXXXXXX" · "https://vimeo.com/123456789" · "assets/video/malalcahuello.mp4"
+        video: "",
+        logo: "assets/img/logo-malalcahuello.webp",
         // Colores y precios del masterplan "Precios lista"
         leyenda: "Precios lista",
         categorias: {
@@ -93,6 +103,10 @@
         mapa: "https://www.google.com/maps/search/?api=1&query=Marchig%C3%BCe%2C+O%27Higgins%2C+Chile",
         // Recorrido virtual 360° (se incrusta en la sección #recorrido)
         tour: "https://marchigue.netlify.app/",
+        // Video del proyecto (opcional): enlace de YouTube o Vimeo, o un archivo en assets/video/.
+        // Ej.: "https://youtu.be/XXXXXXXXXXX" · "https://vimeo.com/123456789" · "assets/video/malalcahuello.mp4"
+        video: "",
+        logo: "assets/img/logo-marchigue.webp",
         sectores: ["Sector Norte", "Sector Sur"],
         // Plano ilustrativo: reemplazar por el masterplan real de Marchigüe
         leyenda: "Precios",
@@ -129,6 +143,9 @@
         mapa: "https://www.google.com/maps/search/?api=1&query=Puerto+Varas%2C+Los+Lagos%2C+Chile",
         // Recorrido virtual 360° (se incrusta en la sección #recorrido)
         tour: "https://6aab0a2a79cbb906fe66b800--tourspuertovaras.netlify.app/",
+        // Video del proyecto (opcional): enlace de YouTube o Vimeo, o un archivo en assets/video/.
+        // Ej.: "https://youtu.be/XXXXXXXXXXX" · "https://vimeo.com/123456789" · "assets/video/malalcahuello.mp4"
+        video: "",
         sectores: [],
         leyenda: "Precios",
         categorias: {
@@ -157,6 +174,22 @@
           [73, "verdeClaro", D], [74, "verdeClaro", D], [75, "celeste", D], [76, "celeste", D], [77, "celeste", D], [78, "celeste", D],
           [79, null, V]
         ])
+      },
+      {
+        id: "santo-domingo",
+        nombre: "Santo Domingo",
+        estado: "preventa",
+        region: "Valparaíso",
+        zona: "Costa central",
+        resumen: "Naturaleza privilegiada, costa exclusiva, vida extraordinaria. Nuestro próximo proyecto, cerca del mar.",
+        descripcion: "Fundos de Santo Domingo: naturaleza privilegiada, costa exclusiva y vida extraordinaria. Nuestro próximo proyecto en la costa central, pensado para una casa de playa, un refugio de fin de semana o vivir con el mar cerca. Inscríbete en la preventa y recibe el plano y los precios de lanzamiento antes que nadie.",
+        destacados: ["Costa central de Chile", "Precios de lanzamiento para inscritos", "Plano y precios antes de su publicación", "Acompañamiento hasta la inscripción en el CBR"],
+        cercanias: [["San Antonio", "10 km"], ["Reserva Nacional El Yali", "20 km"], ["Santiago", "115 km"]],
+        cercaniasNota: "Distancias aproximadas desde la comuna de Santo Domingo. Se confirmarán con la ubicación del proyecto.",
+        mapa: "https://www.google.com/maps/search/?api=1&query=Santo+Domingo%2C+Valpara%C3%ADso%2C+Chile",
+        video: "",
+        logo: "assets/img/logo-santo-domingo.webp",
+        lotes: []
       }
     ],
 

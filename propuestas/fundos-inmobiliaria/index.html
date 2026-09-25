@@ -1,0 +1,985 @@
+<!doctype html>
+<html lang="es-CL">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Fundos Inmobiliaria · Parcelas en Malalcahuello, Marchigüe y Puerto Varas</title>
+<meta name="description" content="Parcelas de 5.000 m² en Malalcahuello, Marchigüe y Puerto Varas. Elige tu lote en el plano, agenda tu visita y sigue tu compra hasta la inscripción en el Conservador.">
+<!-- Propuesta de diseño: no indexar hasta publicarla en el dominio de Fundos -->
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#0A140E">
+<link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Fundos Inmobiliaria">
+<meta property="og:locale" content="es_CL">
+<meta property="og:title" content="Fundos Inmobiliaria · La tierra como punto de partida">
+<meta property="og:description" content="Parcelas de 5.000 m² en Malalcahuello, Marchigüe y Puerto Varas. Elige tu lote en el plano y agenda tu visita.">
+<meta property="og:image" content="https://biplot.cl/propuestas/fundos-inmobiliaria/assets/img/og-fundos.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"RealEstateAgent","name":"Fundos Inmobiliaria","url":"https://www.fundosinmobiliaria.com/","slogan":"La tierra como punto de partida.","areaServed":["Malalcahuello","Marchigüe","Puerto Varas"],"address":{"@type":"PostalAddress","addressCountry":"CL"}}
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Mulish:wght@400;600;700&display=swap">
+<link rel="stylesheet" href="styles.css?v=20260925">
+<script defer src="lib/manifest.js?v=20260925"></script>
+<script defer src="main.js?v=20260925"></script>
+</head>
+<body>
+<a class="skip-link" href="#contenido">Saltar al contenido</a>
+
+<!-- ============ Definiciones SVG compartidas (degradados + íconos) ============ -->
+<svg class="svg-defs" aria-hidden="true" focusable="false" width="0" height="0">
+  <defs>
+    <linearGradient id="g-sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#060D09"/>
+      <stop offset=".42" stop-color="#0D1C13"/>
+      <stop offset=".66" stop-color="#1C2C1E"/>
+      <stop offset="1" stop-color="#2B3323"/>
+    </linearGradient>
+    <radialGradient id="g-glow" cx=".82" cy=".5" r=".55">
+      <stop offset="0" stop-color="#E8CE98" stop-opacity=".55"/>
+      <stop offset=".3" stop-color="#C8A165" stop-opacity=".22"/>
+      <stop offset="1" stop-color="#C8A165" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="g-sun">
+      <stop offset="0" stop-color="#FFF6E2"/>
+      <stop offset=".55" stop-color="#EFD6A4"/>
+      <stop offset="1" stop-color="#C8A165"/>
+    </radialGradient>
+    <radialGradient id="g-halo">
+      <stop offset="0" stop-color="#F3DDB0" stop-opacity=".5"/>
+      <stop offset="1" stop-color="#C8A165" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="g-far" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#243C2C"/>
+      <stop offset="1" stop-color="#172A1E"/>
+    </linearGradient>
+    <linearGradient id="g-mid" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#18301F"/>
+      <stop offset="1" stop-color="#112318"/>
+    </linearGradient>
+    <linearGradient id="g-hill" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#102217"/>
+      <stop offset="1" stop-color="#0C1A11"/>
+    </linearGradient>
+    <linearGradient id="g-front" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#0C1811"/>
+      <stop offset="1" stop-color="#0A140E"/>
+    </linearGradient>
+    <linearGradient id="g-snow" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#F7F5F0"/>
+      <stop offset="1" stop-color="#E4DED2" stop-opacity=".75"/>
+    </linearGradient>
+    <linearGradient id="g-mist" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#EFEBE2" stop-opacity="0"/>
+      <stop offset=".5" stop-color="#EFEBE2" stop-opacity=".09"/>
+      <stop offset="1" stop-color="#EFEBE2" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="g-rim" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#E9D2A0" stop-opacity=".95"/>
+      <stop offset="1" stop-color="#C8A165" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="g-furrow" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#C8A165" stop-opacity="0"/>
+      <stop offset=".25" stop-color="#C8A165"/>
+      <stop offset=".65" stop-color="#EBD39F"/>
+      <stop offset="1" stop-color="#C8A165" stop-opacity="0"/>
+    </linearGradient>
+    <!-- Escena Malalcahuello -->
+    <linearGradient id="g-ma-sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#08120C"/>
+      <stop offset=".7" stop-color="#1B3223"/>
+      <stop offset="1" stop-color="#28402E"/>
+    </linearGradient>
+    <radialGradient id="g-moon">
+      <stop offset="0" stop-color="#EFEBE2" stop-opacity=".28"/>
+      <stop offset="1" stop-color="#EFEBE2" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="g-ma-river" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#E9D2A0"/>
+      <stop offset="1" stop-color="#C8A165" stop-opacity=".35"/>
+    </linearGradient>
+    <!-- Escena Marchigüe -->
+    <linearGradient id="g-mc-sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#F3E6C8"/>
+      <stop offset=".75" stop-color="#E2C48E"/>
+      <stop offset="1" stop-color="#D4AE72"/>
+    </linearGradient>
+    <linearGradient id="g-mc-vine" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#5A673F"/>
+      <stop offset="1" stop-color="#34432B"/>
+    </linearGradient>
+    <!-- Escena Puerto Varas -->
+    <linearGradient id="g-pv-sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#F7F5F0"/>
+      <stop offset="1" stop-color="#E4DED2"/>
+    </linearGradient>
+    <linearGradient id="g-pv-lake" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#C9CFC2"/>
+      <stop offset="1" stop-color="#A9B4A5"/>
+    </linearGradient>
+    <linearGradient id="g-pv-cone" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#7F8E80"/>
+      <stop offset=".55" stop-color="#96A395"/>
+      <stop offset="1" stop-color="#A8B3A6"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Íconos (trazo 1.6, heredan color) -->
+  <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-down" viewBox="0 0 24 24"><path d="M12 5v14M6 13l6 6 6-6" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-close" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></symbol>
+  <symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h10" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-heart" viewBox="0 0 24 24"><path d="M12 20s-7.5-4.6-7.5-10.2A4.2 4.2 0 0 1 12 7.3a4.2 4.2 0 0 1 7.5 2.5C19.5 15.4 12 20 12 20z" fill="var(--heart-fill, none)" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></symbol>
+  <symbol id="i-pin" viewBox="0 0 24 24"><path d="M12 21s-6.5-5.8-6.5-11.2a6.5 6.5 0 1 1 13 0C18.5 15.2 12 21 12 21z" fill="none" stroke="currentColor" stroke-width="1.6"/><circle cx="12" cy="9.8" r="2.3" fill="none" stroke="currentColor" stroke-width="1.6"/></symbol>
+  <symbol id="i-calendar" viewBox="0 0 24 24"><rect x="3.5" y="5" width="17" height="15.5" rx="2" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M3.5 10h17M8 3v4M16 3v4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></symbol>
+  <symbol id="i-map" viewBox="0 0 24 24"><path d="M9 4.5L3.5 6.5v13l5.5-2 6 2 5.5-2v-13l-5.5 2-6-2zM9 4.5v13M15 6.5v13" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></symbol>
+  <symbol id="i-list" viewBox="0 0 24 24"><path d="M9 6.5h11M9 12h11M9 17.5h11" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><circle cx="4.8" cy="6.5" r="1.1" fill="currentColor"/><circle cx="4.8" cy="12" r="1.1" fill="currentColor"/><circle cx="4.8" cy="17.5" r="1.1" fill="currentColor"/></symbol>
+  <symbol id="i-eye" viewBox="0 0 24 24"><path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><circle cx="12" cy="12" r="3" fill="none" stroke="currentColor" stroke-width="1.6"/></symbol>
+  <symbol id="i-bookmark" viewBox="0 0 24 24"><path d="M6.5 3.5h11v17l-5.5-3.8-5.5 3.8z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></symbol>
+  <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 3l7.5 2.8v5.9c0 4.7-3.2 7.9-7.5 9.3-4.3-1.4-7.5-4.6-7.5-9.3V5.8z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M8.7 12l2.3 2.3 4.3-4.6" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-receipt" viewBox="0 0 24 24"><path d="M6 3.5h12v17l-2-1.3-2 1.3-2-1.3-2 1.3-2-1.3-2 1.3z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M9 8.5h6M9 12h6M9 15.5h3.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></symbol>
+  <symbol id="i-pen" viewBox="0 0 24 24"><path d="M4.5 19.5l1-4.2L16 4.8l3.2 3.2L8.7 18.5z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M13.8 7l3.2 3.2M4.5 19.5h15" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></symbol>
+  <symbol id="i-key" viewBox="0 0 24 24"><circle cx="8" cy="15.5" r="4" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M11 12.5l8.5-8.5M16.5 7l2.2 2.2M14.3 9.2l2 2" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></symbol>
+  <symbol id="i-doc" viewBox="0 0 24 24"><path d="M6.5 3.5h7l4.5 4.5v12.5H6.5z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M13.5 3.5V8H18M9.5 12.5h5M9.5 16h5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></symbol>
+  <symbol id="i-people" viewBox="0 0 24 24"><circle cx="9" cy="8.5" r="3.2" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M3 20a6 6 0 0 1 12 0M15.5 5.6a3.2 3.2 0 0 1 0 6M18 14.6A6 6 0 0 1 21 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></symbol>
+  <symbol id="i-compass" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M15.5 8.5l-1.9 5.1-5.1 1.9 1.9-5.1z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></symbol>
+  <symbol id="i-send" viewBox="0 0 24 24"><path d="M4 11.5L20 4l-5.5 16-3.2-6.3z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></symbol>
+  <symbol id="i-whatsapp" viewBox="0 0 24 24"><path fill="currentColor" d="M20.4 3.6A11.7 11.7 0 0 0 2.2 17.6L.9 22.9l5.4-1.4a11.7 11.7 0 0 0 5.6 1.4c6.5 0 11.8-5.3 11.8-11.7 0-3.1-1.2-6.1-3.3-8.3zm-8.4 18a9.7 9.7 0 0 1-4.9-1.4l-.4-.2-3.2.8.9-3.1-.2-.4a9.7 9.7 0 1 1 7.8 4.3zm5.3-7.3c-.3-.1-1.7-.9-2-1-.3-.1-.5-.1-.7.1-.2.3-.8 1-1 1.2-.2.2-.4.2-.6.1-.3-.1-1.2-.5-2.3-1.5a8.7 8.7 0 0 1-1.6-2c-.2-.3 0-.4.1-.6l.4-.5.3-.5c.1-.2 0-.4 0-.5l-.9-2.2c-.2-.6-.5-.5-.7-.5h-.6c-.2 0-.5.1-.8.4-.3.3-1 1-1 2.4s1.1 2.8 1.2 3c.1.2 2.1 3.2 5.1 4.5.7.3 1.3.5 1.7.6.7.2 1.4.2 1.9.1.6-.1 1.7-.7 2-1.4.2-.7.2-1.3.2-1.4-.1-.2-.3-.3-.6-.4z"/></symbol>
+  <symbol id="i-sparkle" viewBox="0 0 24 24"><path d="M12 3.5l1.6 5.3 5.4 1.7-5.4 1.7L12 17.5l-1.6-5.3L5 10.5l5.4-1.7z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M18.5 16.5l.6 1.9 1.9.6-1.9.6-.6 1.9-.6-1.9-1.9-.6 1.9-.6z" fill="currentColor"/></symbol>
+</svg>
+
+<!-- ================================ NAV ================================ -->
+<header class="nav" data-nav>
+  <a class="brand" href="#inicio" aria-label="Fundos Inmobiliaria, inicio">
+    <img src="assets/img/isotipo.webp" alt="" width="58" height="42" decoding="async">
+    <span class="brand-word" aria-hidden="true">Fundos<small>Inmobiliaria</small></span>
+  </a>
+  <nav class="nav-links" aria-label="Principal">
+    <a href="#proyectos">Proyectos</a>
+    <a href="#plano">Elige tu parcela</a>
+    <a href="#como-comprar">Cómo comprar</a>
+    <a href="#nosotros">Nosotros</a>
+    <a href="#preguntas">Preguntas</a>
+  </nav>
+  <div class="nav-actions">
+    <a class="nav-portal" href="#portal"><svg class="i" aria-hidden="true"><use href="#i-key"/></svg>Mi compra</a>
+    <a class="btn btn-gold btn-sm" href="#visita">Agendar visita</a>
+    <button class="nav-toggle" type="button" aria-label="Abrir menú" aria-controls="menu" aria-expanded="false" data-menu-open>
+      <svg class="i" aria-hidden="true"><use href="#i-menu"/></svg>
+    </button>
+  </div>
+</header>
+
+<dialog class="menu" id="menu" aria-labelledby="menu-title">
+  <div class="menu-inner">
+    <h2 class="sr-only" id="menu-title">Menú</h2>
+    <div class="menu-top">
+      <img src="assets/img/isotipo.webp" alt="" width="52" height="38" decoding="async">
+      <button class="icon-btn" type="button" aria-label="Cerrar menú" data-menu-close><svg class="i" aria-hidden="true"><use href="#i-close"/></svg></button>
+    </div>
+    <nav class="menu-links" aria-label="Menú móvil">
+      <a href="#proyectos" data-menu-link>Proyectos</a>
+      <a href="#plano" data-menu-link>Elige tu parcela</a>
+      <a href="#como-comprar" data-menu-link>Cómo comprar</a>
+      <a href="#simulador" data-menu-link>Simulador</a>
+      <a href="#nosotros" data-menu-link>Nosotros</a>
+      <a href="#preguntas" data-menu-link>Preguntas</a>
+      <a href="#portal" data-menu-link>Mi compra</a>
+    </nav>
+    <div class="menu-cta">
+      <a class="btn btn-gold" href="#visita" data-menu-link>Agendar visita</a>
+      <a class="btn btn-ghost" href="https://wa.me/56900000000" target="_blank" rel="noopener" data-wa><svg class="i" aria-hidden="true"><use href="#i-whatsapp"/></svg>WhatsApp</a>
+    </div>
+  </div>
+</dialog>
+
+<main id="contenido">
+
+<!-- ================================ HERO ================================ -->
+<section class="hero" id="inicio" data-hero>
+  <div class="hero-art" aria-hidden="true">
+    <svg class="hero-scene" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMax slice" focusable="false">
+      <rect width="1600" height="900" fill="url(#g-sky)"/>
+      <rect width="1600" height="900" fill="url(#g-glow)"/>
+      <g class="stars">
+        <circle cx="120" cy="92" r="1.2" opacity=".55"/><circle cx="262" cy="160" r="1" opacity=".4"/>
+        <circle cx="384" cy="70" r="1.4" opacity=".7" class="tw"/><circle cx="520" cy="128" r="1" opacity=".45"/>
+        <circle cx="642" cy="58" r="1.1" opacity=".5"/><circle cx="760" cy="150" r="1.3" opacity=".55" class="tw"/>
+        <circle cx="884" cy="88" r="1" opacity=".4"/><circle cx="982" cy="40" r="1.5" opacity=".75"/>
+        <circle cx="1060" cy="142" r="1" opacity=".45" class="tw"/><circle cx="1204" cy="78" r="1.2" opacity=".55"/>
+        <circle cx="1320" cy="168" r="1" opacity=".35"/><circle cx="1424" cy="60" r="1.4" opacity=".65" class="tw"/>
+        <circle cx="1522" cy="118" r="1.1" opacity=".5"/><circle cx="200" cy="248" r=".9" opacity=".3"/>
+        <circle cx="700" cy="232" r=".9" opacity=".3"/><circle cx="1480" cy="238" r=".9" opacity=".3"/>
+        <circle cx="60" cy="200" r="1" opacity=".4"/><circle cx="1100" cy="226" r=".8" opacity=".3"/>
+      </g>
+      <g class="layer" data-depth="0.06"><g class="rise r1">
+        <circle cx="1330" cy="440" r="170" fill="url(#g-halo)"/>
+        <circle cx="1330" cy="440" r="46" fill="url(#g-sun)"/>
+      </g></g>
+      <g class="layer" data-depth="0.12"><g class="rise r2">
+        <path d="M0 560L60 548L112 556L170 534L222 546L282 522L334 540L402 516L452 530L520 510L582 528L642 506L702 524L762 512L822 522L1600 522V900H0Z" fill="#1A2E21" opacity=".55"/>
+        <path d="M0 590C90 574 170 560 250 566C330 572 390 552 470 548C560 544 640 560 720 556C800 552 860 530 930 500C990 474 1040 420 1080 360C1092 340 1100 318 1106 306L1118 300L1132 303L1142 300C1152 316 1166 340 1184 366C1218 414 1262 452 1320 482C1390 516 1470 532 1600 540V900H0Z" fill="url(#g-far)"/>
+        <path d="M1106 306L1118 300L1132 303L1142 300C1150 313 1160 330 1172 348L1162 344L1154 358L1144 348L1134 366L1124 352L1114 370L1104 356L1094 366L1086 352C1094 336 1100 320 1106 306Z" fill="url(#g-snow)"/>
+        <path d="M1142 300C1152 316 1166 340 1184 366C1218 414 1262 452 1320 482C1390 516 1470 532 1600 540" fill="none" stroke="url(#g-rim)" stroke-width="2.2" opacity=".8"/>
+      </g></g>
+      <rect y="500" width="1600" height="150" fill="url(#g-mist)"/>
+      <g class="layer" data-depth="0.24"><g class="rise r3">
+        <path d="M0 630C140 600 260 590 380 604C520 620 640 626 760 606C880 586 980 590 1080 612C1180 632 1280 640 1400 618C1480 604 1550 600 1600 606V900H0Z" fill="url(#g-mid)"/>
+        <path d="M760 606C880 586 980 590 1080 612C1180 632 1280 640 1400 618C1480 604 1550 600 1600 606" fill="none" stroke="#C8A165" stroke-opacity=".22" stroke-width="1.4"/>
+      </g></g>
+      <g class="layer" data-depth="0.42"><g class="rise r4">
+        <path d="M0 700C140 668 300 660 420 680C520 696 600 700 700 690C820 676 920 690 1020 706C1120 720 1220 700 1330 686C1450 672 1540 682 1600 690V900H0Z" fill="url(#g-hill)"/>
+        <g fill="#08120C">
+          <path d="M792 686C780 662 781 622 792 594C803 622 804 662 792 686Z"/>
+          <path d="M822 686C808 654 808 604 822 564C836 604 836 654 822 686Z"/>
+          <path d="M854 688C842 662 842 620 854 588C866 620 866 662 854 688Z"/>
+          <path d="M882 690C873 670 873 636 882 612C891 636 891 670 882 690Z"/>
+          <path d="M1168 712C1160 696 1160 672 1168 656C1176 672 1176 696 1168 712Z"/>
+          <path d="M1188 712C1179 692 1179 664 1188 642C1197 664 1197 692 1188 712Z"/>
+          <path d="M1392 684C1383 666 1383 636 1392 614C1401 636 1401 666 1392 684Z"/>
+          <path d="M1416 684C1406 662 1406 626 1416 596C1426 626 1426 662 1416 684Z"/>
+          <path d="M1440 684C1432 668 1432 642 1440 620C1448 642 1448 668 1440 684Z"/>
+        </g>
+      </g></g>
+      <rect y="640" width="1600" height="120" fill="url(#g-mist)" opacity=".8"/>
+      <g class="layer" data-depth="0.7"><g class="rise r5">
+        <path d="M0 780C300 736 600 736 900 760C1150 780 1400 760 1600 748V900H0Z" fill="url(#g-front)"/>
+        <g class="furrows" fill="none" stroke="url(#g-furrow)" stroke-linecap="round">
+          <path class="furrow" pathLength="1" stroke-width="2.4" d="M-40 802C200 752 460 748 700 794"/>
+          <path class="furrow" pathLength="1" stroke-width="2" d="M-40 834C180 792 420 788 640 828"/>
+          <path class="furrow" pathLength="1" stroke-width="1.6" d="M-40 868C160 830 360 826 560 862"/>
+          <path class="furrow" pathLength="1" stroke-width="2.6" d="M520 920C820 800 1200 760 1640 774"/>
+          <path class="furrow" pathLength="1" stroke-width="2" d="M760 920C1000 840 1300 812 1640 820"/>
+          <path class="furrow" pathLength="1" stroke-width="1.6" d="M1000 920C1200 868 1420 852 1640 864"/>
+        </g>
+      </g></g>
+    </svg>
+    <div class="hero-grain"></div>
+    <div class="hero-shade"></div>
+  </div>
+
+  <div class="hero-inner">
+    <p class="kicker hero-kicker">Parcelas de 5.000 m² · Araucanía · O'Higgins · Los Lagos</p>
+    <h1 class="hero-title">
+      <span class="line"><span>La tierra como</span></span>
+      <span class="line"><span><em>punto de partida.</em></span></span>
+    </h1>
+    <p class="hero-sub">Elige tu parcela en Malalcahuello, Marchigüe o Puerto Varas y avanza con un equipo que te acompaña desde la primera visita hasta la inscripción en el Conservador. Sin letra chica.</p>
+    <div class="hero-actions">
+      <a class="btn btn-gold btn-lg" href="#plano">Ver parcelas disponibles<svg class="i i-go" aria-hidden="true"><use href="#i-arrow"/></svg></a>
+      <a class="btn btn-ghost btn-lg" href="#visita"><svg class="i" aria-hidden="true"><use href="#i-calendar"/></svg>Agendar una visita</a>
+    </div>
+  </div>
+
+  <a class="hero-scroll" href="#buscador" aria-label="Bajar al buscador"><svg class="i" aria-hidden="true"><use href="#i-down"/></svg></a>
+</section>
+
+<!-- ============================== BUSCADOR ============================== -->
+<div class="finder-wrap" id="buscador">
+  <form class="finder" role="search" aria-label="Buscar parcelas" data-finder novalidate>
+    <div class="finder-field">
+      <label for="f-destino">Destino</label>
+      <select id="f-destino" name="destino">
+        <option value="todos">Todos los proyectos</option>
+        <option value="malalcahuello">Malalcahuello · Araucanía</option>
+        <option value="marchigue">Marchigüe · O'Higgins</option>
+        <option value="puerto-varas">Puerto Varas · Los Lagos (preventa)</option>
+      </select>
+    </div>
+    <div class="finder-field">
+      <label for="f-presupuesto">Presupuesto</label>
+      <select id="f-presupuesto" name="presupuesto">
+        <option value="0">Cualquier presupuesto</option>
+        <option value="15000000">Hasta $15 millones</option>
+        <option value="20000000">Hasta $20 millones</option>
+        <option value="25000000">Hasta $25 millones</option>
+      </select>
+    </div>
+    <div class="finder-result" aria-live="polite">
+      <strong data-finder-count>27</strong>
+      <span data-finder-label>parcelas disponibles hoy</span>
+    </div>
+    <button class="btn btn-dark finder-btn" type="submit"><span data-finder-cta>Ver parcelas</span><svg class="i i-go" aria-hidden="true"><use href="#i-arrow"/></svg></button>
+  </form>
+  <ul class="trust">
+    <li><svg class="i" aria-hidden="true"><use href="#i-check"/></svg>5.000 m² por parcela</li>
+    <li><svg class="i" aria-hidden="true"><use href="#i-check"/></svg>Reserva con $1.000.000</li>
+    <li><svg class="i" aria-hidden="true"><use href="#i-check"/></svg>Acompañamiento hasta el CBR</li>
+    <li><svg class="i" aria-hidden="true"><use href="#i-check"/></svg>Tu compra en línea con Fundos 360°</li>
+  </ul>
+</div>
+
+<!-- ============================== VALORES (ticker) ============================== -->
+<div class="ticker" aria-hidden="true">
+  <div class="ticker-track">
+    <span>Transparencia</span><i>✳︎</i><span>Cercanía</span><i>✳︎</i><span>Innovación</span><i>✳︎</i><span>Confianza</span><i>✳︎</i><span>Tierra</span><i>✳︎</i><span>Pertenencia</span><i>✳︎</i>
+    <span>Transparencia</span><i>✳︎</i><span>Cercanía</span><i>✳︎</i><span>Innovación</span><i>✳︎</i><span>Confianza</span><i>✳︎</i><span>Tierra</span><i>✳︎</i><span>Pertenencia</span><i>✳︎</i>
+  </div>
+</div>
+
+<!-- ============================== PROYECTOS ============================== -->
+<section class="section light" id="proyectos" aria-labelledby="proyectos-title">
+  <div class="container">
+    <header class="section-head reveal">
+      <p class="kicker">Nuestros proyectos</p>
+      <h2 id="proyectos-title">Tres paisajes.<br> <em>Un mismo cuidado.</em></h2>
+      <p class="lead">Parcelas de 5.000 m² en la cordillera de La Araucanía, el valle de Colchagua y el entorno del lago Llanquihue. Elige dónde quieres despertar.</p>
+    </header>
+
+    <div class="projects">
+      <!-- Malalcahuello -->
+      <article class="project reveal" data-project="malalcahuello">
+        <div class="project-art">
+          <svg viewBox="0 0 600 380" preserveAspectRatio="xMidYMid slice" aria-hidden="true" focusable="false">
+            <rect width="600" height="380" fill="url(#g-ma-sky)"/>
+            <circle cx="470" cy="78" r="60" fill="url(#g-moon)"/>
+            <circle cx="470" cy="78" r="17" fill="#EFEBE2" opacity=".9"/>
+            <g fill="#EFEBE2" opacity=".6"><circle cx="90" cy="40" r="1"/><circle cx="180" cy="86" r="1.2"/><circle cx="260" cy="30" r=".9"/><circle cx="380" cy="60" r="1"/><circle cx="560" cy="130" r=".9"/><circle cx="40" cy="120" r=".8"/></g>
+            <g class="pl" style="--d:.2">
+              <path d="M20 252C50 232 70 206 88 190L97 187C113 205 132 229 172 247Z" fill="#1A3022"/>
+              <path d="M88 190L97 187C101 192 105 197 109 203L103 201L98 207L93 200L86 205C86 200 87 195 88 190Z" fill="#E4DED2" opacity=".8"/>
+            </g>
+            <g class="pl" style="--d:.35">
+              <path d="M0 252C80 238 150 226 210 200C250 182 280 150 300 118L312 112L326 114L336 110C350 134 372 164 400 188C450 230 520 246 600 252V380H0Z" fill="#20392A"/>
+              <path d="M300 118L312 112L326 114L336 110C348 128 362 148 378 168L366 164L358 178L346 166L336 184L324 170L312 186L302 172L290 182L280 168L268 176C280 160 292 138 300 118Z" fill="url(#g-snow)"/>
+              <path d="M336 110C350 134 372 164 400 188C450 230 520 246 600 252" fill="none" stroke="#E9D2A0" stroke-opacity=".45" stroke-width="1.6"/>
+            </g>
+            <g class="pl" style="--d:.6">
+              <path d="M0 292C100 270 200 282 300 268C400 256 500 272 600 262V380H0Z" fill="#13271A"/>
+            </g>
+            <g class="pl" style="--d:1" fill="#08120C">
+              <path d="M0 336C150 318 300 332 450 320C520 314 570 320 600 324V380H0Z"/>
+              <path d="M256 296C286 300 318 307 322 318C326 331 290 339 292 351C294 365 340 372 352 380H432C402 368 352 362 350 350C348 338 378 330 372 316C366 303 302 296 262 294Z" fill="url(#g-ma-river)" opacity=".9"/>
+              <path d="M262 296C302 301 344 309 345 320C346 334 318 341 320 352C322 364 362 373 392 380" fill="none" stroke="#F7F5F0" stroke-width="1.2" stroke-linecap="round" opacity=".55"/>
+              <path d="M66 330V238h3v92z"/><path d="M40 256Q67 228 94 256Q67 240 40 256zM46 244Q67 220 88 244Q67 230 46 244zM53 234Q67 214 81 234Q67 222 53 234z"/>
+              <path d="M118 334V256h2.6v78z"/><path d="M96 272Q119 248 142 272Q119 258 96 272zM101 262Q119 242 137 262Q119 250 101 262zM107 253Q119 236 131 253Q119 243 107 253z"/>
+              <path d="M530 328V230h3v98z"/><path d="M503 250Q531 220 559 250Q531 234 503 250zM509 238Q531 212 553 238Q531 224 509 238zM516 227Q531 206 546 227Q531 214 516 227z"/>
+            </g>
+          </svg>
+          <span class="badge">15 disponibles</span>
+        </div>
+        <div class="project-body">
+          <p class="project-meta"><svg class="i" aria-hidden="true"><use href="#i-pin"/></svg>La Araucanía · Cordillera</p>
+          <h3>Malalcahuello</h3>
+          <p class="project-desc">Bosque nativo, volcanes y el río Lolén. Nieve en invierno; pesca, senderos y termas el resto del año.</p>
+          <ul class="chips">
+            <li>Frente al río</li><li>Bosque nativo</li><li>Cerca de Corralco</li>
+          </ul>
+          <dl class="facts">
+            <div><dt>Desde</dt><dd>$18.990.000</dd></div>
+            <div><dt>Superficie</dt><dd>5.000 m²</dd></div>
+            <div><dt>Reserva</dt><dd>$1.000.000</dd></div>
+          </dl>
+          <div class="project-actions">
+            <a class="btn btn-dark" href="#plano" data-goto-plan="malalcahuello">Ver lotes<svg class="i i-go" aria-hidden="true"><use href="#i-arrow"/></svg></a>
+            <a class="btn btn-line" href="#plano" data-open-project="malalcahuello">Conocer el proyecto</a>
+          </div>
+        </div>
+      </article>
+
+      <!-- Marchigüe -->
+      <article class="project reveal" data-project="marchigue">
+        <div class="project-art">
+          <svg viewBox="0 0 600 380" preserveAspectRatio="xMidYMid slice" aria-hidden="true" focusable="false">
+            <rect width="600" height="380" fill="url(#g-mc-sky)"/>
+            <circle cx="430" cy="150" r="90" fill="#FFF3D6" opacity=".35"/>
+            <circle cx="430" cy="150" r="38" fill="#FBF0D8"/>
+            <g class="pl" style="--d:.2">
+              <path d="M0 232C100 202 200 212 300 198C400 184 500 206 600 192V380H0Z" fill="#BE9F68" opacity=".75"/>
+            </g>
+            <g class="pl" style="--d:.4">
+              <path d="M0 262C120 238 240 252 360 238C460 226 540 238 600 234V380H0Z" fill="#8C8A5A"/>
+              <g fill="#5E663F"><circle cx="470" cy="236" r="7"/><circle cx="482" cy="233" r="6"/><circle cx="160" cy="246" r="6"/></g>
+            </g>
+            <g class="pl" style="--d:.7">
+              <path d="M0 304C150 264 330 262 600 292V380H0Z" fill="url(#g-mc-vine)"/>
+              <g stroke="#2E3B24" stroke-width="2.2" opacity=".75" fill="none">
+                <path d="M300 276L-60 380"/><path d="M300 276L0 380"/><path d="M300 276L60 380"/><path d="M300 276L120 380"/><path d="M300 276L180 380"/><path d="M300 276L240 380"/><path d="M300 276L300 380"/><path d="M300 276L360 380"/><path d="M300 276L420 380"/><path d="M300 276L480 380"/><path d="M300 276L540 380"/><path d="M300 276L600 380"/><path d="M300 276L660 380"/>
+              </g>
+              <path d="M0 304C150 264 330 262 600 292" fill="none" stroke="#E9D2A0" stroke-opacity=".5" stroke-width="1.4"/>
+            </g>
+            <g class="pl" style="--d:1">
+              <path d="M104 300V264" stroke="#2B3421" stroke-width="4"/>
+              <g fill="#2F3B26"><circle cx="92" cy="258" r="15"/><circle cx="110" cy="250" r="17"/><circle cx="124" cy="262" r="13"/><circle cx="100" cy="244" r="12"/></g>
+              <path d="M0 352C200 336 400 346 600 336V380H0Z" fill="#2B3421"/>
+            </g>
+          </svg>
+          <span class="badge">12 disponibles</span>
+        </div>
+        <div class="project-body">
+          <p class="project-meta"><svg class="i" aria-hidden="true"><use href="#i-pin"/></svg>O'Higgins · Valle de Colchagua</p>
+          <h3>Marchigüe</h3>
+          <p class="project-desc">Lomajes suaves, viñedos y cielos despejados. Clima templado todo el año, a unos 40 minutos de Pichilemu.</p>
+          <ul class="chips">
+            <li>Zona de viñas</li><li>Clima templado</li><li>Cerca de la costa</li>
+          </ul>
+          <dl class="facts">
+            <div><dt>Desde</dt><dd>$12.990.000</dd></div>
+            <div><dt>Superficie</dt><dd>5.000 m²</dd></div>
+            <div><dt>Reserva</dt><dd>$1.000.000</dd></div>
+          </dl>
+          <div class="project-actions">
+            <a class="btn btn-dark" href="#plano" data-goto-plan="marchigue">Ver lotes<svg class="i i-go" aria-hidden="true"><use href="#i-arrow"/></svg></a>
+            <a class="btn btn-line" href="#plano" data-open-project="marchigue">Conocer el proyecto</a>
+          </div>
+        </div>
+      </article>
+
+      <!-- Puerto Varas -->
+      <article class="project reveal" data-project="puerto-varas">
+        <div class="project-art">
+          <svg viewBox="0 0 600 380" preserveAspectRatio="xMidYMid slice" aria-hidden="true" focusable="false">
+            <rect width="600" height="380" fill="url(#g-pv-sky)"/>
+            <g class="pl" style="--d:.2">
+              <path d="M420 252C450 232 470 216 484 206L494 211L500 203L510 213C530 229 560 242 600 248V252Z" fill="#A6B0A3" opacity=".85"/>
+            </g>
+            <g class="pl" style="--d:.35">
+              <path d="M110 252C190 206 250 150 290 96L300 90L310 96C350 150 410 206 490 252Z" fill="url(#g-pv-cone)"/>
+              <path d="M262 132C276 114 288 100 300 90L310 96C322 110 334 126 344 140L334 137L327 150L318 140L308 156L298 142L288 154L280 140L270 146Z" fill="#FFFFFF"/>
+            </g>
+            <g class="pl" style="--d:.5">
+              <rect y="250" width="600" height="80" fill="url(#g-pv-lake)"/>
+              <path d="M150 252C220 268 262 292 300 318C338 292 380 268 450 252Z" fill="#8F9C8C" opacity=".22"/>
+              <g stroke="#F7F5F0" stroke-linecap="round" opacity=".7"><path d="M60 270h60M180 282h90M330 276h70M470 290h80M90 300h50M250 306h60M400 312h60"/></g>
+              <rect y="246" width="600" height="18" fill="#F7F5F0" opacity=".35"/>
+            </g>
+            <g class="pl" style="--d:1" fill="#16301F">
+              <path d="M0 324C60 316 120 320 180 314C260 306 340 318 420 312C500 306 560 314 600 310V380H0Z"/>
+              <path d="M20 322C14 306 14 284 20 268C26 284 26 306 20 322ZM42 320C35 300 35 272 42 252C49 272 49 300 42 320ZM64 322C58 306 58 286 64 272C70 286 70 306 64 322ZM520 316C513 296 513 268 520 248C527 268 527 296 520 316ZM544 318C538 302 538 280 544 264C550 280 550 302 544 318ZM566 314C559 294 559 266 566 246C573 266 573 294 566 314ZM588 316C582 300 582 280 588 266C594 280 594 300 588 316Z"/>
+            </g>
+          </svg>
+          <span class="badge badge-gold">Preventa</span>
+        </div>
+        <div class="project-body">
+          <p class="project-meta"><svg class="i" aria-hidden="true"><use href="#i-pin"/></svg>Los Lagos · Lago Llanquihue</p>
+          <h3>Puerto Varas</h3>
+          <p class="project-desc">Bosque, lago y el volcán Osorno en el horizonte. Vida de sur con Puerto Montt y el aeropuerto a unos 20 km.</p>
+          <ul class="chips">
+            <li>Vista al Osorno</li><li>Entorno de bosque</li><li>Conectividad</li>
+          </ul>
+          <dl class="facts">
+            <div><dt>Etapa</dt><dd>Preventa</dd></div>
+            <div><dt>Superficie</dt><dd>5.000 m²</dd></div>
+            <div><dt>Precios</dt><dd>Lanzamiento</dd></div>
+          </dl>
+          <div class="project-actions">
+            <a class="btn btn-dark" href="#visita" data-preventa="puerto-varas">Inscribirme en la preventa<svg class="i i-go" aria-hidden="true"><use href="#i-arrow"/></svg></a>
+            <a class="btn btn-line" href="#visita" data-open-project="puerto-varas">Conocer el proyecto</a>
+          </div>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ============================== PLANO INTERACTIVO ============================== -->
+<section class="section dark plan-section" id="plano" aria-labelledby="plano-title">
+  <div class="container">
+    <header class="section-head reveal">
+      <p class="kicker">Elige tu parcela</p>
+      <h2 id="plano-title">Recorre el plano y <em>elige tu lote.</em></h2>
+      <p class="lead">Precio, superficie y disponibilidad de cada lote, a la vista. Toca un lote para ver su detalle, guárdalo en favoritos o resérvalo con un ejecutivo.</p>
+    </header>
+
+    <div class="plan reveal" data-plan>
+      <div class="plan-bar">
+        <div class="tabs" role="tablist" aria-label="Proyectos">
+          <button class="tab" role="tab" type="button" aria-selected="true" data-tab="malalcahuello">Malalcahuello</button>
+          <button class="tab" role="tab" type="button" aria-selected="false" data-tab="marchigue">Marchigüe</button>
+          <button class="tab" role="tab" type="button" aria-selected="false" data-tab="puerto-varas">Puerto Varas <small>Preventa</small></button>
+        </div>
+        <div class="view-toggle" role="group" aria-label="Vista">
+          <button type="button" class="is-on" aria-pressed="true" data-view="plano"><svg class="i" aria-hidden="true"><use href="#i-map"/></svg>Plano</button>
+          <button type="button" aria-pressed="false" data-view="lista"><svg class="i" aria-hidden="true"><use href="#i-list"/></svg>Lista</button>
+        </div>
+      </div>
+
+      <div class="plan-filters" data-filters>
+        <fieldset class="status-filter">
+          <legend class="sr-only">Estado del lote</legend>
+          <label class="st st-disponible"><input type="checkbox" value="disponible" checked><span>Disponibles</span></label>
+          <label class="st st-reservada"><input type="checkbox" value="reservada" checked><span>Reservados</span></label>
+          <label class="st st-vendida"><input type="checkbox" value="vendida" checked><span>Vendidos</span></label>
+        </fieldset>
+        <div class="range">
+          <div class="range-head"><label for="f-precio">Precio máximo</label> <output for="f-precio" data-price-out>Sin tope</output></div>
+          <input type="range" id="f-precio" min="0" max="100" step="1" value="100" data-price>
+        </div>
+        <div class="select-sm">
+          <label for="f-sector" class="sr-only">Sector</label>
+          <select id="f-sector" data-sector><option value="">Todos los sectores</option></select>
+        </div>
+        <p class="plan-summary" aria-live="polite" data-summary>15 de 24 lotes disponibles · desde $18.990.000</p>
+      </div>
+
+      <div class="plan-body">
+        <div class="plan-stage" data-stage>
+          <div class="plan-canvas" data-canvas>
+            <noscript><p class="noscript">Activa JavaScript para recorrer el plano interactivo, o escríbenos por WhatsApp y te enviamos el plano comercial.</p></noscript>
+          </div>
+          <div class="plan-list" data-list hidden></div>
+          <div class="plan-preventa" data-preventa-panel hidden>
+            <div class="pp-copy">
+              <p class="kicker">Preventa · Puerto Varas</p>
+              <h3>Sé de los primeros en elegir.</h3>
+              <p>Estamos terminando el plano de loteo. Inscríbete y recibe el plano y los precios de lanzamiento antes de su publicación.</p>
+              <a class="btn btn-gold" href="#visita" data-preventa="puerto-varas">Inscribirme en la preventa<svg class="i i-go" aria-hidden="true"><use href="#i-arrow"/></svg></a>
+            </div>
+            <div class="pp-art" data-preventa-art aria-hidden="true"></div>
+          </div>
+          <div class="plan-tip" role="tooltip" data-tip hidden></div>
+          <ul class="legend">
+            <li><i class="sw sw-disponible"></i>Disponible</li>
+            <li><i class="sw sw-reservada"></i>Reservado</li>
+            <li><i class="sw sw-vendida"></i>Vendido</li>
+            <li><i class="sw sw-fav"></i>Tu favorito</li>
+          </ul>
+        </div>
+
+        <aside class="lot-panel" data-panel aria-live="polite" aria-label="Detalle del lote">
+          <div class="lot-empty" data-panel-empty>
+            <svg class="i lot-empty-icon" aria-hidden="true"><use href="#i-map"/></svg>
+            <h3>Selecciona un lote</h3>
+            <p>Toca cualquier lote del plano para ver su precio, superficie y disponibilidad.</p>
+            <dl class="lot-stats" data-panel-stats>
+              <div><dt>Disponibles</dt><dd>15</dd></div>
+              <div><dt>Desde</dt><dd>$18.990.000</dd></div>
+            </dl>
+            <div class="lot-help">
+              <p>¿Prefieres que te ayudemos a elegir? Cuéntanos qué buscas y te recomendamos lotes.</p>
+              <a class="btn btn-ghost btn-sm" href="https://wa.me/56900000000" target="_blank" rel="noopener" data-wa data-wa-msg="Hola Fundos, ¿me ayudan a elegir una parcela?"><svg class="i" aria-hidden="true"><use href="#i-whatsapp"/></svg>Pedir recomendación</a>
+            </div>
+          </div>
+          <div class="lot-detail" data-panel-detail hidden>
+            <button class="icon-btn lot-close" type="button" aria-label="Cerrar detalle" data-panel-close><svg class="i" aria-hidden="true"><use href="#i-close"/></svg></button>
+            <p class="kicker" data-d-project>Malalcahuello</p>
+            <div class="lot-title">
+              <h3 data-d-title>Lote 12</h3>
+              <span class="pill" data-d-status>Disponible</span>
+            </div>
+            <p class="lot-sector" data-d-sector>Frente Río Lolén – norte</p>
+            <p class="lot-price" data-d-price>$22.990.000</p>
+            <dl class="lot-facts">
+              <div><dt>Superficie</dt><dd data-d-m2>5.000 m²</dd></div>
+              <div><dt>Reserva</dt><dd data-d-reserva>$1.000.000</dd></div>
+              <div><dt>Saldo a la escritura</dt><dd data-d-saldo>$21.990.000</dd></div>
+              <div><dt>Valor por m²</dt><dd data-d-m2price>$4.598</dd></div>
+            </dl>
+            <div class="lot-actions">
+              <a class="btn btn-gold" href="#visita" data-d-reserve>Reservar este lote</a>
+              <a class="btn btn-ghost" href="https://wa.me/56900000000" target="_blank" rel="noopener" data-d-wa><svg class="i" aria-hidden="true"><use href="#i-whatsapp"/></svg>Consultar</a>
+              <button class="btn btn-ghost fav-btn" type="button" aria-pressed="false" data-d-fav><svg class="i" aria-hidden="true"><use href="#i-heart"/></svg><span>Guardar</span></button>
+            </div>
+            <a class="lot-sim" href="#simulador" data-d-sim>Simular el pago de este lote<svg class="i i-go" aria-hidden="true"><use href="#i-arrow"/></svg></a>
+          </div>
+        </aside>
+      </div>
+
+      <div class="favs" data-favs hidden>
+        <p><svg class="i" aria-hidden="true"><use href="#i-heart"/></svg><strong data-favs-count>0</strong> <span data-favs-label>lotes guardados</span> <span class="favs-list" data-favs-list></span></p>
+        <div class="favs-actions">
+          <a class="btn btn-gold btn-sm" href="https://wa.me/56900000000" target="_blank" rel="noopener" data-favs-send><svg class="i" aria-hidden="true"><use href="#i-whatsapp"/></svg>Enviar por WhatsApp</a>
+          <button class="btn btn-ghost btn-sm" type="button" data-favs-clear>Limpiar</button>
+        </div>
+      </div>
+      <p class="plan-note">Plano esquemático y valores referenciales, sujetos a disponibilidad al momento de reservar.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================== CÓMO COMPRAR ============================== -->
+<section class="section light" id="como-comprar" aria-labelledby="pasos-title">
+  <div class="container">
+    <header class="section-head reveal">
+      <p class="kicker">Cómo comprar</p>
+      <h2 id="pasos-title">Un camino claro, <em>de la visita a la escritura.</em></h2>
+      <p class="lead">Comprar un terreno puede parecer complejo. Por eso dividimos el proceso en seis etapas, cada una con responsables, documentos y avance a la vista.</p>
+    </header>
+
+    <ol class="steps" data-steps>
+      <li class="step reveal">
+        <span class="step-n">01</span>
+        <span class="step-icon"><svg class="i" aria-hidden="true"><use href="#i-eye"/></svg></span>
+        <h3>Conoce</h3>
+        <p>Recorre el proyecto en persona o por videollamada. Resolvemos tus dudas sin compromiso.</p>
+      </li>
+      <li class="step reveal">
+        <span class="step-n">02</span>
+        <span class="step-icon"><svg class="i" aria-hidden="true"><use href="#i-bookmark"/></svg></span>
+        <h3>Reserva</h3>
+        <p>Asegura tu lote con $1.000.000 y recibe el comprobante y los antecedentes del lote.</p>
+      </li>
+      <li class="step reveal">
+        <span class="step-n">03</span>
+        <span class="step-icon"><svg class="i" aria-hidden="true"><use href="#i-shield"/></svg></span>
+        <h3>Validación</h3>
+        <p>Revisamos contigo los antecedentes y preparamos los documentos de la compraventa.</p>
+      </li>
+      <li class="step reveal">
+        <span class="step-n">04</span>
+        <span class="step-icon"><svg class="i" aria-hidden="true"><use href="#i-receipt"/></svg></span>
+        <h3>Gastos de escrituración</h3>
+        <p>Te informamos el detalle de notaría y Conservador antes de pagar. Sin sorpresas.</p>
+      </li>
+      <li class="step reveal">
+        <span class="step-n">05</span>
+        <span class="step-icon"><svg class="i" aria-hidden="true"><use href="#i-pen"/></svg></span>
+        <h3>Escritura</h3>
+        <p>Firmas la escritura en notaría y pagas el saldo de tu parcela.</p>
+      </li>
+      <li class="step reveal">
+        <span class="step-n">06</span>
+        <span class="step-icon"><svg class="i" aria-hidden="true"><use href="#i-key"/></svg></span>
+        <h3>Inscripción en el CBR</h3>
+        <p>Inscribimos la propiedad a tu nombre. Desde ese día, la tierra es oficialmente tuya.</p>
+      </li>
+    </ol>
+  </div>
+</section>
+
+<!-- ============================== PORTAL (Fundos 360°) ============================== -->
+<section class="section dark portal" id="portal" aria-labelledby="portal-title">
+  <div class="container portal-grid">
+    <div class="portal-copy reveal">
+      <p class="kicker">Fundos 360° · Mi compra</p>
+      <h2 id="portal-title">Tu compra, <em>en tiempo real.</em></h2>
+      <p class="lead">Gestionamos cada venta en Fundos 360°, nuestra propia plataforma. Desde tu reserva verás el avance de tu compra, tus documentos y los próximos hitos desde el celular: lo mismo que ve tu ejecutivo, lo ves tú.</p>
+      <ul class="ticks">
+        <li><svg class="i" aria-hidden="true"><use href="#i-check"/></svg>El estado de cada etapa, de la reserva a la inscripción</li>
+        <li><svg class="i" aria-hidden="true"><use href="#i-check"/></svg>Comprobantes y documentos siempre disponibles</li>
+        <li><svg class="i" aria-hidden="true"><use href="#i-check"/></svg>Aviso de fechas y vencimientos importantes</li>
+        <li><svg class="i" aria-hidden="true"><use href="#i-check"/></svg>Contacto directo con tu ejecutivo</li>
+      </ul>
+      <p class="portal-note">Acceso para compradores con reserva vigente.</p>
+    </div>
+
+    <div class="phone reveal" aria-label="Vista previa de la sección Mi compra" role="img">
+      <div class="phone-screen" aria-hidden="true">
+        <div class="ph-top">
+          <img src="assets/img/isotipo.webp" alt="" width="34" height="25" decoding="async" loading="lazy">
+          <span>Mi compra</span>
+        </div>
+        <div class="ph-card">
+          <p class="ph-label">Marchigüe · Lote 7</p>
+          <p class="ph-stage">Etapa 5 de 6 · Escritura</p>
+          <div class="ph-bar"><span style="width:78%"></span></div>
+          <ol class="ph-steps">
+            <li class="done">Reserva</li><li class="done">Validación</li><li class="done">Gastos de escrituración</li><li class="now">Firma de escritura</li><li>Inscripción en el CBR</li>
+          </ol>
+        </div>
+        <div class="ph-next">
+          <svg class="i" aria-hidden="true"><use href="#i-calendar"/></svg>
+          <div><p>Próximo hito</p><strong>Firma en notaría · jueves 10:30</strong></div>
+        </div>
+        <ul class="ph-docs">
+          <li><svg class="i" aria-hidden="true"><use href="#i-doc"/></svg>Comprobante de reserva</li>
+          <li><svg class="i" aria-hidden="true"><use href="#i-doc"/></svg>Plano del lote</li>
+          <li><svg class="i" aria-hidden="true"><use href="#i-doc"/></svg>Borrador de escritura</li>
+        </ul>
+        <span class="ph-btn">Hablar con mi ejecutivo</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================== SIMULADOR ============================== -->
+<section class="section cream" id="simulador" aria-labelledby="sim-title">
+  <div class="container sim-grid">
+    <header class="section-head sim-head reveal">
+      <p class="kicker">Simulador</p>
+      <h2 id="sim-title">Haz los números <em>con calma.</em></h2>
+      <p class="lead">Elige un proyecto y un valor de referencia para ver cómo se distribuye tu compra. Sin registrarte y sin compromiso.</p>
+    </header>
+
+    <div class="sim reveal" role="group" aria-labelledby="sim-title" data-sim>
+      <div class="sim-controls">
+        <div class="field">
+          <label for="s-proyecto">Proyecto</label>
+          <select id="s-proyecto" data-s-project>
+            <option value="malalcahuello">Malalcahuello</option>
+            <option value="marchigue">Marchigüe</option>
+          </select>
+        </div>
+        <div class="field">
+          <div class="field-head"><label for="s-precio">Valor de la parcela</label> <output for="s-precio" data-s-price-out>$20.990.000</output></div>
+          <input type="range" id="s-precio" min="18990000" max="23990000" step="100000" value="20990000" data-s-price>
+        </div>
+        <div class="field" data-s-mode-wrap>
+          <span class="label" id="s-modo-label">Forma de pago</span>
+          <div class="seg" role="radiogroup" aria-labelledby="s-modo-label">
+            <label><input type="radio" name="modo" value="contado" checked><span>Contado</span></label>
+            <label><input type="radio" name="modo" value="credito"><span>Financiamiento</span></label>
+          </div>
+        </div>
+        <div class="field" data-s-credit hidden>
+          <div class="field-head"><label for="s-pie">Pie</label> <output for="s-pie" data-s-pie-out>30 %</output></div>
+          <input type="range" id="s-pie" min="30" max="70" step="5" value="30" data-s-pie>
+        </div>
+        <div class="field" data-s-credit hidden>
+          <span class="label" id="s-plazo-label">Plazo</span>
+          <div class="seg seg-4" role="radiogroup" aria-labelledby="s-plazo-label" data-s-plazos>
+            <label><input type="radio" name="plazo" value="12"><span>12 m</span></label>
+            <label><input type="radio" name="plazo" value="24"><span>24 m</span></label>
+            <label><input type="radio" name="plazo" value="36" checked><span>36 m</span></label>
+            <label><input type="radio" name="plazo" value="48"><span>48 m</span></label>
+          </div>
+        </div>
+        <div class="sim-bar">
+          <span class="label">Cómo se reparte tu compra</span>
+          <div class="bar" aria-hidden="true"><span class="b-res" data-s-b="res"></span><span class="b-pie" data-s-b="pie"></span><span class="b-rest" data-s-b="rest"></span></div>
+          <ul class="bar-legend">
+            <li><i class="b-res"></i>Reserva</li>
+            <li data-s-b-pie-l hidden><i class="b-pie"></i>Pie</li>
+            <li><i class="b-rest"></i><span data-s-b-rest-l>Saldo a la escritura</span></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="sim-result" aria-live="polite">
+        <p class="kicker">Tu plan referencial</p>
+        <dl>
+          <div><dt>Reserva</dt><dd data-s-reserva>$1.000.000</dd></div>
+          <div data-s-row-pie hidden><dt>Pie (descontada la reserva)</dt><dd data-s-pie-val>$0</dd></div>
+          <div><dt data-s-saldo-label>Saldo a la escritura</dt><dd data-s-saldo>$19.990.000</dd></div>
+          <div class="sim-big" data-s-row-cuota hidden><dt>Cuota mensual estimada</dt><dd data-s-cuota>$0</dd></div>
+        </dl>
+        <p class="sim-note" data-s-note>Más gastos de escrituración (notaría y Conservador), que te informamos antes de firmar.</p>
+        <a class="btn btn-gold" href="https://wa.me/56900000000" target="_blank" rel="noopener" data-s-send><svg class="i" aria-hidden="true"><use href="#i-whatsapp"/></svg>Enviarme esta simulación</a>
+        <p class="sim-legal">Simulación referencial, no constituye oferta. Las condiciones de financiamiento se evalúan caso a caso.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================== NOSOTROS ============================== -->
+<section class="section light about" id="nosotros" aria-labelledby="nosotros-title">
+  <img class="about-mark" src="assets/img/isotipo.webp" alt="" width="480" height="346" loading="lazy" decoding="async">
+  <div class="container about-grid">
+    <div class="about-copy reveal">
+      <p class="kicker">Quiénes somos</p>
+      <h2 id="nosotros-title">Detrás de cada venta <em>hay una historia.</em></h2>
+      <p>En Fundos Inmobiliaria creemos que la tierra no es solo un terreno: es el punto de partida de un sueño. El de despertar rodeado de naturaleza, construir un refugio familiar, emprender un proyecto propio o simplemente vivir con más calma y espacio.</p>
+      <p>Nacimos para hacer ese camino más simple. Somos un equipo apasionado por conectar personas con lugares, y nuestro compromiso es acompañarte desde la primera visita hasta el día en que ese terreno sea oficialmente tuyo.</p>
+    </div>
+    <ul class="values">
+      <li class="value reveal">
+        <span class="value-icon"><svg class="i" aria-hidden="true"><use href="#i-doc"/></svg></span>
+        <h3>Transparencia</h3>
+        <p>Te contamos todo, siempre. Precios, planos y el estado de cada lote, a la vista.</p>
+      </li>
+      <li class="value reveal">
+        <span class="value-icon"><svg class="i" aria-hidden="true"><use href="#i-people"/></svg></span>
+        <h3>Cercanía</h3>
+        <p>Un ejecutivo te acompaña de la visita a la escritura. Aquí no eres un número, eres un proyecto de vida.</p>
+      </li>
+      <li class="value reveal">
+        <span class="value-icon"><svg class="i" aria-hidden="true"><use href="#i-sparkle"/></svg></span>
+        <h3>Innovación</h3>
+        <p>Tecnología para simplificar lo complejo: sigues tu compra en línea con Fundos 360°.</p>
+      </li>
+      <li class="value reveal">
+        <span class="value-icon"><svg class="i" aria-hidden="true"><use href="#i-shield"/></svg></span>
+        <h3>Confianza</h3>
+        <p>Cada terreno que ofrecemos está respaldado y verificado. Tu tranquilidad es el centro de todo.</p>
+      </li>
+    </ul>
+  </div>
+</section>
+
+<!-- ============================== PREGUNTAS ============================== -->
+<section class="section cream" id="preguntas" aria-labelledby="faq-title">
+  <div class="container faq-grid">
+    <header class="section-head faq-head reveal">
+      <p class="kicker">Preguntas frecuentes</p>
+      <h2 id="faq-title">Lo que todos <em>nos preguntan.</em></h2>
+      <p class="lead">¿No encuentras tu respuesta? Escríbenos y un ejecutivo te responde.</p>
+      <a class="btn btn-dark" href="https://wa.me/56900000000" target="_blank" rel="noopener" data-wa data-wa-msg="Hola Fundos, tengo una pregunta sobre sus parcelas."><svg class="i" aria-hidden="true"><use href="#i-whatsapp"/></svg>Preguntar por WhatsApp</a>
+    </header>
+    <div class="faq reveal">
+      <details open>
+        <summary>¿Qué significa que la parcela tenga rol propio?</summary>
+        <p>Que es una propiedad independiente, con su propio número de rol asignado por el Servicio de Impuestos Internos. Así puedes escriturarla a tu nombre, venderla o heredarla sin depender de terceros.</p>
+      </details>
+      <details>
+        <summary>¿Puedo construir mi casa?</summary>
+        <p>Sí. En parcelas de agrado puedes construir la vivienda del propietario cumpliendo la normativa vigente y los permisos municipales. Te orientamos sobre factibilidades y trámites antes de que compres.</p>
+      </details>
+      <details>
+        <summary>¿Cuánto cuesta reservar y qué pasa si me arrepiento?</summary>
+        <p>La reserva es de $1.000.000 y deja el lote y su precio apartados para ti. Las condiciones de devolución quedan por escrito en el comprobante, antes de que pagues.</p>
+      </details>
+      <details>
+        <summary>¿Qué gastos adicionales tiene la compra?</summary>
+        <p>Los gastos de escrituración: notaría e inscripción en el Conservador de Bienes Raíces. Te entregamos el detalle exacto antes de firmar.</p>
+      </details>
+      <details>
+        <summary>¿Cuánto demora el proceso completo?</summary>
+        <p>Depende de cada caso y de los plazos de la notaría y del Conservador. Desde tu reserva ves cada etapa y su avance en Fundos 360°.</p>
+      </details>
+      <details>
+        <summary>¿Tienen alternativas de financiamiento?</summary>
+        <p>Revisamos contigo las alternativas de pago según tu caso. Usa el simulador para tener una referencia y conversemos.</p>
+      </details>
+      <details>
+        <summary>¿Puedo visitar las parcelas antes de reservar?</summary>
+        <p>Por supuesto. Agenda una visita guiada con un ejecutivo o pide un recorrido por videollamada si estás lejos.</p>
+      </details>
+    </div>
+  </div>
+</section>
+
+<!-- ============================== VISITA / CONTACTO ============================== -->
+<section class="section dark visit" id="visita" aria-labelledby="visita-title">
+  <svg class="visit-lines" viewBox="0 0 1600 400" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+    <g fill="none" stroke="url(#g-furrow)" stroke-linecap="round">
+      <path class="furrow" pathLength="1" stroke-width="1.6" d="M-40 260C300 160 700 150 1100 230"/>
+      <path class="furrow" pathLength="1" stroke-width="1.2" d="M-40 310C280 220 640 210 1000 290"/>
+      <path class="furrow" pathLength="1" stroke-width="1.8" d="M500 420C850 250 1250 200 1640 210"/>
+      <path class="furrow" pathLength="1" stroke-width="1.2" d="M800 420C1100 300 1400 270 1640 280"/>
+    </g>
+  </svg>
+  <div class="container visit-grid">
+    <div class="visit-copy reveal">
+      <p class="kicker">Agenda tu visita</p>
+      <h2 id="visita-title">Ven a <em>caminar tu terreno.</em></h2>
+      <p class="lead">Te mostramos los lotes disponibles, los accesos y el entorno, y respondemos todas tus preguntas en terreno. Si estás lejos, lo recorremos contigo por videollamada.</p>
+      <ul class="contact-list">
+        <li><svg class="i" aria-hidden="true"><use href="#i-whatsapp"/></svg><div><span>WhatsApp</span><a href="https://wa.me/56900000000" target="_blank" rel="noopener" data-wa data-wa-visible>+56 9 0000 0000</a></div></li>
+        <li><svg class="i" aria-hidden="true"><use href="#i-send"/></svg><div><span>Correo</span><a href="mailto:contacto@fundosinmobiliaria.com" data-email>contacto@fundosinmobiliaria.com</a></div></li>
+        <li><svg class="i" aria-hidden="true"><use href="#i-calendar"/></svg><div><span>Horario</span><p data-horario>Lunes a sábado, 9:00 a 19:00</p></div></li>
+      </ul>
+    </div>
+
+    <form class="visit-form reveal" data-visit novalidate>
+      <div class="form-row">
+        <div class="field">
+          <label for="v-nombre">Nombre</label>
+          <input id="v-nombre" name="nombre" type="text" autocomplete="name" required placeholder="Tu nombre">
+          <p class="error" data-error-for="v-nombre">Cuéntanos tu nombre.</p>
+        </div>
+        <div class="field">
+          <label for="v-telefono">Teléfono</label>
+          <input id="v-telefono" name="telefono" type="tel" autocomplete="tel" inputmode="tel" required placeholder="+56 9 1234 5678">
+          <p class="error" data-error-for="v-telefono">Ingresa un teléfono válido.</p>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="field">
+          <label for="v-proyecto">Proyecto</label>
+          <select id="v-proyecto" name="proyecto">
+            <option value="Malalcahuello">Malalcahuello</option>
+            <option value="Marchigüe">Marchigüe</option>
+            <option value="Puerto Varas">Puerto Varas (preventa)</option>
+            <option value="Aún no lo sé">Aún no lo sé</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="v-fecha">Fecha preferida</label>
+          <input id="v-fecha" name="fecha" type="date">
+        </div>
+      </div>
+      <div class="field">
+        <span class="label" id="v-horario-label">Horario</span>
+        <div class="seg" role="radiogroup" aria-labelledby="v-horario-label">
+          <label><input type="radio" name="horario" value="mañana" checked><span>Mañana</span></label>
+          <label><input type="radio" name="horario" value="tarde"><span>Tarde</span></label>
+          <label><input type="radio" name="horario" value="videollamada"><span>Videollamada</span></label>
+        </div>
+      </div>
+      <div class="field">
+        <label for="v-mensaje">Mensaje <small>(opcional)</small></label>
+        <textarea id="v-mensaje" name="mensaje" rows="3" placeholder="¿Te interesa algún lote en particular?"></textarea>
+      </div>
+      <label class="check">
+        <input type="checkbox" name="acepto" required>
+        <span>Acepto que Fundos Inmobiliaria me contacte por WhatsApp o teléfono.</span>
+      </label>
+      <p class="error" data-error-for="acepto">Necesitamos tu autorización para contactarte.</p>
+      <button class="btn btn-gold btn-lg" type="submit"><svg class="i" aria-hidden="true"><use href="#i-whatsapp"/></svg>Agendar por WhatsApp</button>
+      <p class="form-note">Te abriremos WhatsApp con tu solicitud lista para enviar.</p>
+      <div class="form-ok" data-visit-ok hidden tabindex="-1">
+        <svg class="ok-check" viewBox="0 0 52 52" aria-hidden="true"><circle cx="26" cy="26" r="24" fill="none" stroke="currentColor" stroke-width="2"/><path d="M15 27l7 7 15-16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <h3>¡Listo! Tu solicitud está en WhatsApp.</h3>
+        <p>Solo presiona enviar y un ejecutivo te confirmará la visita. ¿No se abrió? <a href="https://wa.me/56900000000" target="_blank" rel="noopener" data-visit-fallback>Ábrelo aquí</a>.</p>
+        <button class="btn btn-line btn-sm" type="button" data-visit-again>Editar mi solicitud</button>
+      </div>
+    </form>
+  </div>
+</section>
+
+</main>
+
+<!-- ================================ FOOTER ================================ -->
+<footer class="footer">
+  <div class="container footer-grid">
+    <div class="footer-brand">
+      <img src="assets/img/isotipo.webp" alt="Fundos Inmobiliaria" width="96" height="69" loading="lazy" decoding="async">
+      <p class="footer-claim">La tierra como <em>punto de partida.</em></p>
+    </div>
+    <nav class="footer-col" aria-label="Proyectos">
+      <h2>Proyectos</h2>
+      <a href="#plano" data-goto-plan="malalcahuello">Malalcahuello</a>
+      <a href="#plano" data-goto-plan="marchigue">Marchigüe</a>
+      <a href="#visita" data-preventa="puerto-varas">Puerto Varas · Preventa</a>
+    </nav>
+    <nav class="footer-col" aria-label="Tu compra">
+      <h2>Tu compra</h2>
+      <a href="#plano">Elige tu parcela</a>
+      <a href="#como-comprar">Cómo comprar</a>
+      <a href="#simulador">Simulador</a>
+      <a href="#portal">Mi compra</a>
+    </nav>
+    <div class="footer-col">
+      <h2>Contacto</h2>
+      <a href="https://wa.me/56900000000" target="_blank" rel="noopener" data-wa data-wa-visible>+56 9 0000 0000</a>
+      <a href="mailto:contacto@fundosinmobiliaria.com" data-email>contacto@fundosinmobiliaria.com</a>
+      <p data-horario>Lunes a sábado, 9:00 a 19:00</p>
+    </div>
+  </div>
+  <div class="container footer-bottom">
+    <p>© 2026 Fundos Inmobiliaria. Imágenes ilustrativas; valores referenciales sujetos a disponibilidad.</p>
+    <p class="footer-credit">Propuesta de diseño · <a href="https://biplot.cl/" target="_blank" rel="noopener">BiPlot</a></p>
+  </div>
+</footer>
+
+<!-- Barra de acción móvil -->
+<div class="mbar" data-mbar>
+  <a class="mbar-wa" href="https://wa.me/56900000000" target="_blank" rel="noopener" data-wa><svg class="i" aria-hidden="true"><use href="#i-whatsapp"/></svg>WhatsApp</a>
+  <a class="btn btn-gold" href="#visita">Agendar visita</a>
+</div>
+
+<!-- Botón flotante WhatsApp (escritorio) -->
+<a class="wa-float" href="https://wa.me/56900000000" target="_blank" rel="noopener" aria-label="Escríbenos por WhatsApp" data-wa><svg class="i" aria-hidden="true"><use href="#i-whatsapp"/></svg></a>
+
+<!-- Ficha de proyecto -->
+<dialog class="pdialog" id="proyecto" aria-labelledby="pd-title" data-pdialog>
+  <div class="pd-art" data-pd-art></div>
+  <button class="icon-btn pd-close" type="button" aria-label="Cerrar" data-pd-close><svg class="i" aria-hidden="true"><use href="#i-close"/></svg></button>
+  <div class="pd-body">
+    <p class="kicker" data-pd-meta></p>
+    <h2 id="pd-title" data-pd-title>Proyecto</h2>
+    <p class="pd-desc" data-pd-desc></p>
+    <div class="pd-cols">
+      <div>
+        <h3>Lo que vas a encontrar</h3>
+        <ul class="ticks" data-pd-list></ul>
+      </div>
+      <div>
+        <h3>Qué hay cerca</h3>
+        <ul class="near" data-pd-near></ul>
+        <p class="pd-small" data-pd-near-note></p>
+        <a class="pd-map" href="#" target="_blank" rel="noopener" data-pd-map><svg class="i" aria-hidden="true"><use href="#i-pin"/></svg>Ver en Google Maps</a>
+      </div>
+    </div>
+    <div class="pd-actions" data-pd-actions></div>
+  </div>
+</dialog>
+
+</body>
+</html>

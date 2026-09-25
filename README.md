@@ -7,6 +7,7 @@ Sitio estático (HTML, CSS y JavaScript, sin build). Se sirve tal cual:
 - `index.html` — sitio principal.
 - `plotline.html` — recorrido "Cómo pensamos la automatización".
 - `assets/` — video, imágenes y scripts.
+- `propuestas/fundos-inmobiliaria/` — propuesta de sitio para Fundos Inmobiliaria (no indexada; ver su README).
 
 ## Desarrollo local
 

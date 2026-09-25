@@ -89,6 +89,12 @@
     if (contacto.whatsappVisible) $$("[data-wa-visible]").forEach(function (a) { a.textContent = contacto.whatsappVisible; });
     if (contacto.email) $$("[data-email]").forEach(function (a) { a.href = "mailto:" + contacto.email; a.textContent = contacto.email; });
     if (contacto.horario) $$("[data-horario]").forEach(function (p) { p.textContent = contacto.horario; });
+    // Aviso para lectores de pantalla: estos enlaces abren otra pestaña o la app
+    $$('a[target="_blank"]').forEach(function (a) {
+      var ids = (a.getAttribute("aria-describedby") || "").split(" ").filter(Boolean);
+      if (ids.indexOf("nueva-pestana") < 0) ids.push("nueva-pestana");
+      a.setAttribute("aria-describedby", ids.join(" "));
+    });
   }
 
   /* =============================================================
@@ -235,6 +241,14 @@
     $$("[data-goto-plan]").forEach(function (a) {
       a.addEventListener("click", function () { Plan.show(a.getAttribute("data-goto-plan")); });
     });
+    // Enlaces repetidos en cada tarjeta: el lector de pantalla oye de qué proyecto son
+    $$(".project[data-project]").forEach(function (card) {
+      var p = proyecto(card.getAttribute("data-project"));
+      if (!p) return;
+      $$("[data-goto-plan], [data-open-project], .art-360", card).forEach(function (a) {
+        if (!$(".sr-only", a)) a.insertAdjacentHTML("beforeend", '<span class="sr-only"> de ' + esc(p.nombre) + "</span>");
+      });
+    });
     $$("[data-chip-total]").forEach(function (li) {
       var p = proyecto(li.getAttribute("data-chip-total"));
       if (p) li.textContent = p.lotes.length + " parcelas en total";
@@ -253,6 +267,8 @@
     if (!form) return;
     var dest = $("#f-destino", form), bud = $("#f-presupuesto", form);
     var count = $("[data-finder-count]", form), label = $("[data-finder-label]", form), cta = $("[data-finder-cta]", form), by = $("[data-finder-by]", form);
+    var liveF = $("[data-finder-live]", form), liveT = 0;
+    function say(t) { if (!liveF) return; window.clearTimeout(liveT); liveT = window.setTimeout(function () { liveF.textContent = t; }, 450); }
 
     function matches(p, max) {
       return disponibles(p).filter(function (l) { return l.precio <= max; }).length;
@@ -285,6 +301,7 @@
         label.textContent = "No hay parcelas hasta " + clp(r.max) + (r.todos ? "" : " en " + r.target.nombre) + ". Parten en " + clp(desde(r.target)) + ".";
         cta.textContent = "Ver desde " + clp(desde(r.target));
         by.hidden = true;
+        say(label.textContent);
         return;
       }
       count.hidden = false;
@@ -293,6 +310,7 @@
       by.hidden = !(r.todos && parts.length > 1);
       by.textContent = parts.map(function (x) { return x.n + " en " + x.p.nombre; }).join(" · ");
       cta.textContent = r.todos && parts.length > 1 ? "Ver en " + r.target.nombre : "Ver parcelas";
+      say(r.n + " " + label.textContent + (by.hidden ? "" : ": " + by.textContent));
     }
     dest.addEventListener("change", update);
     bud.addEventListener("change", update);
@@ -325,6 +343,8 @@
     agua: "#3E9FD6"
   };
   var HEART = "M0 3.6C-3.9 1-5.2-.9-5.2-2.5a2.6 2.6 0 0 1 5.2-.8 2.6 2.6 0 0 1 5.2.8C5.2-.9 3.9 1 0 3.6Z";
+  // Precio corto para el plano: $20,99M
+  function corto(v) { return "$" + String(Math.round(v / 10000) / 100).replace(".", ",") + "M"; }
   function tituloPrecios(p) {
     var cats = p.categorias || {};
     return Object.keys(cats).some(function (k) { return cats[k].lista; }) ? "Precio oferta" : "Precios";
@@ -381,6 +401,7 @@
     if (contorno) s.push('<path class="pl-limite" d="' + contorno + '"/>');
     s.push("</g>");
     s.push('<path class="lot-ring" d="M0 0" style="display:none"/>');
+    s.push('<path class="lot-focus lot-focus-o" d="M0 0" style="display:none"/><path class="lot-focus lot-focus-i" d="M0 0" style="display:none"/>');
     // Pins: disponible = disco blanco con el color de su precio; vendida = cápsula discreta "V · n"
     s.push('<g class="pl-pins" aria-hidden="true">');
     lots.forEach(function (o) {
@@ -393,7 +414,7 @@
         return;
       }
       s.push('<g class="pin pin-' + l.estado + '" data-n="' + n + '" ' + st + '><circle class="pin-sh" r="12.5" cy="1.4"/><circle class="pin-b" r="12"/>' +
-        '<text class="pin-t">' + n + '</text><g class="pin-fav" transform="translate(10.5 -10.5)"><circle r="6.8"/><path d="' + HEART + '"/></g></g>');
+        '<text class="pin-t">' + n + '</text><text class="pin-p" y="22">' + (l.precio ? corto(l.precio) : "") + '</text><g class="pin-fav" transform="translate(10.5 -10.5)"><circle r="6.8"/><path d="' + HEART + '"/></g></g>');
     });
     s.push("</g></svg>");
     return s.join("");
@@ -496,6 +517,10 @@
       return framed ? "" : " " + location.href.split("#")[0] + "#lote-" + p.id + "-" + l.n;
     }
 
+    [stage, canvas].forEach(function (el) {
+      el.addEventListener("scroll", function () { if (el.scrollLeft || el.scrollTop) { el.scrollLeft = 0; el.scrollTop = 0; } });
+    });
+
     /* ---- Render ---- */
     function renderSvg() {
       var p = P();
@@ -536,7 +561,7 @@
         Z.k = 1; Z.cx = b[0] + b[2] / 2; Z.cy = b[1] + b[3] / 2;
         if (isSmall()) {
           // lotes de ~36 px: se pueden tocar sin errar
-          Z.k = clamp((18 / Z.r20) * Z.fitW / W, 1, MAXK);
+          Z.k = clamp((20 / Z.r20) * Z.fitW / W, 1, MAXK);
           var pts = disponibles(P()).map(function (l) { return pt(l.n); }).filter(Boolean);
           if (pts.length) {
             Z.cx = pts.reduce(function (t, q) { return t + q[0]; }, 0) / pts.length;
@@ -562,6 +587,7 @@
       var upp = vw / Z.W, clearPx = Z.r20 / upp;
       svg.style.setProperty("--u", (upp * clamp(clearPx / 15, 0.62, 1)).toFixed(4));
       svg.classList.toggle("is-dense", clearPx < 11);
+      svg.classList.toggle("is-roomy", clearPx >= 30);
       canvas.classList.toggle("is-zoomed", Z.k > 1.01);
       if (zoomUi) {
         $('[data-zoom="in"]', zoomUi).disabled = Z.k >= MAXK - 0.01;
@@ -745,6 +771,7 @@
         var ok = passes(l);
         any = any || ok;
         sh.path.classList.toggle("is-dim", !ok);
+        if (ok) sh.path.removeAttribute("aria-hidden"); else sh.path.setAttribute("aria-hidden", "true");
         if (sh.pin) sh.pin.classList.toggle("is-dim", !ok);
       });
       $$(".pl-cat", cats).forEach(function (b) { b.setAttribute("aria-pressed", b.getAttribute("data-cat") === S.sector ? "true" : "false"); });
@@ -791,6 +818,7 @@
       price.max = prices.length;
       price.value = i;
       priceOut.textContent = i >= prices.length ? "Sin tope" : "Hasta " + clp(prices[i]);
+      price.setAttribute("aria-valuetext", priceOut.textContent);
       paintRange(price);
     }
     function clearFilters() {
@@ -907,11 +935,12 @@
       var p = P(), l = lotOf(p, n);
       if (!l) return;
       S.sel = n;
-      $$(".lot.is-active", canvas).forEach(function (el) { el.classList.remove("is-active"); });
+      $$(".lot.is-active", canvas).forEach(function (el) { el.classList.remove("is-active"); el.removeAttribute("aria-current"); });
       $$(".pin.is-active", canvas).forEach(function (el) { el.classList.remove("is-active"); });
       var sh = shapes[n];
       if (sh && ring) {
         sh.path.classList.add("is-active");
+        sh.path.setAttribute("aria-current", "true");
         if (sh.pin) sh.pin.classList.add("is-active");
         ring.setAttribute("d", sh.path.getAttribute("d"));
         ring.style.display = "";
@@ -961,7 +990,7 @@
       if (!panel.classList.contains("is-open")) return;
       panel.classList.remove("is-open", "is-expanded");
       panel.style.transform = "";
-      panel.removeAttribute("role");
+      panel.setAttribute("role", "region");
       panel.removeAttribute("aria-modal");
       panel.removeAttribute("aria-labelledby");
       if (backdrop) backdrop.hidden = true;
@@ -1052,7 +1081,7 @@
         var on = t.getAttribute("data-tab") === id;
         t.setAttribute("aria-selected", on ? "true" : "false");
         t.setAttribute("tabindex", on ? "0" : "-1");
-        if (on) stage.setAttribute("aria-labelledby", t.id);
+        if (on) tabpanel.setAttribute("aria-labelledby", t.id);
       });
       if (!p.lotes.length) return;
       if (zoomUi) zoomUi.hidden = S.view !== "plano";
@@ -1085,29 +1114,38 @@
     /* ---- Eventos ---- */
     tabs.forEach(function (t, i) {
       t.id = t.id || "tab-" + t.getAttribute("data-tab");
-      t.setAttribute("aria-controls", "plan-stage");
+      t.setAttribute("aria-controls", "plan-tabpanel");
       var p = proyecto(t.getAttribute("data-tab"));
-      if (p && p.lotes.length && !$("small", t)) t.insertAdjacentHTML("beforeend", "<small>" + disponibles(p).length + " disp.</small>");
+      if (p && p.lotes.length && !$("small", t)) t.insertAdjacentHTML("beforeend", '<small aria-hidden="true">' + disponibles(p).length + ' disp.</small><span class="sr-only">, ' + disponibles(p).length + " disponibles</span>");
       t.addEventListener("click", function () { setProject(t.getAttribute("data-tab")); });
       t.addEventListener("keydown", function (e) {
-        if (e.key !== "ArrowRight" && e.key !== "ArrowLeft") return;
+        var nx = null;
+        if (e.key === "ArrowRight" || e.key === "ArrowLeft") nx = tabs[(i + (e.key === "ArrowRight" ? 1 : tabs.length - 1)) % tabs.length];
+        else if (e.key === "Home") nx = tabs[0];
+        else if (e.key === "End") nx = tabs[tabs.length - 1];
+        if (!nx) return;
         e.preventDefault();
-        var nx = tabs[(i + (e.key === "ArrowRight" ? 1 : tabs.length - 1)) % tabs.length];
         nx.focus();
         setProject(nx.getAttribute("data-tab"));
       });
     });
-    stage.id = "plan-stage";
-    stage.setAttribute("role", "tabpanel");
+    var tabpanel = $("[data-tabpanel]", root) || stage;
+    tabpanel.id = "plan-tabpanel";
+    tabpanel.setAttribute("role", "tabpanel");
     views.forEach(function (b) { b.addEventListener("click", function () { setView(b.getAttribute("data-view")); }); });
     checks.forEach(function (c) { c.addEventListener("change", function () { S.est[c.value] = c.checked; S.nota = ""; applyFilters(); }); });
     price.addEventListener("input", function () {
       var i = +price.value;
       S.max = i >= prices.length ? Infinity : prices[i];
       priceOut.textContent = i >= prices.length ? "Sin tope" : "Hasta " + clp(prices[i]);
+      price.setAttribute("aria-valuetext", priceOut.textContent);
       paintRange(price);
       S.nota = ""; S.otros = [];
       applyFilters();
+    });
+    if (cats) cats.addEventListener("focusin", function (e) {
+      var b = e.target.closest(".pl-cat");
+      if (b) b.scrollIntoView({ inline: "nearest", block: "nearest", behavior: reduced ? "auto" : "smooth" });
     });
     if (cats) cats.addEventListener("click", function (e) {
       var b = e.target.closest(".pl-cat");
@@ -1130,7 +1168,7 @@
     // Plano: clic, teclado y tooltip
     canvas.addEventListener("click", function (e) {
       var el = e.target.closest && e.target.closest(".lot");
-      if (el) select(+el.getAttribute("data-n"));
+      if (el && !el.classList.contains("is-dim")) select(+el.getAttribute("data-n"));
     });
     canvas.addEventListener("keydown", function (e) {
       var el = e.target.closest && e.target.closest(".lot");
@@ -1185,13 +1223,19 @@
       var el = e.target.closest && e.target.closest(".lot");
       if (el && !el.contains(e.relatedTarget)) tip.hidden = true;
     });
+    function focusRing(el) {
+      $$(".lot-focus", canvas).forEach(function (f) {
+        if (el) { f.setAttribute("d", el.getAttribute("d")); f.style.display = ""; } else f.style.display = "none";
+      });
+    }
     canvas.addEventListener("focusin", function (e) {
       var el = e.target.closest && e.target.closest(".lot");
       if (!el) return;
       var n = +el.getAttribute("data-n");
-      reveal(n, function () { if (document.activeElement === el) tipAt(el); });
+      if (el.matches(":focus-visible")) focusRing(el);
+      reveal(n, function () { if (document.activeElement === el) { tipAt(el); document.dispatchEvent(new CustomEvent("fundos:focusvisible", { detail: el })); } });
     });
-    canvas.addEventListener("focusout", function () { tip.hidden = true; });
+    canvas.addEventListener("focusout", function () { tip.hidden = true; focusRing(null); });
 
     // Lista
     list.addEventListener("click", function (e) {
@@ -1308,6 +1352,7 @@
     var form = $("[data-sim]");
     if (!form) return;
     var fin = B.financiamiento || {};
+    var simLive = $("[data-sim-live]"), simLiveT = 0;
     var selP = $("[data-s-project]", form), price = $("[data-s-price]", form), priceOut = $("[data-s-price-out]", form);
     var pie = $("[data-s-pie]", form), pieOut = $("[data-s-pie-out]", form), plazosBox = $("[data-s-plazos]", form);
     var modeWrap = $("[data-s-mode-wrap]", form), creditEls = $$("[data-s-credit]", form);
@@ -1364,6 +1409,7 @@
       if (lotBox) lotBox.textContent = lotSel ? "Lote " + lotSel + " de " + p.nombre : nAt + (nAt === 1 ? " lote disponible a este precio" : " lotes disponibles a este precio");
       var que = "una parcela en " + p.nombre + (lotSel ? " (lote " + lotSel + ")" : "") + " de " + clp(v);
       pieOut.textContent = pct(+pie.value);
+      pie.setAttribute("aria-valuetext", pct(+pie.value));
       creditEls.forEach(function (el) { el.hidden = !credito; });
       $$('input[type="range"]', form).forEach(paintRange);
       out.reserva.textContent = clp(RESERVA);
@@ -1396,6 +1442,11 @@
         if (out.lRest) out.lRest.textContent = "Financiado en cuotas";
       }
       out.send.href = waHref(msg);
+      if (simLive) {
+        window.clearTimeout(simLiveT);
+        var txt = credito ? "Cuota estimada " + out.cuota.textContent.replace(" × ", " en ") + " meses" : "Saldo a la escritura " + out.saldo.textContent;
+        simLiveT = window.setTimeout(function () { simLive.textContent = txt; }, 400);
+      }
     }
     selP.addEventListener("change", function () { lotSel = null; range(proyecto(selP.value)); calc(); });
     price.addEventListener("input", function () { lotSel = null; });
@@ -1432,8 +1483,8 @@
       var key = e.getAttribute("data-error-for");
       var input = document.getElementById(key) || el[key];
       e.id = e.id || "err-" + i;
-      if (input && input.setAttribute) input.setAttribute("aria-describedby", e.id);
     });
+    if (el.acepto) el.acepto.setAttribute("aria-invalid", "false");
 
     var rules = {
       nombre: function (v) { return v.trim().length >= 2; },
@@ -1447,6 +1498,7 @@
       if (!input) return true;
       var good = rules[name](input.value || "", input);
       var err = $('[data-error-for="' + (input.id || name) + '"]', form);
+      if (err) { if (good) input.removeAttribute("aria-describedby"); else input.setAttribute("aria-describedby", err.id); }
       var field = input.closest(".field");
       if (field) field.classList.toggle("has-error", !good);
       if (err) err.classList.toggle("is-shown", !good);
@@ -1489,9 +1541,11 @@
       fb.href = waHref(msg);
       if (okMsg) okMsg.textContent = msg;
       ok.hidden = false;
+      inertForm(true);
       ok.focus();
     });
-    if (again) again.addEventListener("click", function () { ok.hidden = true; el.nombre.focus(); });
+    function inertForm(on) { [].forEach.call(form.children, function (ch) { if (ch !== ok) ch.inert = on; }); }
+    if (again) again.addEventListener("click", function () { ok.hidden = true; inertForm(false); el.nombre.focus(); });
 
     var lastAuto = "";
     Visit.prefill = function (o) {
@@ -1505,6 +1559,7 @@
         lastAuto = el.mensaje.value;
       }
       ok.hidden = true;
+      inertForm(false);
       form.classList.remove("is-prefilled");
       void form.offsetWidth;
       form.classList.add("is-prefilled");
@@ -1669,6 +1724,8 @@
       setText("[data-tour-cta]", "Entrar");
       setText("[data-tour-dock-q]", "¿Te gustó");
       status.textContent = "Recorrido de " + T().nombre + " abierto. Arrastra para mirar alrededor.";
+      var ae = document.activeElement;
+      if (!ae || ae === document.body || root.contains(ae)) $("[data-tour-close]", root).focus({ preventScroll: true });
     }
     function leave() {
       token++;
@@ -1711,15 +1768,30 @@
       fullBtn.title = on ? "Salir de pantalla completa" : "Pantalla completa";
       $("use", fullBtn).setAttribute("href", on ? "#i-shrink" : "#i-expand");
     }
-    function immersive() { stage.classList.add("is-immersive"); document.body.classList.add("tour-lock"); syncFull(); }
+    function immersive() {
+      stage.classList.add("is-immersive");
+      document.body.classList.add("tour-lock");
+      var n = stage;
+      while (n && n !== document.body) {
+        [].forEach.call(n.parentNode.children, function (s) {
+          if (s !== n && !s.inert && s.tagName !== "SCRIPT") { s.inert = true; s.setAttribute("data-tour-inert", ""); }
+        });
+        n = n.parentNode;
+      }
+      syncFull();
+      $("[data-tour-close]", root).focus({ preventScroll: true });
+    }
     function exitFull() {
       if (document.fullscreenElement === stage && document.exitFullscreen) {
         var r = document.exitFullscreen();
         if (r && r.catch) r.catch(function () {});
       }
+      var wasImm = stage.classList.contains("is-immersive");
       stage.classList.remove("is-immersive");
       document.body.classList.remove("tour-lock");
+      $$("[data-tour-inert]").forEach(function (s) { s.inert = false; s.removeAttribute("data-tour-inert"); });
       syncFull();
+      if (wasImm) fullBtn.focus({ preventScroll: true });
     }
     fullBtn.addEventListener("click", function () {
       if (isFull()) { exitFull(); return; }
@@ -1768,8 +1840,15 @@
     }
 
     // Accesos desde otras partes de la página
+    var pickerNav = $(".tour-picker", root);
+    if (pickerNav) pickerNav.addEventListener("focusin", function (e) {
+      var a = e.target.closest(".tour-pick");
+      if (a) a.scrollIntoView({ inline: "nearest", block: "nearest", behavior: reduced ? "auto" : "smooth" });
+    });
     function toStage() {
       stage.scrollIntoView({ block: "center", behavior: reduced ? "auto" : "smooth" });
+      var t = state() === "live" ? $("[data-tour-close]", root) : (state() === "blocked" ? $("[data-tour-blocked] a", root) : lens);
+      if (t) t.focus({ preventScroll: true });
     }
     Tour.open = function (id, go) { select(id, go); window.setTimeout(toStage, 40); };
     $$("[data-tour-open]").forEach(function (a) {
@@ -1905,6 +1984,13 @@
     if (visit) new IntersectionObserver(function (en) { atVisit = en[0].isIntersecting; update(); }, { threshold: 0.12 }).observe(visit);
     document.addEventListener("fundos:sheet", update);
     window.addEventListener("scroll", function () { if (window.innerHeight < 600) update(); }, { passive: true });
+    function unobscure(t) {
+      if (!t || !bar.classList.contains("is-visible") || bar.contains(t) || !t.getBoundingClientRect) return;
+      var r = t.getBoundingClientRect(), top = bar.getBoundingClientRect().top;
+      if (r.bottom > top - 8) window.scrollBy(0, r.bottom - top + 16);
+    }
+    document.addEventListener("focusin", function (e) { if (!e.target.closest || !e.target.closest(".plan-canvas")) unobscure(e.target); });
+    document.addEventListener("fundos:focusvisible", function (e) { unobscure(e.detail); });
   }
 
   /* =============================================================

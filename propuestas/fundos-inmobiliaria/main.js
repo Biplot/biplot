@@ -46,6 +46,18 @@
   }
   var ESTADO = { disponible: "Disponible", reservada: "Reservado", vendida: "Vendido" };
 
+  // El precio de cada lote sale de su categoría (colores del masterplan)
+  proyectos.forEach(function (p) {
+    var cats = p.categorias || {};
+    (p.lotes || []).forEach(function (l) {
+      var c = cats[l.cat];
+      l.precio = c ? c.precio : null;
+      l.lista = c && c.lista ? c.lista : null;
+      l.m2 = l.m2 || 5000;
+    });
+  });
+  function precioTxt(l) { return l.precio ? clp(l.precio) : "Vendido"; }
+
   function paintRange(input) {
     var min = +input.min || 0, max = +input.max || 100, v = +input.value;
     input.style.setProperty("--p", ((v - min) / ((max - min) || 1) * 100) + "%");
@@ -467,11 +479,91 @@
     return s.join("");
   }
 
+  function hexPts(x, y, r) {
+    var pts = [];
+    for (var i = 0; i < 6; i++) { var a = Math.PI / 180 * (60 * i - 30); pts.push((x + r * Math.cos(a)).toFixed(1) + "," + (y + r * Math.sin(a)).toFixed(1)); }
+    return pts.join(" ");
+  }
+  // Plano con el lenguaje de los masterplan de Fundos: terreno, colores por precio, vendidas y números
+  function svgPlan(p) {
+    var P = (B.planos || {})[p.id], vb, lots, calles, agua = [], camino = "", contorno = null;
+    if (P) {
+      vb = P.viewBox;
+      lots = [];
+      p.lotes.forEach(function (l) { var q = P.lotes[l.n]; if (q) lots.push({ l: l, d: q.d, cx: q.l[0], cy: q.l[1] }); });
+      calles = P.calles || []; agua = P.agua || []; camino = P.caminoPrincipal || ""; contorno = P.contorno;
+    } else {
+      var g = geometry(p);
+      vb = [0, 0, 1000, 640];
+      lots = g.lots.map(function (o) { return { l: o.l, d: o.d, cx: o.cx, cy: o.cy }; });
+      calles = [{ tipo: "eje", d: pathD(g.road.points, false) }];
+    }
+    var hex = p.etiqueta === "hexagono", R = hex ? 14 : 16, FS = hex ? 12.5 : 13.5;
+    var cats = p.categorias || {};
+    var s = [];
+    s.push('<svg class="plan-svg" viewBox="' + vb.join(" ") + '" xmlns="http://www.w3.org/2000/svg" role="group" aria-label="Plano de lotes de ' + esc(p.nombre) + '">');
+    s.push('<defs>' +
+      '<filter id="pl-terreno" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency="0.018" numOctaves="4" seed="4"/>' +
+      '<feColorMatrix type="matrix" values="0 0 0 0 0.12  0 0 0 0 0.17  0 0 0 0 0.09  1.4 0 0 0 -0.45"/></filter>' +
+      '<filter id="pl-grano" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" seed="9"/>' +
+      '<feColorMatrix type="matrix" values="0 0 0 0 0.9  0 0 0 0 0.92  0 0 0 0 0.85  0 0 0 0.9 -0.42"/></filter>' +
+      '<pattern id="lot-hatch" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="7" height="7" fill="#E9E3D7" fill-opacity=".85"/><rect width="2.6" height="7" fill="#8C8474"/></pattern>' +
+      (contorno ? '<clipPath id="pl-predio"><path d="' + contorno + '"/></clipPath>' : "") + "</defs>");
+    var full = 'x="' + vb[0] + '" y="' + vb[1] + '" width="' + vb[2] + '" height="' + vb[3] + '"';
+    s.push('<rect ' + full + ' fill="#1A2317"/><rect ' + full + ' filter="url(#pl-terreno)" opacity=".9"/>');
+    s.push('<g' + (contorno ? ' clip-path="url(#pl-predio)"' : "") + '><rect ' + full + ' fill="#5E6B4C"/><rect ' + full + ' filter="url(#pl-terreno)"/><rect ' + full + ' filter="url(#pl-grano)" opacity=".35"/></g>');
+    s.push('<g class="lots">');
+    lots.forEach(function (o) {
+      var l = o.l, c = cats[l.cat];
+      var fill = l.estado === "vendida" ? (p.vendidaColor || "#A8AAA5") : (c ? c.color : "#C8A165");
+      var aria = "Lote " + l.n + ", " + ESTADO[l.estado].toLowerCase() + (l.precio ? ", " + clp(l.precio) : "") + ", " + m2(l.m2);
+      s.push('<path class="lot st-' + l.estado + '" style="--c:' + fill + '" data-n="' + l.n + '" tabindex="0" role="button" aria-label="' + esc(aria) + '" d="' + o.d + '"/>');
+    });
+    s.push("</g>");
+    s.push('<g class="pl-hatch" aria-hidden="true">');
+    lots.forEach(function (o) { if (o.l.estado === "reservada") s.push('<path d="' + o.d + '" fill="url(#lot-hatch)" opacity=".75"/>'); });
+    s.push("</g>");
+    s.push('<g aria-hidden="true">');
+    calles.forEach(function (k) {
+      if (k.tipo === "servidumbre") s.push('<path class="pl-servidumbre" d="' + k.d + '" fill-rule="evenodd"/>');
+      else if (k.tipo === "linea") s.push('<path class="pl-camino" d="' + k.d + '"/>');
+      else s.push('<path class="pl-eje-borde" d="' + k.d + '"/><path class="pl-eje" d="' + k.d + '"/>');
+    });
+    agua.forEach(function (a) { s.push('<path d="' + a.d + '" fill-rule="evenodd" fill="' + (p.agua || "#1E9BE3") + '"/>'); });
+    if (camino) s.push('<path class="pl-principal" d="' + camino + '"/>');
+    s.push("</g>");
+    s.push('<path class="lot-ring" d="M0 0" style="display:none"/>');
+    s.push('<g class="pl-labels" aria-hidden="true">');
+    lots.forEach(function (o) {
+      var x = o.cx, y = o.cy, n = o.l.n;
+      s.push(hex ? '<polygon class="pl-badge" data-n="' + n + '" points="' + hexPts(x, y, R) + '"/>' : '<circle class="pl-badge" data-n="' + n + '" cx="' + x + '" cy="' + y + '" r="' + R + '"/>');
+      s.push('<text class="lot-num" data-n="' + n + '" x="' + x + '" y="' + (y + 0.5) + '" font-size="' + FS + '">' + n + "</text>");
+      s.push('<circle class="lot-fav" data-n="' + n + '" cx="' + (x + R * 0.8).toFixed(1) + '" cy="' + (y - R * 0.8).toFixed(1) + '" r="' + (hex ? 4.5 : 5.5) + '"/>');
+    });
+    s.push("</g></svg>");
+    return s.join("");
+  }
+  function legendHtml(p) {
+    var hex = p.etiqueta === "hexagono" ? " hex" : "", cats = p.categorias || {}, P = (B.planos || {})[p.id] || {};
+    var h = ['<p class="pl-title">' + esc(p.leyenda || "Precios") + "</p><ul>"];
+    Object.keys(cats).forEach(function (k) {
+      var c = cats[k];
+      h.push('<li><i class="sw' + hex + '" style="--c:' + c.color + '"></i>' + (c.lista ? "<s>" + clp(c.lista) + "</s> " : "") + "<b>" + clp(c.precio) + "</b></li>");
+    });
+    (P.agua || []).forEach(function (a) { h.push('<li><i class="sw sw-agua" style="--c:' + (p.agua || "#1E9BE3") + '"></i>' + esc(a.nombre) + "</li>"); });
+    if ((P.calles || []).some(function (k) { return k.tipo === "servidumbre"; })) h.push('<li><i class="sw sw-servidumbre"></i>Servidumbre de tránsito</li>');
+    if (P.caminoPrincipal) h.push('<li><i class="sw sw-principal"></i>Camino principal</li>');
+    if (p.lotes.some(function (l) { return l.estado === "reservada"; })) h.push('<li><i class="sw sw-reservada"></i>Reservadas</li>');
+    h.push('<li><i class="sw' + hex + '" style="--c:' + (p.vendidaColor || "#A8AAA5") + '"></i>Vendidas</li>');
+    h.push('<li><i class="sw sw-fav"></i>Tu favorito</li></ul>');
+    return h.join("");
+  }
+
   function initPlan() {
     var root = $("[data-plan]");
     if (!root) return;
     var canvas = $("[data-canvas]", root), list = $("[data-list]", root), stage = $("[data-stage]", root);
-    var tip = $("[data-tip]", root), prev = $("[data-preventa-panel]", root), legend = $(".legend", root);
+    var tip = $("[data-tip]", root), prev = $("[data-preventa-panel]", root), legend = $("[data-legend]", root), hint = $("[data-hint]", root);
     var summary = $("[data-summary]", root), price = $("[data-price]", root), priceOut = $("[data-price-out]", root);
     var sectorSel = $("[data-sector]", root), tabs = $$("[data-tab]", root), views = $$("[data-view]", root);
     var viewToggle = $(".view-toggle", root), statusBox = $(".status-filter", root), rangeBox = $(".range", root), sectorBox = $(".select-sm", root);
@@ -500,7 +592,7 @@
 
     function P() { return proyecto(S.id); }
     function lotOf(p, n) { for (var i = 0; i < p.lotes.length; i++) if (p.lotes[i].n === n) return p.lotes[i]; return null; }
-    function passes(l) { return !!S.est[l.estado] && l.precio <= S.max && (S.sector === "" || String(l.sector) === S.sector); }
+    function passes(l) { return !!S.est[l.estado] && (l.precio || 0) <= S.max && (S.sector === "" || l.cat === S.sector); }
     function isFav(id, n) { return favs.indexOf(id + ":" + n) > -1; }
     // Enlace directo al lote; dentro de un marco (vista previa) se omite
     function lotLink(p, l) {
@@ -512,7 +604,8 @@
     /* ---- Render ---- */
     function renderSvg() {
       var p = P();
-      canvas.innerHTML = svgString(p, geometry(p));
+      canvas.innerHTML = svgPlan(p);
+      if (legend) legend.innerHTML = legendHtml(p);
       var svg = $("svg", canvas);
       shapes = {};
       $$(".lot", svg).forEach(function (el) { shapes[el.getAttribute("data-n")] = { path: el }; });
@@ -521,30 +614,33 @@
       ring = $(".lot-ring", svg);
       scaleLabels();
     }
+    // En pantallas chicas el plano mantiene un ancho legible y se desliza de lado
     function scaleLabels() {
       var svg = $("svg", canvas);
       if (!svg) return;
-      var w = svg.getBoundingClientRect().width || 1000, k = 1000 / w;
-      svg.style.setProperty("--lbl", clamp(12.5 * k * 0.86, 12.5, 30).toFixed(1) + "px");
-      svg.style.setProperty("--lblmap", clamp(19 * k * 0.62, 19, 34).toFixed(1) + "px");
+      var vb = svg.viewBox.baseVal, wide = vb && vb.width / vb.height > 2;
+      var min = window.innerWidth < 720 ? (wide ? 980 : 640) : 0;
+      svg.style.minWidth = min ? min + "px" : "";
+      if (hint) hint.hidden = !min || S.view !== "plano";
     }
     function renderList() {
       var p = P();
-      var rows = p.lotes.filter(passes).sort(function (a, b) { return (a[S.sort] - b[S.sort]) * S.dir || a.n - b.n; });
+      var key = function (l) { return S.sort === "precio" ? (l.precio || 1e12) : l[S.sort]; };
+      var rows = p.lotes.filter(passes).sort(function (a, b) { return (key(a) - key(b)) * S.dir || a.n - b.n; });
       if (!rows.length) { list.innerHTML = '<p class="list-empty">No hay lotes con estos filtros. Prueba ampliando el precio o los estados.</p>'; return; }
       var arrow = function (k) { return S.sort === k ? (S.dir > 0 ? " ↑" : " ↓") : ""; };
       var h = ['<table class="lot-table"><caption class="sr-only">Lotes de ' + esc(p.nombre) + '</caption><thead><tr>',
         '<th scope="col"><button type="button" data-sort="n">Lote' + arrow("n") + '</button></th>',
-        '<th scope="col" class="t-sector">Sector</th>',
+        '<th scope="col" class="t-sector">Precio lista</th>',
         '<th scope="col" class="t-m2"><button type="button" data-sort="m2">Superficie' + arrow("m2") + '</button></th>',
         '<th scope="col"><button type="button" data-sort="precio">Precio' + arrow("precio") + '</button></th>',
         '<th scope="col">Estado</th><th scope="col"><span class="sr-only">Acción</span></th></tr></thead><tbody>'];
       rows.forEach(function (l) {
         h.push('<tr data-n="' + l.n + '"' + (S.sel === l.n ? ' class="is-active"' : "") + '>' +
           '<td class="t-num">' + l.n + (isFav(p.id, l.n) ? ' <svg class="i t-fav" aria-label="Favorito" role="img"><use href="#i-heart"/></svg>' : "") + "</td>" +
-          '<td class="t-sector">' + esc(p.sectores[l.sector] || "") + "</td>" +
+          '<td class="t-sector">' + (l.lista ? "<s>" + clp(l.lista) + "</s>" : "") + "</td>" +
           '<td class="t-m2">' + m2(l.m2) + "</td>" +
-          '<td class="t-price">' + clp(l.precio) + "</td>" +
+          '<td class="t-price"><i class="t-cat" style="--c:' + ((p.categorias[l.cat] || {}).color || "transparent") + '"></i>' + (l.precio ? clp(l.precio) : "—") + "</td>" +
           '<td><span class="dot st-' + l.estado + '">' + ESTADO[l.estado] + "</span></td>" +
           '<td class="t-sel"><button type="button" data-n="' + l.n + '" aria-label="Ver lote ' + l.n + '">Ver</button></td></tr>');
       });
@@ -606,17 +702,17 @@
       d.title.textContent = "Lote " + l.n;
       d.status.textContent = ESTADO[l.estado];
       d.status.setAttribute("data-estado", l.estado);
-      d.sector.textContent = p.sectores[l.sector] || "";
-      d.price.textContent = clp(l.precio);
+      d.sector.innerHTML = l.lista ? "Precio lista <s>" + clp(l.lista) + "</s>" : (l.precio ? "Precio de venta" : "Este lote ya tiene dueño.");
+      d.price.textContent = precioTxt(l);
       d.m2.textContent = m2(l.m2);
-      d.reserva.textContent = clp(RESERVA);
-      d.saldo.textContent = clp(l.precio - RESERVA);
-      d.m2price.textContent = clp(l.precio / l.m2);
+      d.reserva.textContent = l.precio ? clp(RESERVA) : "—";
+      d.saldo.textContent = l.precio ? clp(l.precio - RESERVA) : "—";
+      d.m2price.textContent = l.precio ? clp(l.precio / l.m2) : "—";
       pDetail.classList.toggle("is-closed", l.estado !== "disponible");
       if (l.estado === "disponible") { d.reserve.textContent = "Reservar este lote"; d.reserve.setAttribute("href", "#visita"); }
       else if (l.estado === "reservada") { d.reserve.textContent = "Avísame si se libera"; d.reserve.setAttribute("href", "#visita"); }
       else { d.reserve.textContent = "Ver un lote similar disponible"; d.reserve.setAttribute("href", "#plano"); }
-      d.wa.href = waHref("Hola Fundos, me interesa el lote " + l.n + " de " + p.nombre + " (" + m2(l.m2) + ", " + clp(l.precio) + "). ¿Me pueden dar más información?" + lotLink(p, l));
+      d.wa.href = waHref("Hola Fundos, me interesa el lote " + l.n + " de " + p.nombre + " (" + m2(l.m2) + ", " + precioTxt(l) + "). ¿Me pueden dar más información?" + lotLink(p, l));
       d.sim.hidden = l.estado === "vendida";
       syncFavButton();
     }
@@ -666,7 +762,7 @@
     function nearestAvailable(l) {
       var best = null;
       disponibles(P()).forEach(function (x) {
-        var score = Math.abs(x.precio - l.precio) + Math.abs(x.n - l.n) * 1000;
+        var score = (l.precio ? Math.abs(x.precio - l.precio) : 0) + Math.abs(x.n - l.n) * 1000;
         if (!best || score < best.score) best = { l: x, score: score };
       });
       return best && best.l;
@@ -686,7 +782,7 @@
         var parts = k.split(":"), p = proyecto(parts[0]), l = p && lotOf(p, +parts[1]);
         if (!l) return;
         (groups[p.nombre] = groups[p.nombre] || []).push(l.n);
-        lines.push("• " + p.nombre + ", lote " + l.n + " (" + m2(l.m2) + ", " + clp(l.precio) + ")");
+        lines.push("• " + p.nombre + ", lote " + l.n + " (" + m2(l.m2) + ", " + precioTxt(l) + ")");
       });
       favList.textContent = "· " + Object.keys(groups).map(function (g) { return g + ": " + groups[g].sort(function (a, b) { return a - b; }).join(", "); }).join(" · ");
       favSend.href = waHref("Hola Fundos, guardé estos lotes y me gustaría recibir más información:\n" + lines.join("\n"));
@@ -733,9 +829,11 @@
       }
       canvas.hidden = S.view !== "plano";
       list.hidden = S.view !== "lista";
-      prices = p.lotes.map(function (l) { return l.precio; }).filter(function (v, i, a) { return a.indexOf(v) === i; }).sort(function (a, b) { return a - b; });
+      prices = p.lotes.map(function (l) { return l.precio; }).filter(function (v, i, a) { return v && a.indexOf(v) === i; }).sort(function (a, b) { return a - b; });
       syncPrice();
-      sectorSel.innerHTML = '<option value="">Todos los sectores</option>' + p.sectores.map(function (s, i) { return '<option value="' + i + '">' + esc(s) + "</option>"; }).join("");
+      sectorSel.innerHTML = '<option value="">Todas las categorías</option>' + Object.keys(p.categorias || {}).map(function (k) { var c = p.categorias[k]; return '<option value="' + k + '">' + clp(c.precio) + (c.lista ? " (antes " + clp(c.lista) + ")" : "") + "</option>"; }).join("");
+      // solo se muestran los estados que existen en este proyecto
+      checks.forEach(function (c) { var lbl = c.closest("label"); if (lbl) lbl.hidden = !p.lotes.some(function (l) { return l.estado === c.value; }); });
       renderSvg();
       applyFilters();
       refreshFavs();
@@ -747,7 +845,8 @@
       canvas.hidden = v !== "plano";
       list.hidden = v !== "lista";
       if (legend) legend.hidden = v !== "plano";
-      if (v === "lista") renderList(); else scaleLabels();
+      if (v === "lista") renderList();
+      scaleLabels();
     }
 
     /* ---- Eventos ---- */
@@ -795,7 +894,7 @@
     function showTip(el, x, y) {
       var p = P(), l = lotOf(p, +el.getAttribute("data-n"));
       if (!l) return;
-      tip.innerHTML = "Lote " + l.n + " · " + clp(l.precio) + "<small>" + ESTADO[l.estado] + " · " + m2(l.m2) + "</small>";
+      tip.innerHTML = "Lote " + l.n + " · " + precioTxt(l) + "<small>" + (l.lista ? "Antes " + clp(l.lista) + " · " : "") + ESTADO[l.estado] + "</small>";
       tip.hidden = false;
       tip.style.left = x + "px";
       tip.style.top = y + "px";
@@ -852,7 +951,7 @@
       Visit.prefill({
         proyecto: p.nombre,
         mensaje: l.estado === "disponible"
-          ? "Quiero reservar el lote " + l.n + " de " + p.nombre + " (" + m2(l.m2) + ", " + clp(l.precio) + ")."
+          ? "Quiero reservar el lote " + l.n + " de " + p.nombre + " (" + m2(l.m2) + ", " + precioTxt(l) + ")."
           : "Me interesa el lote " + l.n + " de " + p.nombre + ". Avísenme si se libera."
       });
       closeSheet(true);
@@ -930,7 +1029,7 @@
     if (+pie.value < +pie.min) pie.value = pie.min;
 
     function range(p, value) {
-      var ps = p.lotes.map(function (l) { return l.precio; });
+      var ps = p.lotes.map(function (l) { return l.precio; }).filter(Boolean);
       var mn = Math.min.apply(null, ps), mx = Math.max.apply(null, ps);
       price.min = mn;
       price.max = mx;

@@ -24,9 +24,10 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Mulish:wght@400;600;700&display=swap">
-<link rel="stylesheet" href="styles.css?v=20260925c">
-<script defer src="lib/manifest.js?v=20260925c"></script>
-<script defer src="main.js?v=20260925c"></script>
+<link rel="stylesheet" href="styles.css?v=20260925d">
+<script defer src="lib/manifest.js?v=20260925d"></script>
+<script defer src="lib/planos.js?v=20260925d"></script>
+<script defer src="main.js?v=20260925d"></script>
 </head>
 <body>
 <a class="skip-link" href="#contenido">Saltar al contenido</a>
@@ -293,20 +294,22 @@
         <option value="todos">Todos los proyectos</option>
         <option value="malalcahuello">Malalcahuello · Araucanía</option>
         <option value="marchigue">Marchigüe · O'Higgins</option>
-        <option value="puerto-varas">Puerto Varas · Los Lagos (preventa)</option>
+        <option value="puerto-varas">Puerto Varas · Los Lagos</option>
       </select>
     </div>
     <div class="finder-field">
       <label for="f-presupuesto">Presupuesto</label>
       <select id="f-presupuesto" name="presupuesto">
         <option value="0">Cualquier presupuesto</option>
+        <option value="10000000">Hasta $10 millones</option>
         <option value="15000000">Hasta $15 millones</option>
         <option value="20000000">Hasta $20 millones</option>
-        <option value="25000000">Hasta $25 millones</option>
+        <option value="30000000">Hasta $30 millones</option>
+        <option value="45000000">Hasta $45 millones</option>
       </select>
     </div>
     <div class="finder-result" aria-live="polite">
-      <strong data-finder-count>27</strong>
+      <strong data-finder-count>107</strong>
       <span data-finder-label>parcelas disponibles hoy</span>
     </div>
     <button class="btn btn-dark finder-btn" type="submit"><span data-finder-cta>Ver parcelas</span><svg class="i i-go" aria-hidden="true"><use href="#i-arrow"/></svg></button>
@@ -366,17 +369,17 @@
               <path d="M530 328V230h3v98z"/><path d="M503 250Q531 220 559 250Q531 234 503 250zM509 238Q531 212 553 238Q531 224 509 238zM516 227Q531 206 546 227Q531 214 516 227z"/>
             </g>
           </svg>
-          <span class="badge">15 disponibles</span>
+          <span class="badge">17 disponibles</span>
         </div>
         <div class="project-body">
           <p class="project-meta"><svg class="i" aria-hidden="true"><use href="#i-pin"/></svg>La Araucanía · Cordillera</p>
           <h3>Malalcahuello</h3>
           <p class="project-desc">Bosque nativo, volcanes y el río Lolén. Nieve en invierno; pesca, senderos y termas el resto del año.</p>
           <ul class="chips">
-            <li>Frente al río</li><li>Bosque nativo</li><li>Cerca de Corralco</li>
+            <li>Frente al río Lolén</li><li>Precios rebajados</li><li>Cerca de Corralco</li>
           </ul>
           <dl class="facts">
-            <div><dt>Desde</dt><dd>$18.990.000</dd></div>
+            <div><dt>Desde</dt><dd>$9.990.000</dd></div>
             <div><dt>Superficie</dt><dd>5.000 m²</dd></div>
             <div><dt>Reserva</dt><dd>$1.000.000</dd></div>
           </dl>
@@ -458,23 +461,23 @@
               <path d="M20 322C14 306 14 284 20 268C26 284 26 306 20 322ZM42 320C35 300 35 272 42 252C49 272 49 300 42 320ZM64 322C58 306 58 286 64 272C70 286 70 306 64 322ZM520 316C513 296 513 268 520 248C527 268 527 296 520 316ZM544 318C538 302 538 280 544 264C550 280 550 302 544 318ZM566 314C559 294 559 266 566 246C573 266 573 294 566 314ZM588 316C582 300 582 280 588 266C594 280 594 300 588 316Z"/>
             </g>
           </svg>
-          <span class="badge badge-gold">Preventa</span>
+          <span class="badge">78 disponibles</span>
         </div>
         <div class="project-body">
-          <p class="project-meta"><svg class="i" aria-hidden="true"><use href="#i-pin"/></svg>Los Lagos · Lago Llanquihue</p>
+          <p class="project-meta"><svg class="i" aria-hidden="true"><use href="#i-pin"/></svg>Los Lagos · Entre mar y lago</p>
           <h3>Puerto Varas</h3>
-          <p class="project-desc">Bosque, lago y el volcán Osorno en el horizonte. Vida de sur con Puerto Montt y el aeropuerto a unos 20 km.</p>
+          <p class="project-desc">Bosque nativo atravesado por un estero, con camino principal y caminos interiores. Puerto Montt y el aeropuerto a unos 20 km.</p>
           <ul class="chips">
-            <li>Vista al Osorno</li><li>Entorno de bosque</li><li>Conectividad</li>
+            <li>Estero en el predio</li><li>Bosque nativo</li><li>79 parcelas</li>
           </ul>
           <dl class="facts">
-            <div><dt>Etapa</dt><dd>Preventa</dd></div>
+            <div><dt>Desde</dt><dd>$27.990.000</dd></div>
             <div><dt>Superficie</dt><dd>5.000 m²</dd></div>
-            <div><dt>Precios</dt><dd>Lanzamiento</dd></div>
+            <div><dt>Reserva</dt><dd>$1.000.000</dd></div>
           </dl>
           <div class="project-actions">
-            <a class="btn btn-dark" href="#visita" data-preventa="puerto-varas">Inscribirme en la preventa<svg class="i i-go" aria-hidden="true"><use href="#i-arrow"/></svg></a>
-            <a class="btn btn-line" href="#visita" data-open-project="puerto-varas">Conocer el proyecto</a>
+            <a class="btn btn-dark" href="#plano" data-goto-plan="puerto-varas">Ver lotes<svg class="i i-go" aria-hidden="true"><use href="#i-arrow"/></svg></a>
+            <a class="btn btn-line" href="#plano" data-open-project="puerto-varas">Conocer el proyecto</a>
           </div>
         </div>
       </article>
@@ -496,7 +499,7 @@
         <div class="tabs" role="tablist" aria-label="Proyectos">
           <button class="tab" role="tab" type="button" aria-selected="true" data-tab="malalcahuello">Malalcahuello</button>
           <button class="tab" role="tab" type="button" aria-selected="false" data-tab="marchigue">Marchigüe</button>
-          <button class="tab" role="tab" type="button" aria-selected="false" data-tab="puerto-varas">Puerto Varas <small>Preventa</small></button>
+          <button class="tab" role="tab" type="button" aria-selected="false" data-tab="puerto-varas">Puerto Varas</button>
         </div>
         <div class="view-toggle" role="group" aria-label="Vista">
           <button type="button" class="is-on" aria-pressed="true" data-view="plano"><svg class="i" aria-hidden="true"><use href="#i-map"/></svg>Plano</button>
@@ -516,10 +519,10 @@
           <input type="range" id="f-precio" min="0" max="100" step="1" value="100" data-price>
         </div>
         <div class="select-sm">
-          <label for="f-sector" class="sr-only">Sector</label>
-          <select id="f-sector" data-sector><option value="">Todos los sectores</option></select>
+          <label for="f-sector" class="sr-only">Categoría de precio</label>
+          <select id="f-sector" data-sector><option value="">Todas las categorías</option></select>
         </div>
-        <p class="plan-summary" aria-live="polite" data-summary>15 de 24 lotes disponibles · desde $18.990.000</p>
+        <p class="plan-summary" aria-live="polite" data-summary>17 de 58 lotes disponibles · desde $9.990.000</p>
       </div>
 
       <div class="plan-body">
@@ -527,6 +530,8 @@
           <div class="plan-canvas" data-canvas>
             <noscript><p class="noscript">Activa JavaScript para recorrer el plano interactivo, o escríbenos por WhatsApp y te enviamos el plano comercial.</p></noscript>
           </div>
+          <p class="plan-hint" data-hint hidden>Desliza para recorrer el plano →</p>
+          <div class="plan-legend" data-legend></div>
           <div class="plan-list" data-list hidden></div>
           <div class="plan-preventa" data-preventa-panel hidden>
             <div class="pp-copy">
@@ -538,12 +543,6 @@
             <div class="pp-art" data-preventa-art aria-hidden="true"></div>
           </div>
           <div class="plan-tip" role="tooltip" data-tip hidden></div>
-          <ul class="legend">
-            <li><i class="sw sw-disponible"></i>Disponible</li>
-            <li><i class="sw sw-reservada"></i>Reservado</li>
-            <li><i class="sw sw-vendida"></i>Vendido</li>
-            <li><i class="sw sw-fav"></i>Tu favorito</li>
-          </ul>
         </div>
 
         <aside class="lot-panel" data-panel aria-live="polite" aria-label="Detalle del lote">
@@ -552,8 +551,8 @@
             <h3>Selecciona un lote</h3>
             <p>Toca cualquier lote del plano para ver su precio, superficie y disponibilidad.</p>
             <dl class="lot-stats" data-panel-stats>
-              <div><dt>Disponibles</dt><dd>15</dd></div>
-              <div><dt>Desde</dt><dd>$18.990.000</dd></div>
+              <div><dt>Disponibles</dt><dd>17</dd></div>
+              <div><dt>Desde</dt><dd>$9.990.000</dd></div>
             </dl>
             <div class="lot-help">
               <p>¿Prefieres que te ayudemos a elegir? Cuéntanos qué buscas y te recomendamos lotes.</p>
@@ -567,7 +566,7 @@
               <h3 data-d-title>Lote 12</h3>
               <span class="pill" data-d-status>Disponible</span>
             </div>
-            <p class="lot-sector" data-d-sector>Frente Río Lolén – norte</p>
+            <p class="lot-sector" data-d-sector>Precio lista <s>$30.990.000</s></p>
             <p class="lot-price" data-d-price>$22.990.000</p>
             <dl class="lot-facts">
               <div><dt>Superficie</dt><dd data-d-m2>5.000 m²</dd></div>
@@ -592,7 +591,7 @@
           <button class="btn btn-ghost btn-sm" type="button" data-favs-clear>Limpiar</button>
         </div>
       </div>
-      <p class="plan-note">Plano esquemático y valores referenciales, sujetos a disponibilidad al momento de reservar.</p>
+      <p class="plan-note">Planos basados en los masterplan de cada proyecto. Precios y disponibilidad referenciales, sujetos a confirmación al momento de reservar.</p>
     </div>
   </div>
 </section>
@@ -879,7 +878,7 @@
           <select id="v-proyecto" name="proyecto">
             <option value="Malalcahuello">Malalcahuello</option>
             <option value="Marchigüe">Marchigüe</option>
-            <option value="Puerto Varas">Puerto Varas (preventa)</option>
+            <option value="Puerto Varas">Puerto Varas</option>
             <option value="Aún no lo sé">Aún no lo sé</option>
           </select>
         </div>
@@ -932,7 +931,7 @@
       <h2>Proyectos</h2>
       <a href="#plano" data-goto-plan="malalcahuello">Malalcahuello</a>
       <a href="#plano" data-goto-plan="marchigue">Marchigüe</a>
-      <a href="#visita" data-preventa="puerto-varas">Puerto Varas · Preventa</a>
+      <a href="#plano" data-goto-plan="puerto-varas">Puerto Varas</a>
     </nav>
     <nav class="footer-col" aria-label="Tu compra">
       <h2>Tu compra</h2>

@@ -10,10 +10,11 @@
 
   var D = "disponible", R = "reservada", V = "vendida";
 
-  // Lote compacto: [número, índice de sector, m², precio CLP, estado]
+  // Lote compacto: [número, categoría de precio (null si está vendido), estado, m² opcional]
+  // El precio sale de la categoría; la superficie por defecto es 5.000 m².
   function lotes(rows) {
     return rows.map(function (r) {
-      return { n: r[0], sector: r[1], m2: r[2], precio: r[3], estado: r[4] };
+      return { n: r[0], cat: r[1], estado: r[2], m2: r[3] || 5000 };
     });
   }
 
@@ -51,22 +52,29 @@
         cercanias: [["Centro de ski Corralco", "13 km"], ["Curacautín", "28 km"], ["Temuco", "115 km"]],
         cercaniasNota: "Distancias aproximadas desde el pueblo de Malalcahuello.",
         mapa: "https://www.google.com/maps/search/?api=1&query=Malalcahuello%2C+Araucan%C3%ADa%2C+Chile",
-        sectores: ["Frente Río Lolén – norte", "Zona norte – faja río"],
-        plano: {
-          tipo: "rio",
-          camino: [[70, 340], [270, 302], [530, 344], [775, 318], [975, 352]],
-          rio: [[-20, 92], [240, 58], [520, 118], [790, 84], [1020, 136]],
-          filas: [{ lado: -1, desde: 18, hasta: 150, lotes: 12 }, { lado: 1, desde: 18, hasta: 146, lotes: 12 }]
+        // Colores y precios del masterplan "Precios lista"
+        leyenda: "Precios lista",
+        categorias: {
+          oro:     { color: "#B79E2E", lista: 30990000, precio: 20990000 },
+          celeste: { color: "#2A97C4", lista: 28990000, precio: 18990000 },
+          azul:    { color: "#26306A", lista: 24990000, precio: 14990000 },
+          verde:   { color: "#6C9A47", lista: 19990000, precio: 9990000 },
+          lila:    { color: "#B463D6", lista: 10990000, precio: 7990000 }
         },
+        vendidaColor: "#A8AAA5",
+        etiqueta: "circulo",
+        agua: "#1E9BE3",
         lotes: lotes([
-          [1, 0, 5000, 22990000, D], [2, 0, 5000, 22990000, V], [3, 0, 5000, 22990000, D],
-          [4, 0, 5000, 16990000, V], [5, 0, 5000, 21990000, R], [6, 0, 5000, 22990000, D],
-          [7, 0, 5000, 22990000, D], [8, 0, 5000, 22990000, R], [9, 0, 5400, 23490000, D],
-          [10, 0, 5000, 22990000, D], [11, 0, 5000, 22990000, V], [12, 0, 5800, 23990000, D],
-          [13, 1, 5000, 19990000, D], [14, 1, 5000, 18990000, D], [15, 1, 5000, 19990000, R],
-          [16, 1, 5000, 19990000, D], [17, 1, 5200, 20990000, D], [18, 1, 5000, 19990000, V],
-          [19, 1, 5000, 19990000, D], [20, 1, 5200, 20990000, R], [21, 1, 5200, 20990000, D],
-          [22, 1, 5000, 19990000, D], [23, 1, 5000, 19990000, R], [24, 1, 5600, 21490000, D]
+          [1, null, V], [2, null, V], [3, null, V], [4, null, V], [5, "celeste", D], [6, "oro", D],
+          [7, "oro", D], [8, "oro", D], [9, null, V], [10, null, V], [11, null, V], [12, null, V],
+          [13, null, V], [14, null, V], [15, null, V], [16, null, V], [17, null, V], [18, "azul", D],
+          [19, "azul", D], [20, "azul", D], [21, null, V], [22, null, V], [23, null, V], [24, null, V],
+          [25, "azul", D], [26, null, V], [27, null, V], [28, "azul", D], [29, null, V], [30, "azul", D],
+          [31, "azul", D], [32, "azul", D], [33, null, V], [34, null, V], [35, null, V], [36, null, V],
+          [37, null, V], [38, null, V], [39, null, V], [40, "verde", D], [41, "verde", D], [42, null, V],
+          [43, null, V], [44, null, V], [45, "azul", D], [46, "azul", D], [47, null, V], [48, null, V],
+          [49, null, V], [50, null, V], [51, null, V], [52, null, V], [53, null, V], [54, "verde", D],
+          [55, null, V], [56, null, V], [57, null, V], [58, null, V]
         ])
       },
       {
@@ -82,37 +90,67 @@
         cercaniasNota: "Distancias aproximadas desde Marchigüe.",
         mapa: "https://www.google.com/maps/search/?api=1&query=Marchig%C3%BCe%2C+O%27Higgins%2C+Chile",
         sectores: ["Sector Norte", "Sector Sur"],
+        // Plano ilustrativo: reemplazar por el masterplan real de Marchigüe
+        leyenda: "Precios",
+        categorias: {
+          a: { color: "#C9C43A", precio: 12990000 },
+          b: { color: "#2A97C4", precio: 13990000 },
+          c: { color: "#35A83A", precio: 14990000 }
+        },
+        vendidaColor: "#A8AAA5",
+        etiqueta: "circulo",
         plano: {
           tipo: "lomas",
           camino: [[70, 412], [280, 360], [510, 350], [745, 290], [975, 250]],
           filas: [{ lado: -1, desde: 18, hasta: 142, lotes: 10 }, { lado: 1, desde: 18, hasta: 142, lotes: 10 }]
         },
         lotes: lotes([
-          [1, 0, 5000, 13490000, D], [2, 0, 5000, 12990000, D], [3, 0, 5000, 12990000, V],
-          [4, 0, 5000, 12990000, D], [5, 0, 5000, 13490000, R], [6, 0, 5000, 13490000, D],
-          [7, 0, 5000, 13990000, D], [8, 0, 5000, 13990000, V], [9, 0, 5200, 14490000, D],
-          [10, 0, 5500, 14990000, R],
-          [11, 1, 5000, 14490000, D], [12, 1, 5000, 13990000, D], [13, 1, 5000, 13990000, R],
-          [14, 1, 5000, 14490000, D], [15, 1, 5000, 14490000, V], [16, 1, 5200, 14990000, D],
-          [17, 1, 5200, 14990000, D], [18, 1, 5400, 15490000, R], [19, 1, 6000, 15990000, D],
-          [20, 1, 5400, 15490000, R]
+          [1, "b", D], [2, "a", D], [3, "a", V], [4, "a", D], [5, "b", R], [6, "b", D],
+          [7, "b", D], [8, "b", V], [9, "c", D], [10, "c", R],
+          [11, "c", D], [12, "b", D], [13, "b", R], [14, "c", D], [15, "c", V], [16, "c", D],
+          [17, "c", D], [18, "c", R], [19, "c", D], [20, "c", R]
         ])
       },
       {
         id: "puerto-varas",
         nombre: "Puerto Varas",
-        estado: "preventa",
+        estado: "venta",
         region: "Los Lagos",
-        zona: "Lago Llanquihue",
-        resumen: "Bosque, lago y el volcán Osorno en el horizonte. Vida de sur con Puerto Montt y el aeropuerto a unos 20 km.",
-        descripcion: "Nuestro próximo proyecto, en el entorno del lago Llanquihue y con el volcán Osorno en el horizonte. Las personas inscritas en la preventa reciben el plano y los precios de lanzamiento antes de su publicación.",
-        destacados: ["Vista al volcán Osorno", "Entorno de bosque y lago", "Puerto Montt y aeropuerto cerca", "Precios de lanzamiento para inscritos"],
+        zona: "Entre mar y lago",
+        resumen: "Fundos de Puerto Varas: bosque nativo atravesado por un estero, con camino principal y caminos interiores. Puerto Montt y el aeropuerto a unos 20 km.",
+        descripcion: "Fundos de Puerto Varas, entre mar y lago. Un predio de bosque nativo atravesado por un estero, con acceso por camino principal y caminos interiores a cada parcela. Vida de sur, cerca de la ciudad.",
+        destacados: ["Estero dentro del predio", "Bosque nativo", "Acceso por camino principal", "Plano y antecedentes legales a la vista"],
         cercanias: [["Puerto Montt", "20 km"], ["Aeropuerto El Tepual", "20 km"], ["Frutillar", "32 km"]],
         cercaniasNota: "Distancias aproximadas desde Puerto Varas.",
         mapa: "https://www.google.com/maps/search/?api=1&query=Puerto+Varas%2C+Los+Lagos%2C+Chile",
         sectores: [],
-        plano: null,
-        lotes: []
+        leyenda: "Precios",
+        categorias: {
+          amarillo:    { color: "#C9C43A", precio: 27990000 },
+          verdeClaro:  { color: "#35A83A", precio: 35990000 },
+          celeste:     { color: "#1E95BF", precio: 40990000 },
+          verdeOscuro: { color: "#2F5E2C", precio: 45990000 },
+          morado:      { color: "#6A67C9", precio: 50990000 }
+        },
+        vendidaColor: "#141414",
+        etiqueta: "hexagono",
+        agua: "#2B3BFF",
+        lotes: lotes([
+          [1, "verdeOscuro", D], [2, "morado", D], [3, "morado", D], [4, "verdeOscuro", D], [5, "morado", D], [6, "verdeOscuro", D],
+          [7, "verdeOscuro", D], [8, "morado", D], [9, "verdeOscuro", D], [10, "verdeClaro", D], [11, "celeste", D], [12, "verdeClaro", D],
+          [13, "verdeClaro", D], [14, "celeste", D], [15, "celeste", D], [16, "celeste", D], [17, "celeste", D], [18, "verdeClaro", D],
+          [19, "verdeClaro", D], [20, "celeste", D], [21, "celeste", D], [22, "celeste", D], [23, "verdeClaro", D], [24, "verdeClaro", D],
+          [25, "verdeClaro", D], [26, "verdeClaro", D], [27, "celeste", D], [28, "celeste", D], [29, "celeste", D], [30, "verdeClaro", D],
+          [31, "verdeClaro", D], [32, "celeste", D], [33, "celeste", D], [34, "celeste", D], [35, "celeste", D], [36, "verdeClaro", D],
+          [37, "verdeClaro", D], [38, "celeste", D], [39, "verdeClaro", D], [40, "verdeClaro", D], [41, "celeste", D], [42, "verdeClaro", D],
+          [43, "verdeClaro", D], [44, "celeste", D], [45, "verdeClaro", D], [46, "verdeClaro", D], [47, "celeste", D], [48, "verdeClaro", D],
+          [49, "verdeClaro", D], [50, "celeste", D], [51, "verdeClaro", D], [52, "amarillo", D], [53, "celeste", D], [54, "celeste", D],
+          [55, "celeste", D], [56, "celeste", D], [57, "amarillo", D], [58, "amarillo", D], [59, "celeste", D], [60, "celeste", D],
+          [61, "celeste", D], [62, "celeste", D], [63, "verdeClaro", D], [64, "celeste", D], [65, "celeste", D], [66, "verdeClaro", D],
+          [67, "verdeClaro", D], [68, "celeste", D], [69, "celeste", D], [70, "celeste", D], [71, "verdeClaro", D], [72, "verdeClaro", D],
+          [73, "verdeClaro", D], [74, "verdeClaro", D], [75, "celeste", D], [76, "celeste", D], [77, "celeste", D], [78, "celeste", D],
+          [79, null, V]
+        ])
       }
     ],
 

@@ -482,8 +482,10 @@ input[type="range"]:focus-visible { outline: 2px solid var(--gold); outline-offs
 .plan-summary { font-size: .88rem; color: var(--cream-70); margin-left: auto; }
 
 .plan-body { display: grid; gap: 1rem; }
-.plan-stage { position: relative; background: var(--n050); border-radius: var(--r-md); overflow: hidden; color: var(--g900); min-height: 260px; }
+.plan-stage { position: relative; align-self: start; background: #1A2317; border-radius: var(--r-md); overflow: hidden; color: var(--g900); min-height: 260px; }
+.plan-canvas { overflow-x: auto; overscroll-behavior-x: contain; }
 .plan-canvas svg { width: 100%; height: auto; }
+.plan-list { background: var(--n050); }
 .noscript { padding: 3rem 1.5rem; text-align: center; color: var(--n600); }
 .legend {
   display: flex; flex-wrap: wrap; gap: .35rem 1rem; padding: .7rem .9rem;
@@ -527,25 +529,45 @@ input[type="range"]:focus-visible { outline: 2px solid var(--gold); outline-offs
 .pl-compass text { font: 700 11px var(--sans); fill: var(--g900); text-anchor: middle; }
 .pl-scale { stroke: #8B8375; stroke-width: 1.5; fill: none; }
 .lot {
-  cursor: pointer; stroke: #F7F5F0; stroke-width: 2.4; stroke-linejoin: round;
-  transition: fill .3s var(--ease-soft), opacity .35s var(--ease-soft), stroke .2s;
+  cursor: pointer; fill: var(--c); fill-opacity: .74; stroke: rgba(255, 255, 255, .8); stroke-width: 1.2; stroke-linejoin: round;
+  vector-effect: non-scaling-stroke; transition: fill-opacity .3s var(--ease-soft), opacity .35s var(--ease-soft), stroke-width .2s;
 }
-.lot.st-disponible { fill: #E6D2AC; }
-.lot.st-reservada { fill: url(#lot-hatch); }
-.lot.st-vendida { fill: #4A5F50; }
-.lot.st-disponible:hover, .lot.st-disponible:focus-visible { fill: #DDBF86; }
-.lot.st-reservada:hover, .lot.st-reservada:focus-visible { fill: #E1D9CB; }
-.lot.st-vendida:hover, .lot.st-vendida:focus-visible { fill: #587060; }
+.lot.st-vendida { fill-opacity: .86; }
+.lot:hover, .lot:focus-visible { fill-opacity: .95; stroke: #FFFFFF; stroke-width: 2.4; }
 .lot:focus { outline: none; }
-.lot:focus-visible { stroke: var(--g900); stroke-width: 3; }
-.lot.is-active { fill: var(--gold) !important; stroke: var(--g900); stroke-width: 3; }
-.lot.is-dim { opacity: .16; pointer-events: none; }
-.lot-num { font: 700 12.5px var(--sans); font-size: var(--lbl, 12.5px); fill: var(--g900); text-anchor: middle; dominant-baseline: central; pointer-events: none; transition: opacity .3s; }
-.lot-num.on-dark { fill: #F7F5F0; }
-.lot-num.is-dim { opacity: .25; }
-.lot-fav { fill: var(--gold); stroke: #F7F5F0; stroke-width: 1.6; pointer-events: none; opacity: 0; transform-box: fill-box; transform-origin: center; transform: scale(.4); transition: opacity .3s, transform .45s var(--ease-out); }
+.lot.is-active { fill-opacity: 1; stroke: #FFFFFF; stroke-width: 3; }
+.lot.is-dim { opacity: .22; pointer-events: none; }
+.pl-badge { fill: #3B4948; stroke: rgba(255, 255, 255, .28); stroke-width: 1; pointer-events: none; }
+polygon.pl-badge { fill: #B7B7B7; stroke: none; }
+.lot-num { font-family: var(--sans); font-weight: 700; fill: #FFFFFF; text-anchor: middle; dominant-baseline: central; pointer-events: none; transition: opacity .3s; }
+.lot-num.is-dim { opacity: .3; }
+.lot-fav { fill: var(--gold); stroke: #0A140E; stroke-width: 1.4; pointer-events: none; opacity: 0; transform-box: fill-box; transform-origin: center; transform: scale(.4); transition: opacity .3s, transform .45s var(--ease-out); }
 .lot-fav.is-on { opacity: 1; transform: scale(1); }
-.lot-ring { fill: none; stroke: var(--g900); stroke-width: 2; stroke-dasharray: 6 5; pointer-events: none; animation: ants 1.2s linear infinite; }
+.lot-ring { fill: none; stroke: var(--gold); stroke-width: 2.5; stroke-dasharray: 7 5; vector-effect: non-scaling-stroke; pointer-events: none; animation: ants 1.2s linear infinite; }
+.pl-servidumbre { fill: #F3D3AE; stroke: #5E4E3C; stroke-width: .9; stroke-dasharray: 2 2; }
+.pl-camino { fill: none; stroke: #BDBDBD; stroke-width: 4.5; stroke-linejoin: round; stroke-linecap: square; }
+.pl-principal { fill: none; stroke: #E0342C; stroke-width: 7; }
+.pl-eje-borde { fill: none; stroke: #5E4E3C; stroke-width: 25; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 3 3; }
+.pl-eje { fill: none; stroke: #F3D3AE; stroke-width: 22; stroke-linecap: round; stroke-linejoin: round; }
+
+/* Leyenda de precios, como en los masterplan */
+.plan-legend { padding: .9rem 1rem 1rem; background: #EFEBE2; color: var(--g900); border-top: 1px solid rgba(10, 20, 14, .12); }
+.plan-legend .pl-title { display: inline-block; margin-bottom: .7rem; padding: .35rem .75rem; border-radius: 3px; background: #A51E1A; color: #FFFFFF; font: 700 .72rem/1 var(--serif); font-size: .95rem; letter-spacing: .06em; text-transform: uppercase; }
+.plan-legend ul { display: flex; flex-wrap: wrap; gap: .55rem 1.3rem; }
+.plan-legend li { display: flex; align-items: center; gap: .5rem; font-size: .84rem; font-weight: 600; color: var(--n600); font-variant-numeric: tabular-nums; }
+.plan-legend s { color: #6B665D; }
+.plan-legend b { color: #A51E1A; font-weight: 700; font-size: .95rem; }
+.plan-legend .sw { width: 16px; height: 16px; border-radius: 50%; background: var(--c); flex: none; }
+.plan-legend .sw.hex { border-radius: 0; clip-path: polygon(25% 3%, 75% 3%, 100% 50%, 75% 97%, 25% 97%, 0 50%); }
+.plan-legend .sw-agua { width: 22px; height: 5px; border-radius: 3px; }
+.plan-legend .sw-servidumbre { width: 22px; height: 9px; border-radius: 2px; background: #F3D3AE; border: 1px dashed #5E4E3C; }
+.plan-legend .sw-principal { width: 22px; height: 6px; border-radius: 2px; background: #E0342C; }
+.plan-legend .sw-reservada { border-radius: 3px; background: repeating-linear-gradient(135deg, #8C8474 0 2px, #E9E3D7 2px 5px); }
+.plan-legend .sw-fav { width: 12px; height: 12px; background: var(--gold); box-shadow: 0 0 0 2px #EFEBE2, 0 0 0 3px #0A140E; }
+.plan-hint { padding: .5rem 1rem 0; font-size: .8rem; font-weight: 700; color: var(--cream-70); background: #1A2317; }
+.lot-table .t-cat { display: inline-block; width: 10px; height: 10px; margin-right: .45rem; border-radius: 50%; background: var(--c); vertical-align: 0; }
+.lot-table .t-sector s { color: var(--n500); }
+.lot-sector s { color: var(--cream-55); }
 
 /* Lista */
 .plan-list { max-height: 560px; overflow: auto; }

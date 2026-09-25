@@ -32,7 +32,8 @@ Todo lo editable está en `lib/manifest.js`.
 
 - [ ] **Contacto:** número de WhatsApp, correo y horario. Hoy es un placeholder (`+56 9 0000 0000`).
 - [ ] **Lotes, precios y estados:** son referenciales, basados en ejemplos del manual. Lo ideal es leerlos desde Fundos 360° (módulo Parcelas) para mostrar la disponibilidad real.
-- [ ] **Puerto Varas:** se presenta como *preventa*. Confirmar la etapa del proyecto.
+- [ ] **Superficie por lote:** se asume 5.000 m² en todos los proyectos (confirmar, sobre todo Puerto Varas).
+- [ ] **Marchigüe:** falta su masterplan real.
 - [ ] **Financiamiento:** tasa (0,9 % mensual), pie mínimo (30 %) y plazos son supuestos. Si no hay crédito directo, usar `financiamiento.habilitado = false`.
 - [ ] **Preguntas frecuentes:** revisar las respuestas (condiciones de devolución de la reserva, construcción, plazos).
 - [ ] **Destacados y cercanías:** las distancias se miden desde cada pueblo, no desde el proyecto. Reemplazar por los tiempos reales.
@@ -51,9 +52,13 @@ assets/img/       Isotipo (del manual), favicon y og-fundos.jpg para compartir
 .htaccess         Caché para hosting Apache/Hostinger
 ```
 
-### Editar lotes
+### Planos y lotes
 
-Cada lote es `[número, sector, m², precio, estado]` con estado `disponible`, `reservada` o `vendida`. El dibujo del plano se genera desde `plano`: el camino (`camino`), el río (`rio`) y las filas de lotes a cada lado (`filas`). La cantidad de lotes de las filas debe sumar el total de la lista.
+Los planos de **Malalcahuello** y **Puerto Varas** replican los masterplan de Fundos: misma geometría de lotes, colores por categoría de precio, vendidas en gris (Malalcahuello) o negro (Puerto Varas), servidumbres, río o estero, camino principal y la leyenda "Precios lista" con el precio anterior tachado.
+
+- **Precios y estados** se editan en `lib/manifest.js`. Cada lote es `[número, categoría, estado]` (`disponible`, `reservada` o `vendida`); el precio sale de la categoría (`categorias`), con `lista` para el precio tachado.
+- **Geometría** en `lib/planos.js`. Se generó automáticamente desde las imágenes de los masterplan (segmentación de bordes de lotes, servidumbres y agua). Si cambia un loteo, conviene regenerarla desde el nuevo plano.
+- **Marchigüe** usa un plano ilustrativo con el mismo estilo hasta tener su masterplan.
 
 ## Notas de marca y técnicas
 

@@ -489,15 +489,11 @@
     marcaVendida: "V",     // marca de vendido, como en los masterplan
     agua: "#3E9FD6"
   };
-  // Radio de los números según el tamaño típico de lote del plano (legibles sin tapar el lote)
+  // Radio de los números según la holgura típica de los lotes del plano (legibles sin tapar el lote).
+  // r = radio del mayor círculo que cabe en el lote alrededor de su etiqueta (lib/planos.js)
   function badgeR(lots) {
-    var dims = lots.map(function (o) {
-      var v = (o.d.match(/-?\d+(\.\d+)?/g) || []).map(Number), xs = [], ys = [];
-      for (var i = 0; i + 1 < v.length; i += 2) { xs.push(v[i]); ys.push(v[i + 1]); }
-      return Math.min(Math.max.apply(null, xs) - Math.min.apply(null, xs), Math.max.apply(null, ys) - Math.min.apply(null, ys));
-    }).sort(function (a, b) { return a - b; });
-    var q = dims[Math.floor(dims.length * 0.25)] || 44;
-    return clamp(q * 0.34, 10, 16);
+    var rs = lots.map(function (o) { return o.r || 20; }).sort(function (a, b) { return a - b; });
+    return clamp((rs[Math.floor(rs.length * 0.2)] || 20) * 0.62, 11, 15);
   }
   function tituloPrecios(p) {
     var cats = p.categorias || {};
@@ -509,7 +505,7 @@
     if (P) {
       vb = P.viewBox;
       lots = [];
-      p.lotes.forEach(function (l) { var q = P.lotes[l.n]; if (q) lots.push({ l: l, d: q.d, cx: q.l[0], cy: q.l[1] }); });
+      p.lotes.forEach(function (l) { var q = P.lotes[l.n]; if (q) lots.push({ l: l, d: q.d, cx: q.l[0], cy: q.l[1], r: q.r }); });
       calles = P.calles || []; agua = P.agua || []; camino = P.caminoPrincipal || ""; contorno = P.contorno;
     } else {
       var g = geometry(p);
@@ -517,7 +513,7 @@
       lots = g.lots.map(function (o) { return { l: o.l, d: o.d, cx: o.cx, cy: o.cy }; });
       calles = [{ tipo: "eje", d: pathD(g.road.points, false) }];
     }
-    var R = badgeR(lots), FS = +(R * 0.84).toFixed(1), SUB = +(R * 0.62).toFixed(1);
+    var R = badgeR(lots), FS = +(R * 0.84).toFixed(1), SUB = +(R * 0.66).toFixed(1);
     var cats = p.categorias || {};
     var s = [];
     s.push('<svg class="plan-svg" viewBox="' + vb.join(" ") + '" xmlns="http://www.w3.org/2000/svg" role="group" aria-label="Plano de lotes de ' + esc(p.nombre) + '">');
@@ -560,10 +556,11 @@
     lots.forEach(function (o) {
       var x = o.cx, y = o.cy, n = o.l.n;
       if (o.l.estado === "vendida") {
-        // Vendida: "V" en un círculo y el número debajo
-        s.push('<circle class="pl-badge pl-badge-v" data-n="' + n + '" cx="' + x + '" cy="' + y + '" r="' + (R - 1.5).toFixed(1) + '"/>');
-        s.push('<text class="lot-num lot-v" data-n="' + n + '" x="' + x + '" y="' + (y + 0.5) + '" font-size="' + FS + '">' + PLANO.marcaVendida + "</text>");
-        s.push('<text class="lot-sub" data-n="' + n + '" x="' + x + '" y="' + (y + R + SUB * 0.75).toFixed(1) + '" font-size="' + SUB + '">' + n + "</text>");
+        // Vendida: "V" en un círculo y el número debajo; el conjunto queda centrado en el lote
+        var rv = R - 1.5, top = y - (2 * rv + 2 + SUB) / 2, vy = top + rv, ny = top + 2 * rv + 2 + SUB / 2;
+        s.push('<circle class="pl-badge pl-badge-v" data-n="' + n + '" cx="' + x + '" cy="' + vy.toFixed(1) + '" r="' + rv.toFixed(1) + '"/>');
+        s.push('<text class="lot-num lot-v" data-n="' + n + '" x="' + x + '" y="' + (vy + 0.5).toFixed(1) + '" font-size="' + FS + '">' + PLANO.marcaVendida + "</text>");
+        s.push('<text class="lot-sub" data-n="' + n + '" x="' + x + '" y="' + ny.toFixed(1) + '" font-size="' + SUB + '">' + n + "</text>");
         return;
       }
       s.push('<circle class="pl-badge" data-n="' + n + '" cx="' + x + '" cy="' + y + '" r="' + R.toFixed(1) + '"/>');

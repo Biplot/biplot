@@ -186,7 +186,7 @@ h2 em, h1 em, .footer-claim em { font-style: italic; color: var(--gold-ink); }
 .field-head output { font-size: .86rem; }
 .field input[type="text"], .field input[type="tel"], .field input[type="email"], .field input[type="date"], .field select, .field textarea {
   width: 100%; min-height: 50px; padding: .7rem .9rem;
-  background: var(--white); color: var(--g900);
+  background-color: var(--white); color: var(--g900);
   border: 1px solid #D3CBBD; border-radius: var(--r-sm);
   font-size: 1rem; transition: border-color .2s, box-shadow .2s;
 }
@@ -662,19 +662,6 @@ html:not(.js) .plan-zoom { display: none; }
 .list-empty { padding: 2.5rem 1rem; text-align: center; color: var(--n600); }
 .list-empty .link-btn { color: var(--gold-ink); }
 
-/* Preventa */
-.plan-preventa { display: grid; background: var(--g900); color: var(--n050); }
-.pp-copy { display: grid; align-content: center; justify-items: start; gap: .9rem; padding: clamp(1.5rem, 5vw, 4rem); max-width: 620px; }
-.pp-art { position: relative; min-height: 220px; margin: 0 1rem 1rem; border-radius: var(--r-md); overflow: hidden; box-shadow: 0 0 0 1px rgba(200, 161, 101, .3); }
-.pp-art svg { position: absolute; inset: 0; width: 100%; height: 100%; }
-.plan.is-preventa .plan-body { grid-template-columns: 1fr; }
-.plan-preventa h3 { font-size: clamp(2rem, 4vw, 3rem); }
-.plan-preventa p:not(.kicker) { color: var(--cream-70); max-width: 46ch; }
-.plan-preventa .kicker { margin-bottom: 0; }
-@media (min-width: 720px) {
-  .plan-preventa { grid-template-columns: 1.05fr 1fr; min-height: 420px; }
-  .pp-art { min-height: 0; margin: 1.2rem 1.2rem 1.2rem 0; }
-}
 
 /* Panel de detalle (en móvil, hoja inferior) */
 .sheet-backdrop { position: fixed; inset: 0; z-index: 94; background: rgba(5, 10, 7, .28); }
@@ -967,7 +954,7 @@ html:not(.js) .plan-zoom { display: none; }
 .form-ok h3 { font-size: 2rem; font-weight: 600; }
 .form-ok p { color: var(--n600); max-width: 36ch; font-size: .92rem; }
 .ok-msg { max-width: 44ch; margin: 0; padding: .9rem 1rem; border-left: 2px solid var(--gold); border-radius: 0 var(--r-sm) var(--r-sm) 0; background: var(--white); color: var(--g900); font-size: .92rem; line-height: 1.55; text-align: left; }
-.form-ok a { color: var(--gold-ink); font-weight: 700; text-decoration: underline; text-underline-offset: 3px; }
+.form-ok a:not(.btn) { color: var(--gold-ink); font-weight: 700; text-decoration: underline; text-underline-offset: 3px; }
 .visit-form .form-ok .btn { width: auto; margin-top: .4rem; }
 
 /* ---------------- FOOTER ---------------- */
@@ -1390,6 +1377,25 @@ body.tour-lock { overflow: hidden; }
 /* =============================================================
    9. Movimiento reducido: solo se apagan los efectos intrusivos
    ============================================================= */
+/* ---------------- Ajustes de flujo (auditoría) ---------------- */
+.finder-result { flex-wrap: wrap; }
+.finder-by { flex-basis: 100%; font-size: .76rem; font-weight: 700; color: var(--gold-ink); line-height: 1.35; }
+.plan-others { display: flex; flex-wrap: wrap; align-items: center; gap: .4rem .6rem; font-size: .84rem; color: var(--cream-70); grid-column: 1 / -1; }
+.plan-others button { min-height: 36px; padding: .3rem .8rem; border-radius: 999px; border: 1px solid rgba(200, 161, 101, .45); color: var(--gold); font-weight: 700; font-size: .82rem; }
+.plan-others button:hover { background: rgba(200, 161, 101, .14); }
+.steps-cta { display: flex; flex-wrap: wrap; align-items: center; gap: .7rem 1.2rem; margin-top: clamp(2rem, 4vw, 3rem); }
+.steps-sim { display: inline-flex; align-items: center; gap: .4rem; min-height: 44px; font-weight: 700; color: var(--gold-ink); }
+.steps-sim .i { width: 1em; height: 1em; transition: transform .3s var(--ease-out); }
+.steps-sim:hover .i { transform: translateX(3px); }
+.portal-actions { display: flex; flex-wrap: wrap; gap: .7rem; margin-top: 1.8rem; }
+.portal .portal-note { margin-top: .9rem; }
+.pd-facts { display: flex; flex-wrap: wrap; gap: .5rem; margin-top: 1.2rem; }
+.pd-facts span { padding: .4rem .8rem; border-radius: 999px; background: var(--n100); font-size: .84rem; font-weight: 600; color: var(--n600); }
+.pd-facts b { color: var(--g900); }
+.pd-actions { position: sticky; bottom: 0; z-index: 2; padding-block: 1rem; margin-bottom: -1rem; background: linear-gradient(transparent, var(--n050) 22%); }
+@media (hover: none) { .on-mouse { display: none; } }
+.sim-lot { font-size: .8rem; font-weight: 700; color: var(--gold-ink); margin-top: .35rem; }
+
 /* ---------------- Ajustes responsivos (auditoría) ---------------- */
 .faq summary { text-wrap: balance; }
 h2 em { text-wrap: balance; }

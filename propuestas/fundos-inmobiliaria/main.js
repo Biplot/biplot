@@ -75,7 +75,7 @@
 
   // API compartida entre módulos (se completa en cada init)
   var Visit = { prefill: function () {} };
-  var Plan = { apply: function () {}, show: function () {} };
+  var Plan = { apply: function () {}, show: function () {}, current: function () { return (proyectos[0] || {}).id; } };
   var Sim = { set: function () {} };
   var Tour = { open: function () {} };
   var Video = { open: function () {} };
@@ -110,11 +110,14 @@
       var io = new IntersectionObserver(function (entries) {
         entries.forEach(function (en) {
           if (!en.isIntersecting) return;
-          links.forEach(function (a) { a.classList.remove("is-current"); });
+          Object.keys(byId).forEach(function (k) { byId[k].classList.remove("is-current"); });
           if (byId[en.target.id]) byId[en.target.id].classList.add("is-current");
         });
       }, { rootMargin: "-45% 0px -50% 0px", threshold: 0 });
-      Object.keys(byId).forEach(function (id) { var s = document.getElementById(id); if (s) io.observe(s); });
+      var portal = $(".nav-portal");
+      if (portal) byId.portal = portal;
+      // Se observan todas las secciones: al pasar por una sin enlace, el subrayado se limpia
+      $$("main > section[id], #buscador").forEach(function (s) { io.observe(s); });
     }
 
     // Menú móvil (dialog nativo: foco atrapado y Esc gratis)
@@ -232,11 +235,13 @@
     $$("[data-goto-plan]").forEach(function (a) {
       a.addEventListener("click", function () { Plan.show(a.getAttribute("data-goto-plan")); });
     });
-    $$("[data-preventa]").forEach(function (a) {
-      a.addEventListener("click", function () {
-        var p = proyecto(a.getAttribute("data-preventa"));
-        Visit.prefill({ proyecto: p ? p.nombre : "", mensaje: "Quiero inscribirme en la preventa de " + (p ? p.nombre : "su próximo proyecto") + "." });
-      });
+    $$("[data-chip-total]").forEach(function (li) {
+      var p = proyecto(li.getAttribute("data-chip-total"));
+      if (p) li.textContent = p.lotes.length + " parcelas en total";
+    });
+    // "Ver parcelas disponibles": abre el plano mostrando solo lo que se puede comprar
+    $$("[data-plan-disp]").forEach(function (a) {
+      a.addEventListener("click", function () { Plan.apply({ id: Plan.current(), soloDisponibles: true }); });
     });
   }
 
@@ -247,24 +252,19 @@
     var form = $("[data-finder]");
     if (!form) return;
     var dest = $("#f-destino", form), bud = $("#f-presupuesto", form);
-    var count = $("[data-finder-count]", form), label = $("[data-finder-label]", form), cta = $("[data-finder-cta]", form);
+    var count = $("[data-finder-count]", form), label = $("[data-finder-label]", form), cta = $("[data-finder-cta]", form), by = $("[data-finder-by]", form);
 
     function matches(p, max) {
       return disponibles(p).filter(function (l) { return l.precio <= max; }).length;
     }
+    // Resultado por proyecto: el total que se promete es el mismo que después se muestra
     function result() {
-      var id = dest.value, max = +bud.value || Infinity;
-      var p = proyecto(id);
-      if (p && p.estado === "preventa") return { preventa: p };
-      var list = id === "todos" ? proyectos.filter(function (x) { return x.estado === "venta"; }) : [p];
-      var best = null, bestN = -1, total = 0;
-      list.forEach(function (x) {
-        if (!x) return;
-        var n = matches(x, max);
-        total += n;
-        if (n > bestN) { bestN = n; best = x; }
-      });
-      return { n: total, max: max, target: best };
+      var id = dest.value, max = +bud.value || Infinity, todos = id === "todos";
+      var list = todos ? proyectos.filter(function (x) { return x.lotes && x.lotes.length; }) : [proyecto(id)].filter(Boolean);
+      var rows = list.map(function (x) { return { p: x, n: matches(x, max) }; }).sort(function (a, b) { return b.n - a.n || desde(a.p) - desde(b.p); });
+      var total = rows.reduce(function (t, r) { return t + r.n; }, 0);
+      var cheapest = list.slice().sort(function (a, b) { return desde(a) - desde(b); })[0];
+      return { n: total, max: max, rows: rows, todos: todos, target: total ? rows[0].p : cheapest };
     }
     function countTo(to) {
       var from = parseInt(count.textContent, 10) || 0;
@@ -278,29 +278,36 @@
     }
     function update() {
       var r = result();
-      if (r.preventa) {
+      var parts = r.rows.filter(function (x) { return x.n; });
+      if (!r.target) return;
+      if (r.n === 0) {
         count.hidden = true;
-        label.textContent = "Preventa abierta: recibe el plano y los precios antes que nadie.";
-        cta.textContent = "Inscribirme";
+        label.textContent = "No hay parcelas hasta " + clp(r.max) + (r.todos ? "" : " en " + r.target.nombre) + ". Parten en " + clp(desde(r.target)) + ".";
+        cta.textContent = "Ver desde " + clp(desde(r.target));
+        by.hidden = true;
         return;
       }
       count.hidden = false;
       countTo(r.n);
-      if (r.n === 0) label.textContent = "sin parcelas en ese rango. Prueba otro presupuesto.";
-      else label.textContent = (r.n === 1 ? "parcela disponible" : "parcelas disponibles") + (r.max < Infinity ? " en tu presupuesto" : " hoy");
-      cta.textContent = r.n === 0 ? "Ver el plano" : "Ver parcelas";
+      label.textContent = (r.n === 1 ? "parcela disponible" : "parcelas disponibles") + (r.max < Infinity ? " en tu presupuesto" : " hoy");
+      by.hidden = !(r.todos && parts.length > 1);
+      by.textContent = parts.map(function (x) { return x.n + " en " + x.p.nombre; }).join(" · ");
+      cta.textContent = r.todos && parts.length > 1 ? "Ver en " + r.target.nombre : "Ver parcelas";
     }
     dest.addEventListener("change", update);
     bud.addEventListener("change", update);
     form.addEventListener("submit", function (e) {
       e.preventDefault();
       var r = result();
-      if (r.preventa) {
-        Visit.prefill({ proyecto: r.preventa.nombre, mensaje: "Quiero inscribirme en la preventa de " + r.preventa.nombre + "." });
-        scrollToEl($("#visita"));
-        return;
+      if (!r.target) return;
+      if (r.n === 0) {
+        Plan.apply({ id: r.target.id, max: Infinity, soloDisponibles: true, nota: "No hay lotes hasta " + clp(r.max) + ": te mostramos todos los disponibles de " + r.target.nombre + "." });
+      } else {
+        Plan.apply({
+          id: r.target.id, max: r.max, soloDisponibles: true,
+          otros: r.todos ? r.rows.filter(function (x) { return x.n; }).map(function (x) { return { id: x.p.id, nombre: x.p.nombre, n: x.n }; }) : []
+        });
       }
-      if (r.target) Plan.apply({ id: r.target.id, max: r.max, soloDisponibles: r.n > 0 });
       scrollToEl($("#plano"));
     });
     update();
@@ -428,7 +435,7 @@
     var root = $("[data-plan]");
     if (!root) return;
     var canvas = $("[data-canvas]", root), list = $("[data-list]", root), stage = $("[data-stage]", root);
-    var tip = $("[data-tip]", root), prev = $("[data-preventa-panel]", root), legend = $("[data-legend]", root), hint = $("[data-hint]", root);
+    var tip = $("[data-tip]", root), legend = $("[data-legend]", root), hint = $("[data-hint]", root), othersEl = $("[data-plan-others]", root);
     var cats = $("[data-cats]", root), empty = $("[data-plan-empty]", root), live = $("[data-plan-live]", root);
     var summary = $("[data-summary]", root), clearBtn = $("[data-clear-filters]", root);
     var price = $("[data-price]", root), priceOut = $("[data-price-out]", root);
@@ -453,7 +460,8 @@
     var S = {
       id: first ? first.id : (proyectos[0] && proyectos[0].id),
       est: { disponible: true, reservada: true, vendida: true },
-      max: Infinity, sector: "", view: "plano", sel: null, sort: "n", dir: 1
+      max: Infinity, sector: "", view: "plano", sel: null, sort: "n", dir: 1,
+      nota: "", otros: []      // aviso y otros proyectos cuando se llega desde el buscador
     };
     var favs = loadFavs().filter(function (k) {
       var parts = k.split(":"), p = proyecto(parts[0]);
@@ -747,7 +755,6 @@
     }
     function updateSummary() {
       var p = P();
-      if (!p.lotes.length) { summary.textContent = "Preventa · plano y precios muy pronto"; if (clearBtn) clearBtn.hidden = true; return; }
       var all = p.lotes.length, disp = disponibles(p).length, act = filtersActive();
       if (!act) summary.textContent = disp + " de " + all + " lotes disponibles · desde " + clp(desde(p));
       else {
@@ -760,6 +767,13 @@
           : hits.length + (hits.length === 1 ? " lote" : " lotes") + " con estos filtros";
       }
       if (clearBtn) clearBtn.hidden = !act;
+      if (othersEl) {
+        var otros = S.otros.filter(function (o) { return o.id !== S.id; });
+        othersEl.hidden = !S.nota && !otros.length;
+        othersEl.innerHTML = S.nota ? esc(S.nota) : (otros.length ? "También en tu presupuesto:" + otros.map(function (o) {
+          return ' <button type="button" data-other="' + o.id + '">' + o.n + " en " + esc(o.nombre) + " →</button>";
+        }).join("") : "");
+      }
       var n = (S.max < Infinity ? 1 : 0) + (S.sector ? 1 : 0) + (["disponible", "reservada", "vendida"].filter(function (k) { return !S.est[k]; }).length ? 1 : 0);
       if (fCount) fCount.textContent = n ? " · " + n : "";
       var dds = $$("dd", pStats);
@@ -780,6 +794,7 @@
       paintRange(price);
     }
     function clearFilters() {
+      S.nota = ""; S.otros = [];
       S.est = { disponible: true, reservada: true, vendida: true };
       checks.forEach(function (c) { c.checked = true; });
       S.max = Infinity; S.sector = "";
@@ -1030,7 +1045,7 @@
       S.id = id;
       if (!opts.keepFilters) {                     // al cambiar de proyecto todos los filtros vuelven a cero
         S.est = { disponible: true, reservada: true, vendida: true };
-        S.max = Infinity; S.sector = "";
+        S.max = Infinity; S.sector = ""; S.nota = ""; S.otros = [];
       }
       checks.forEach(function (c) { c.checked = !!S.est[c.value]; });
       tabs.forEach(function (t) {
@@ -1039,36 +1054,9 @@
         t.setAttribute("tabindex", on ? "0" : "-1");
         if (on) stage.setAttribute("aria-labelledby", t.id);
       });
-      var pre = !p.lotes.length;
-      root.classList.toggle("is-preventa", pre);
-      prev.hidden = !pre;
-      [viewToggle, filtersBox, panel].forEach(function (el) { if (el) el.hidden = pre; });
-      if (zoomUi) zoomUi.hidden = pre || S.view !== "plano";
-      if (legend) legend.hidden = pre || S.view !== "plano";
-      if (cats) cats.hidden = pre;
-      var ppArt = $("[data-preventa-art]", root);
-      if (pre) {
-        var ppKick = $("[data-preventa-kicker]", root), ppBtn = $("[data-preventa]", prev);
-        if (ppKick) ppKick.textContent = "Preventa · " + p.nombre;
-        if (ppBtn) ppBtn.setAttribute("data-preventa", p.id);
-        if (ppArt && ppArt.getAttribute("data-for") !== id) {
-          var src = $('.project[data-project="' + id + '"] .project-art svg');
-          ppArt.innerHTML = "";
-          if (src) ppArt.appendChild(src.cloneNode(true));
-          ppArt.setAttribute("data-for", id);
-        }
-      }
-      if (pre) {
-        resetPanel();
-        if (hint) hint.hidden = true;
-        if (empty) empty.hidden = true;
-        canvas.hidden = true;
-        list.hidden = true;
-        canvas.innerHTML = "";
-        shapes = {};
-        updateSummary();
-        return;
-      }
+      if (!p.lotes.length) return;
+      if (zoomUi) zoomUi.hidden = S.view !== "plano";
+      if (legend) legend.hidden = S.view !== "plano";
       canvas.hidden = S.view !== "plano";
       list.hidden = S.view !== "lista";
       prices = p.lotes.filter(function (l) { return l.estado !== "vendida"; }).map(function (l) { return l.precio; })
@@ -1099,7 +1087,7 @@
       t.id = t.id || "tab-" + t.getAttribute("data-tab");
       t.setAttribute("aria-controls", "plan-stage");
       var p = proyecto(t.getAttribute("data-tab"));
-      if (p && !$("small", t)) t.insertAdjacentHTML("beforeend", "<small>" + (p.lotes.length ? disponibles(p).length + " disp." : "Preventa") + "</small>");
+      if (p && p.lotes.length && !$("small", t)) t.insertAdjacentHTML("beforeend", "<small>" + disponibles(p).length + " disp.</small>");
       t.addEventListener("click", function () { setProject(t.getAttribute("data-tab")); });
       t.addEventListener("keydown", function (e) {
         if (e.key !== "ArrowRight" && e.key !== "ArrowLeft") return;
@@ -1112,12 +1100,13 @@
     stage.id = "plan-stage";
     stage.setAttribute("role", "tabpanel");
     views.forEach(function (b) { b.addEventListener("click", function () { setView(b.getAttribute("data-view")); }); });
-    checks.forEach(function (c) { c.addEventListener("change", function () { S.est[c.value] = c.checked; applyFilters(); }); });
+    checks.forEach(function (c) { c.addEventListener("change", function () { S.est[c.value] = c.checked; S.nota = ""; applyFilters(); }); });
     price.addEventListener("input", function () {
       var i = +price.value;
       S.max = i >= prices.length ? Infinity : prices[i];
       priceOut.textContent = i >= prices.length ? "Sin tope" : "Hasta " + clp(prices[i]);
       paintRange(price);
+      S.nota = ""; S.otros = [];
       applyFilters();
     });
     if (cats) cats.addEventListener("click", function (e) {
@@ -1129,6 +1118,8 @@
     });
     root.addEventListener("click", function (e) {
       if (e.target.closest("[data-clear-filters]")) clearFilters();
+      var ot = e.target.closest("[data-other]");
+      if (ot) setProject(ot.getAttribute("data-other"), { keepFilters: true });
     });
     if (fToggle) fToggle.addEventListener("click", function () {
       var open = fToggle.getAttribute("aria-expanded") !== "true";
@@ -1244,7 +1235,7 @@
     d.fav.addEventListener("click", function () { if (S.sel != null) toggleFav(S.id, S.sel); });
     d.sim.addEventListener("click", function () {
       var l = lotOf(P(), S.sel);
-      if (l) Sim.set(S.id, l.precio);
+      if (l) Sim.set(S.id, l.precio, l.n);
       closeSheet(true);
     });
     if (d.close) d.close.addEventListener("click", function () { closeSheet(); });
@@ -1278,11 +1269,15 @@
 
     /* ---- API para otros módulos ---- */
     Plan.show = function (id) { if (id !== S.id) setProject(id); };
+    Plan.current = function () { return S.id; };
     Plan.apply = function (o) {
       S.est = o.soloDisponibles ? { disponible: true, reservada: false, vendida: false } : { disponible: true, reservada: true, vendida: true };
       S.max = o.max || Infinity;
       S.sector = "";
-      setProject(o.id, { keepFilters: true });
+      S.nota = o.nota || "";
+      S.otros = o.otros || [];
+      if (S.view !== "plano") setView("plano");
+      setProject(o.id || S.id, { keepFilters: true });
     };
 
     // Enlace directo a un lote: #lote-malalcahuello-12 (al cargar y al hacer clic en enlaces internos)
@@ -1342,23 +1337,32 @@
     pie.min = Math.round((fin.pieMinimo || 0.2) * 100);
     if (+pie.value < +pie.min) pie.value = pie.min;
 
+    // El valor solo puede ser un precio real del proyecto (los de sus lotes disponibles)
+    var vals = [], lotSel = null, lotBox = $("[data-s-lot]", form);
     function range(p, value) {
-      var ps = p.lotes.map(function (l) { return l.precio; }).filter(Boolean);
-      var mn = Math.min.apply(null, ps), mx = Math.max.apply(null, ps);
-      price.min = mn;
-      price.max = mx;
-      price.step = 100000;
-      if (value == null) {
-        var disp = disponibles(p).map(function (l) { return l.precio; }).sort(function (a, b) { return a - b; });
-        value = disp.length ? disp[Math.floor(disp.length / 2)] : mn;
+      var disp = disponibles(p);
+      vals = (disp.length ? disp : p.lotes).map(function (l) { return l.precio; }).filter(Boolean)
+        .filter(function (v, i, a) { return a.indexOf(v) === i; }).sort(function (a, b) { return a - b; });
+      price.min = 0;
+      price.max = Math.max(0, vals.length - 1);
+      price.step = 1;
+      var i = Math.floor((vals.length - 1) / 2);
+      if (value != null) {
+        i = 0;
+        vals.forEach(function (v, k) { if (Math.abs(v - value) < Math.abs(vals[i] - value)) i = k; });
       }
-      price.value = clamp(value, mn, mx);
+      price.value = i;
+      price.setAttribute("aria-valuetext", clp(vals[i] || 0));
     }
     function calc() {
       var p = proyecto(selP.value);
       var modo = $('input[name="modo"]:checked', form);
-      var v = +price.value, credito = !modeWrap.hidden && !!modo && modo.value === "credito";
+      var v = vals[+price.value] || 0, credito = !modeWrap.hidden && !!modo && modo.value === "credito";
       priceOut.textContent = clp(v);
+      price.setAttribute("aria-valuetext", clp(v));
+      var nAt = disponibles(p).filter(function (l) { return l.precio === v; }).length;
+      if (lotBox) lotBox.textContent = lotSel ? "Lote " + lotSel + " de " + p.nombre : nAt + (nAt === 1 ? " lote disponible a este precio" : " lotes disponibles a este precio");
+      var que = "una parcela en " + p.nombre + (lotSel ? " (lote " + lotSel + ")" : "") + " de " + clp(v);
       pieOut.textContent = pct(+pie.value);
       creditEls.forEach(function (el) { el.hidden = !credito; });
       $$('input[type="range"]', form).forEach(paintRange);
@@ -1370,7 +1374,7 @@
         out.saldoLabel.textContent = "Saldo a la escritura";
         out.saldo.textContent = clp(v - RESERVA);
         out.note.textContent = "Más gastos de escrituración (notaría y Conservador), que te informamos antes de firmar.";
-        msg = "Hola Fundos, simulé una parcela en " + p.nombre + " de " + clp(v) + " pagando al contado. ¿Me pueden asesorar?";
+        msg = "Hola Fundos, simulé " + que + " pagando al contado. ¿Me pueden asesorar?";
         bar(RESERVA / v, 0, (v - RESERVA) / v);
         if (out.lPie) out.lPie.hidden = true;
         if (out.lRest) out.lRest.textContent = "Saldo a la escritura";
@@ -1386,24 +1390,26 @@
         out.saldo.textContent = clp(fin$);
         out.cuota.textContent = clp(cuota) + " × " + n;
         out.note.textContent = "Cuota referencial en " + n + " meses con tasa de " + pct((i * 100).toFixed(1)) + " mensual. Más gastos de escrituración.";
-        msg = "Hola Fundos, simulé una parcela en " + p.nombre + " de " + clp(v) + " con pie de " + pie.value + "% y " + n + " cuotas de aprox. " + clp(cuota) + ". ¿Me pueden asesorar?";
+        msg = "Hola Fundos, simulé " + que + " con pie de " + pct(+pie.value) + " y " + n + " cuotas de aprox. " + clp(cuota) + ". ¿Me pueden asesorar?";
         bar(RESERVA / v, Math.max(0, pieTotal - RESERVA) / v, fin$ / v);
         if (out.lPie) out.lPie.hidden = false;
         if (out.lRest) out.lRest.textContent = "Financiado en cuotas";
       }
       out.send.href = waHref(msg);
     }
-    selP.addEventListener("change", function () { range(proyecto(selP.value)); calc(); });
+    selP.addEventListener("change", function () { lotSel = null; range(proyecto(selP.value)); calc(); });
+    price.addEventListener("input", function () { lotSel = null; });
     form.addEventListener("input", calc);
     form.addEventListener("change", calc);
     range(proyecto(selP.value));
     calc();
 
-    Sim.set = function (id, precio) {
+    Sim.set = function (id, precio, n) {
       var p = proyecto(id);
       if (!p || !p.lotes.length) return;
       selP.value = id;
       range(p, precio);
+      lotSel = n || null;
       calc();
     };
   }
@@ -1433,6 +1439,7 @@
       nombre: function (v) { return v.trim().length >= 2; },
       telefono: function (v) { var d = v.replace(/\D/g, ""); return d.length >= 8 && d.length <= 15; },
       correo: function (v) { v = v.trim(); return !v || /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v); },
+      fecha: function (v) { return !v || !el.fecha.min || v >= el.fecha.min; },
       acepto: function (_, input) { return input.checked; }
     };
     function check(name) {
@@ -1462,14 +1469,20 @@
       if (el.fecha.value) {
         var parts = el.fecha.value.split("-");
         var dt = new Date(+parts[0], +parts[1] - 1, +parts[2]);
-        try { fecha = dt.toLocaleDateString("es-CL", { weekday: "long", day: "numeric", month: "long" }); } catch (err) { fecha = el.fecha.value; }
+        try {
+          fecha = dt.toLocaleDateString("es-CL", { weekday: "long" }) + " " + dt.toLocaleDateString("es-CL", { day: "numeric", month: "long" });
+        } catch (err) { fecha = el.fecha.value; }
       }
       var horario = (form.querySelector('input[name="horario"]:checked') || {}).value || "";
-      var proyectoTxt = el.proyecto.value;
-      var msg = "Hola Fundos, soy " + el.nombre.value.trim() + ". " +
-        (proyectoTxt === "Aún no lo sé" ? "Quiero agendar una visita y conocer sus proyectos" : "Quiero agendar una visita a " + proyectoTxt) +
-        (fecha ? " el " + fecha : "") + (horario ? " (" + horario + ")" : "") + "." +
-        (el.mensaje.value.trim() ? " " + el.mensaje.value.trim() : "") +
+      var proyectoTxt = el.proyecto.value, nada = proyectoTxt === "Aún no lo sé";
+      var que = horario === "videollamada"
+        ? "Quiero agendar una videollamada para conocer " + (nada ? "sus proyectos" : proyectoTxt)
+        : (nada ? "Quiero agendar una visita para conocer sus proyectos" : "Quiero agendar una visita a " + proyectoTxt);
+      var cuando = (fecha ? " el " + fecha : "") + (horario === "mañana" ? " en la mañana" : horario === "tarde" ? " en la tarde" : "");
+      var extra = el.mensaje.value.trim();
+      if (extra && !/[.!?…]$/.test(extra)) extra += ".";
+      var msg = "Hola Fundos, soy " + el.nombre.value.trim() + ". " + que + cuando + "." +
+        (extra ? " " + extra : "") +
         " Mi teléfono: " + el.telefono.value.trim() + "." +
         (el.correo && el.correo.value.trim() ? " Mi correo: " + el.correo.value.trim() + "." : "");
       // Se muestra el mensaje y se envía con un enlace real (sin ventanas emergentes)
@@ -1480,12 +1493,17 @@
     });
     if (again) again.addEventListener("click", function () { ok.hidden = true; el.nombre.focus(); });
 
+    var lastAuto = "";
     Visit.prefill = function (o) {
       if (o.proyecto) {
         var opt = Array.prototype.filter.call(el.proyecto.options, function (x) { return x.value === o.proyecto; })[0];
         if (opt) el.proyecto.value = o.proyecto;
       }
-      if (o.mensaje) el.mensaje.value = o.mensaje;
+      // Solo se reemplaza el mensaje si está vacío o si lo escribió la página (nunca lo que escribió la persona)
+      if ("mensaje" in o && (!el.mensaje.value.trim() || el.mensaje.value === lastAuto)) {
+        el.mensaje.value = o.mensaje || "";
+        lastAuto = el.mensaje.value;
+      }
       ok.hidden = true;
       form.classList.remove("is-prefilled");
       void form.offsetWidth;
@@ -1526,22 +1544,23 @@
       f.title.textContent = p.nombre;
       f.desc.textContent = p.descripcion;
       f.list.innerHTML = (p.destacados || []).map(function (x) { return "<li>" + check + "<span>" + esc(x) + "</span></li>"; }).join("");
-      f.near.innerHTML = (p.cercanias || []).map(function (c) { return "<li><span>" + esc(c[0]) + "</span><span>aprox. " + esc(c[1]) + "</span></li>"; }).join("");
+      f.near.innerHTML = (p.cercanias || []).map(function (c) { return "<li><span>" + esc(c[0]) + "</span><span>" + esc(c[1]) + "</span></li>"; }).join("");
+      var facts = $("[data-pd-facts]", dlg);
+      if (facts) facts.innerHTML = p.lotes.length
+        ? "<span>Desde <b>" + clp(desde(p)) + "</b></span><span><b>" + disponibles(p).length + "</b> de " + p.lotes.length + " disponibles</span><span>Parcelas de <b>" + m2(p.lotes[0].m2) + "</b></span><span>Reserva <b>" + clp(RESERVA) + "</b></span>"
+        : "";
       f.note.textContent = p.cercaniasNota || "";
       f.map.href = p.mapa || "#";
-      f.actions.innerHTML = p.estado === "preventa"
-        ? '<a class="btn btn-gold" href="#visita" data-act="preventa">Inscribirme en la preventa' + arrow + '</a><a class="btn btn-line" href="' + esc(waHref("Hola Fundos, quiero saber más de la preventa de " + p.nombre + ".")) + '" target="_blank" rel="noopener">Preguntar por WhatsApp</a>'
-        : '<a class="btn btn-dark" href="#plano" data-act="plano">Ver lotes disponibles' + arrow + '</a><a class="btn btn-line" href="#visita" data-act="visita">Agendar una visita</a>';
+      f.actions.innerHTML = '<a class="btn btn-dark" href="#plano" data-act="plano">Ver lotes disponibles' + arrow + '</a><a class="btn btn-line" href="#visita" data-act="visita">Agendar una visita</a>';
       if (p.video) f.actions.insertAdjacentHTML("beforeend", '<button class="btn btn-line" type="button" data-act="video"><svg class="i" aria-hidden="true"><use href="#i-play"/></svg>Ver video</button>');
       if (p.tour) f.actions.insertAdjacentHTML("beforeend", '<a class="btn btn-line" href="#recorrido" data-act="tour"><svg class="i" aria-hidden="true"><use href="#i-360"/></svg>Recorrido 360°</a>');
       $$("[data-act]", f.actions).forEach(function (a) {
-        a.addEventListener("click", function () {
+        a.addEventListener("click", function (e) {
           var act = a.getAttribute("data-act");
-          if (act === "plano") Plan.show(p.id);
-          if (act === "tour") Tour.open(p.id, true);
+          if (act === "plano") Plan.apply({ id: p.id, soloDisponibles: true });
+          if (act === "tour") { e.preventDefault(); dlg.close(); Tour.open(p.id, true); return; }
           if (act === "video") { dlg.close(); Video.open(p.id); return; }
           if (act === "visita") Visit.prefill({ proyecto: p.nombre, mensaje: "" });
-          if (act === "preventa") Visit.prefill({ proyecto: p.nombre, mensaje: "Quiero inscribirme en la preventa de " + p.nombre + "." });
           dlg.close();
         });
       });
@@ -1594,6 +1613,8 @@
       var changed = id !== cur;
       cur = id;
       picks.forEach(function (a) { a.setAttribute("aria-current", a.getAttribute("data-tour-pick") === id ? "true" : "false"); });
+      var nav = $(".tour-picker", root), act = $('.tour-pick[aria-current="true"]', root);
+      if (nav && act && nav.scrollWidth > nav.clientWidth) nav.scrollTo({ left: act.offsetLeft - (nav.clientWidth - act.offsetWidth) / 2, behavior: reduced ? "auto" : "smooth" });
       if (changed) {
         poster.innerHTML = "";
         var src = art(id);
@@ -1635,7 +1656,6 @@
       f.src = p.tour;
       f.title = "Recorrido virtual 360° de " + p.nombre;
       f.setAttribute("allow", "fullscreen; accelerometer; gyroscope; magnetometer; xr-spatial-tracking; autoplay");
-      f.setAttribute("allowfullscreen", "");
       f.setAttribute("referrerpolicy", "strict-origin-when-cross-origin");
       f.addEventListener("load", function () { window.setTimeout(function () { reveal(my); }, 180); });
       // Se espera al cierre del portal anterior antes de montar el nuevo
@@ -1647,6 +1667,7 @@
       window.clearTimeout(timer);
       state("live");
       setText("[data-tour-cta]", "Entrar");
+      setText("[data-tour-dock-q]", "¿Te gustó");
       status.textContent = "Recorrido de " + T().nombre + " abierto. Arrastra para mirar alrededor.";
     }
     function leave() {
@@ -1747,21 +1768,25 @@
     }
 
     // Accesos desde otras partes de la página
-    Tour.open = function (id, go) { select(id, go); };
+    function toStage() {
+      stage.scrollIntoView({ block: "center", behavior: reduced ? "auto" : "smooth" });
+    }
+    Tour.open = function (id, go) { select(id, go); window.setTimeout(toStage, 40); };
     $$("[data-tour-open]").forEach(function (a) {
-      a.addEventListener("click", function () {
+      a.addEventListener("click", function (e) {
         var id = a.getAttribute("data-tour-open");
-        if (id === "plan") {
-          var t = $('#plano [data-tab][aria-selected="true"]');
-          id = t ? t.getAttribute("data-tab") : cur;
-        }
-        select(id, true);
+        if (id === "plan") id = Plan.current();
+        e.preventDefault();
+        Tour.open(id, true);
       });
+    });
+    $$('a[href="#recorrido"]:not([data-tour-open])').forEach(function (a) {
+      a.addEventListener("click", function (e) { e.preventDefault(); toStage(); });
     });
 
     var m = /^#recorrido-([a-z0-9-]+)$/.exec(location.hash);
     select(m && proyecto(m[1]) ? m[1] : first.id, false);
-    if (m) window.setTimeout(function () { scrollToEl($("#recorrido")); }, 80);
+    if (m) window.setTimeout(toStage, 80);
   }
 
   /* =============================================================
@@ -1831,8 +1856,7 @@
         f.src = s.frame;
         f.title = "Video de " + p.nombre;
         f.setAttribute("allow", "autoplay; fullscreen; picture-in-picture; encrypted-media");
-        f.setAttribute("allowfullscreen", "");
-        f.setAttribute("referrerpolicy", "strict-origin-when-cross-origin");
+          f.setAttribute("referrerpolicy", "strict-origin-when-cross-origin");
         loading = true;
         box.appendChild(f);
       } else {

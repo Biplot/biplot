@@ -24,10 +24,10 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Mulish:wght@400;600;700&display=swap">
-<link rel="stylesheet" href="styles.css?v=20260925j">
-<script defer src="lib/manifest.js?v=20260925j"></script>
-<script defer src="lib/planos.js?v=20260925j"></script>
-<script defer src="main.js?v=20260925j"></script>
+<link rel="stylesheet" href="styles.css?v=20260925k">
+<script defer src="lib/manifest.js?v=20260925k"></script>
+<script defer src="lib/planos.js?v=20260925k"></script>
+<script defer src="main.js?v=20260925k"></script>
 </head>
 <body>
 <a class="skip-link" href="#contenido">Saltar al contenido</a>
@@ -177,7 +177,7 @@
   </div>
   <nav class="nav-links" aria-label="Principal">
     <a href="#proyectos">Proyectos</a>
-    <a href="#recorrido">Tour 360°</a>
+    <a href="#recorrido">Recorrido 360°</a>
     <a href="#plano">Elige tu parcela</a>
     <a href="#como-comprar">Cómo comprar</a>
     <a href="#nosotros">Nosotros</a>
@@ -289,7 +289,7 @@
     </h1>
     <p class="hero-sub">Elige tu parcela en Malalcahuello, Marchigüe o Puerto Varas y avanza con un equipo que te acompaña desde la primera visita hasta la inscripción en el Conservador. Sin letra chica.</p>
     <div class="hero-actions">
-      <a class="btn btn-gold btn-lg" href="#plano">Ver parcelas disponibles<svg class="i i-go" aria-hidden="true"><use href="#i-arrow"/></svg></a>
+      <a class="btn btn-gold btn-lg" href="#plano" data-plan-disp>Ver parcelas disponibles<svg class="i i-go" aria-hidden="true"><use href="#i-arrow"/></svg></a>
       <a class="btn btn-ghost btn-lg" href="#visita"><svg class="i" aria-hidden="true"><use href="#i-calendar"/></svg>Agendar una visita</a>
     </div>
     <a class="hero-tour" href="#recorrido">
@@ -328,6 +328,7 @@
     <div class="finder-result" aria-live="polite">
       <strong data-finder-count>107</strong>
       <span data-finder-label>parcelas disponibles hoy</span>
+      <small class="finder-by" data-finder-by hidden></small>
     </div>
     <button class="btn btn-dark finder-btn" type="submit"><span data-finder-cta>Ver parcelas</span><svg class="i i-go" aria-hidden="true"><use href="#i-arrow"/></svg></button>
   </form>
@@ -395,7 +396,7 @@
           <h3>Malalcahuello</h3>
           <p class="project-desc">Bosque nativo, volcanes y el río Lolén. Nieve en invierno; pesca, senderos y termas el resto del año.</p>
           <ul class="chips">
-            <li>Frente al río Lolén</li><li>Precios rebajados</li><li>Cerca de Corralco</li>
+            <li>Frente al río Lolén</li><li>Precio oferta</li><li>Cerca de Corralco</li>
           </ul>
           <dl class="facts">
             <div><dt>Desde</dt><dd>$9.990.000</dd></div>
@@ -491,7 +492,7 @@
           <h3>Puerto Varas</h3>
           <p class="project-desc">Bosque nativo atravesado por un estero, con camino principal y caminos interiores. Puerto Montt y el aeropuerto a unos 20 km.</p>
           <ul class="chips">
-            <li>Estero en el predio</li><li>Bosque nativo</li><li>79 parcelas</li>
+            <li>Estero en el predio</li><li>Bosque nativo</li><li data-chip-total="puerto-varas">79 parcelas en total</li>
           </ul>
           <dl class="facts">
             <div><dt>Desde</dt><dd>$27.990.000</dd></div>
@@ -552,7 +553,7 @@
             <span class="sr-only" data-tour-label>al recorrido 360° de Malalcahuello</span>
           </a>
           <p class="tour-name"><span data-tour-region>La Araucanía · Cordillera</span><strong data-tour-name>Malalcahuello</strong></p>
-          <p class="tour-tip">Arrastra para mirar alrededor · Pellizca o usa la rueda para acercarte</p>
+          <p class="tour-tip">Arrastra para mirar alrededor · Pellizca<span class="on-mouse"> o usa la rueda</span> para acercarte</p>
         </div>
 
         <div class="tour-frame" data-tour-frame></div>
@@ -575,7 +576,7 @@
       </div>
 
       <div class="tour-dock">
-        <p><svg class="i" aria-hidden="true"><use href="#i-compass"/></svg><span>¿Te gustó <strong data-tour-dock-name>Malalcahuello</strong>? Revisa sus lotes o visítalo en persona.</span></p>
+        <p><svg class="i" aria-hidden="true"><use href="#i-compass"/></svg><span><span data-tour-dock-q>¿Te interesa</span> <strong data-tour-dock-name>Malalcahuello</strong>? Revisa sus lotes o visítalo en persona.</span></p>
         <div class="tour-dock-actions">
           <a class="btn btn-dark btn-sm" href="#plano" data-tour-plan>Ver lotes<svg class="i i-go" aria-hidden="true"><use href="#i-arrow"/></svg></a>
           <a class="btn btn-line btn-sm" href="#visita" data-tour-visit><svg class="i" aria-hidden="true"><use href="#i-calendar"/></svg>Agendar visita</a>
@@ -607,13 +608,14 @@
             <button type="button" class="is-on" aria-pressed="true" data-view="plano" aria-label="Ver como plano"><svg class="i" aria-hidden="true"><use href="#i-map"/></svg><span>Plano</span></button>
             <button type="button" aria-pressed="false" data-view="lista" aria-label="Ver como lista"><svg class="i" aria-hidden="true"><use href="#i-list"/></svg><span>Lista</span></button>
           </div>
-          <a class="plan-360" href="#recorrido" data-tour-open="plan"><svg class="i" aria-hidden="true"><use href="#i-360"/></svg>Tour 360°</a>
+          <a class="plan-360" href="#recorrido" data-tour-open="plan"><svg class="i" aria-hidden="true"><use href="#i-360"/></svg>Recorrido 360°</a>
         </div>
       </div>
 
       <div class="plan-filters" data-filters>
         <div class="plan-filters-head">
           <p class="plan-summary"><span data-summary aria-live="polite">17 de 58 lotes disponibles · desde $9.990.000</span> <button type="button" class="link-btn" data-clear-filters hidden>Limpiar filtros</button></p>
+          <p class="plan-others" data-plan-others hidden></p>
           <button type="button" class="filters-toggle" data-filters-toggle aria-expanded="false" aria-controls="plan-filter-fields"><svg class="i" aria-hidden="true"><use href="#i-sliders"/></svg>Filtros<span data-filter-count></span></button>
         </div>
         <div class="filter-fields" id="plan-filter-fields">
@@ -652,15 +654,6 @@
           </div>
           <div class="plan-legend" data-legend></div>
           <div class="plan-list" data-list hidden></div>
-          <div class="plan-preventa" data-preventa-panel hidden>
-            <div class="pp-copy">
-              <p class="kicker" data-preventa-kicker>Preventa</p>
-              <h3>Sé de los primeros en elegir.</h3>
-              <p>Estamos terminando el plano de loteo. Inscríbete y recibe el plano y los precios de lanzamiento antes de su publicación.</p>
-              <a class="btn btn-gold" href="#visita" data-preventa="">Inscribirme en la preventa<svg class="i i-go" aria-hidden="true"><use href="#i-arrow"/></svg></a>
-            </div>
-            <div class="pp-art" data-preventa-art aria-hidden="true"></div>
-          </div>
           <p class="sr-only" aria-live="polite" data-plan-live></p>
         </div>
 
@@ -730,7 +723,7 @@
     <header class="section-head reveal">
       <p class="kicker">Cómo comprar</p>
       <h2 id="pasos-title">Un camino claro,<br> <em>de la visita a la escritura.</em></h2>
-      <p class="lead">Comprar un terreno puede parecer complejo. Por eso dividimos el proceso en seis etapas, cada una con responsables, documentos y avance a la vista.</p>
+      <p class="lead">Seis etapas, cada una con responsables, documentos y avance a la vista. Siempre sabes qué sigue y qué necesitas.</p>
     </header>
 
     <ol class="steps" data-steps>
@@ -771,6 +764,11 @@
         <p>Inscribimos la propiedad a tu nombre. Desde ese día, la tierra es oficialmente tuya.</p>
       </li>
     </ol>
+    <div class="steps-cta reveal">
+      <a class="btn btn-dark" href="#plano" data-plan-disp>Elegir mi lote<svg class="i i-go" aria-hidden="true"><use href="#i-arrow"/></svg></a>
+      <a class="btn btn-line" href="#visita">Agendar una visita</a>
+      <a class="steps-sim" href="#simulador">Simular el pago<svg class="i i-go" aria-hidden="true"><use href="#i-arrow"/></svg></a>
+    </div>
   </div>
 </section>
 
@@ -787,7 +785,11 @@
         <li><svg class="i" aria-hidden="true"><use href="#i-check"/></svg>Aviso de fechas y vencimientos importantes</li>
         <li><svg class="i" aria-hidden="true"><use href="#i-check"/></svg>Contacto directo con tu ejecutivo</li>
       </ul>
-      <p class="portal-note">Acceso para compradores con reserva vigente.</p>
+      <div class="portal-actions">
+        <a class="btn btn-gold" href="https://wa.me/56900000000" target="_blank" rel="noopener" data-wa data-wa-msg="Hola, tengo una reserva con Fundos y quiero mi acceso a Mi compra."><svg class="i" aria-hidden="true"><use href="#i-key"/></svg>Pedir mi acceso</a>
+        <a class="btn btn-ghost" href="#como-comprar">Ver las etapas</a>
+      </div>
+      <p class="portal-note">Disponible para compradores con reserva vigente: te enviamos tu acceso por WhatsApp o correo.</p>
     </div>
 
     <div class="phone reveal" aria-label="Vista previa de la sección Mi compra" role="img">
@@ -799,9 +801,9 @@
         <div class="ph-card">
           <p class="ph-label">Marchigüe · Lote 7</p>
           <p class="ph-stage">Etapa 5 de 6 · Escritura</p>
-          <div class="ph-bar"><span style="width:78%"></span></div>
+          <div class="ph-bar"><span style="width:83%"></span></div>
           <ol class="ph-steps">
-            <li class="done">Reserva</li><li class="done">Validación</li><li class="done">Gastos de escrituración</li><li class="now">Firma de escritura</li><li>Inscripción en el CBR</li>
+            <li class="done">Conoce</li><li class="done">Reserva</li><li class="done">Validación</li><li class="done">Gastos de escrituración</li><li class="now">Escritura</li><li>Inscripción en el CBR</li>
           </ol>
         </div>
         <div class="ph-next">
@@ -839,7 +841,8 @@
         </div>
         <div class="field">
           <div class="field-head"><label for="s-precio">Valor de la parcela</label> <output for="s-precio" data-s-price-out>$20.990.000</output></div>
-          <input type="range" id="s-precio" min="18990000" max="23990000" step="100000" value="20990000" data-s-price>
+          <input type="range" id="s-precio" min="0" max="4" step="1" value="2" data-s-price aria-describedby="s-precio-lot">
+          <p class="sim-lot" id="s-precio-lot" data-s-lot></p>
         </div>
         <div class="field" data-s-mode-wrap>
           <span class="label" id="s-modo-label">Forma de pago</span>
@@ -932,7 +935,7 @@
       <header class="team-head reveal">
         <p class="kicker">Nuestro equipo</p>
         <h3 class="team-title">Detrás de cada venta <em>hay una historia.</em></h3>
-        <p>Somos un equipo apasionado por conectar personas con lugares. Te acompañamos desde la primera visita hasta el día en que ese terreno sea oficialmente tuyo, sin letra chica y sin complicaciones.</p>
+        <p>Somos un equipo apasionado por conectar personas con lugares. Te acompañamos desde la primera visita hasta el día en que ese terreno quede inscrito a tu nombre, con respuestas claras en cada paso.</p>
       </header>
       <ul class="team-list">
         <!-- Al tener nombre y cargo de cada integrante, agregarlos en member-body -->
@@ -995,7 +998,7 @@
       </details>
       <details>
         <summary>¿Tienen alternativas de financiamiento?</summary>
-        <p>Revisamos contigo las alternativas de pago según tu caso. Usa el simulador para tener una referencia y conversemos.</p>
+        <p>Sí. Como referencia, puedes pagar con un pie desde el 30 % y el saldo en hasta 48 cuotas; las condiciones finales se revisan contigo según tu caso. Usa el simulador para ver una cuota aproximada.</p>
       </details>
       <details>
         <summary>¿Puedo visitar las parcelas antes de reservar?</summary>
@@ -1056,14 +1059,15 @@
           </select>
         </div>
         <div class="field">
-          <label for="v-fecha">Fecha preferida</label>
+          <label for="v-fecha">Fecha preferida <small>(opcional)</small></label>
           <input id="v-fecha" name="fecha" type="date">
+          <p class="error" data-error-for="v-fecha">Elige una fecha desde hoy.</p>
         </div>
       </div>
       <div class="field">
-        <span class="label" id="v-horario-label">Horario</span>
+        <span class="label" id="v-horario-label">Horario <small>(opcional)</small></span>
         <div class="seg" role="radiogroup" aria-labelledby="v-horario-label">
-          <label><input type="radio" name="horario" value="mañana" checked><span>Mañana</span></label>
+          <label><input type="radio" name="horario" value="mañana"><span>Mañana</span></label>
           <label><input type="radio" name="horario" value="tarde"><span>Tarde</span></label>
           <label><input type="radio" name="horario" value="videollamada"><span>Videollamada</span></label>
         </div>
@@ -1077,14 +1081,14 @@
         <span>Acepto que Fundos Inmobiliaria me contacte por WhatsApp o teléfono.</span>
       </label>
       <p class="error" data-error-for="acepto">Necesitamos tu autorización para contactarte.</p>
-      <button class="btn btn-gold btn-lg" type="submit"><svg class="i" aria-hidden="true"><use href="#i-whatsapp"/></svg>Agendar por WhatsApp</button>
+      <button class="btn btn-gold btn-lg" type="submit"><svg class="i" aria-hidden="true"><use href="#i-whatsapp"/></svg>Revisar y enviar por WhatsApp</button>
       <p class="form-note">Antes de enviarlo verás tu mensaje completo.</p>
       <div class="form-ok" data-visit-ok hidden tabindex="-1">
         <svg class="ok-check" viewBox="0 0 52 52" aria-hidden="true"><circle cx="26" cy="26" r="24" fill="none" stroke="currentColor" stroke-width="2"/><path d="M15 27l7 7 15-16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        <h3>Tu solicitud está lista.</h3>
+        <h3>Último paso: envíanos tu mensaje</h3>
         <blockquote class="ok-msg" data-visit-msg></blockquote>
         <a class="btn btn-gold" href="https://wa.me/56900000000" target="_blank" rel="noopener" data-visit-fallback><svg class="i" aria-hidden="true"><use href="#i-whatsapp"/></svg>Enviar por WhatsApp</a>
-        <p>Un ejecutivo te confirmará la visita cuando recibamos tu mensaje.</p>
+        <p>Se abrirá WhatsApp con este texto. Un ejecutivo te confirma la visita.</p>
         <button class="btn btn-line btn-sm" type="button" data-visit-again>Editar mi solicitud</button>
       </div>
     </form>
@@ -1108,11 +1112,13 @@
     </nav>
     <nav class="footer-col" aria-label="Tu compra">
       <h2>Tu compra</h2>
-      <a href="#recorrido">Recorridos 360°</a>
+      <a href="#recorrido">Recorrido 360°</a>
       <a href="#plano">Elige tu parcela</a>
       <a href="#como-comprar">Cómo comprar</a>
       <a href="#simulador">Simulador</a>
       <a href="#portal">Mi compra</a>
+      <a href="#preguntas">Preguntas frecuentes</a>
+      <a href="#visita">Agendar visita</a>
     </nav>
     <div class="footer-col">
       <h2>Contacto</h2>
@@ -1155,6 +1161,7 @@
     <p class="kicker" data-pd-meta></p>
     <h2 id="pd-title" data-pd-title>Proyecto</h2>
     <p class="pd-desc" data-pd-desc></p>
+    <div class="pd-facts" data-pd-facts></div>
     <div class="pd-cols">
       <div>
         <h3>Lo que vas a encontrar</h3>

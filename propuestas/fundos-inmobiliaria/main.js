@@ -721,7 +721,7 @@
         '<th scope="col"' + sortAttr("precio") + '><button type="button" data-sort="precio">Precio' + arrow("precio") + "</button></th>",
         hasLista ? '<th scope="col" class="t-sector">Antes</th>' : "",
         sameM2 ? "" : '<th scope="col" class="t-m2"' + sortAttr("m2") + '><button type="button" data-sort="m2">Superficie' + arrow("m2") + "</button></th>",
-        '<th scope="col">Estado</th><th scope="col"><span class="sr-only">Acción</span></th></tr></thead><tbody>'];
+        '<th scope="col">Estado</th><th scope="col" class="t-sel"><span class="sr-only">Acción</span></th></tr></thead><tbody>'];
       rows.forEach(function (l) {
         var sold = l.estado === "vendida", c = (p.categorias || {})[l.cat];
         h.push('<tr data-n="' + l.n + '"' + (S.sel === l.n ? ' class="is-active"' : "") + ">" +

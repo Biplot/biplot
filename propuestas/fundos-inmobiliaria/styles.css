@@ -1473,6 +1473,34 @@ body.tour-lock { overflow: hidden; }
 .st input:not(:checked) + span { border-style: dashed; text-decoration: line-through; text-decoration-color: rgba(247, 245, 240, .45); }
 .plan-cats, .tour-picker { scroll-padding-inline: .8rem 3rem; }
 
+/* ---------------- Anchos límite (QA) ---------------- */
+.finder-field { grid-template-columns: minmax(0, 1fr); }
+.finder-field select { width: 100%; min-width: 0; text-overflow: ellipsis; }
+@media (max-width: 379px) {
+  .btn-lg { padding-inline: 1.1em; font-size: .95rem; }
+  .hero-actions .btn { white-space: normal; text-align: center; }
+  .mbar { grid-template-columns: auto minmax(0, 1fr); }
+  .mbar-wa { font-size: 0; gap: 0; padding: 0; width: 48px; justify-content: center; }
+  .mbar-wa .i { width: 22px; height: 22px; }
+}
+/* Pestañas de proyecto: siempre las tres enteras, sin cortar nombres */
+@media (max-width: 719px) {
+  .tabs { display: grid; grid-template-columns: auto auto auto; width: 100%; border-radius: 14px; overflow: visible; }
+  .tab { flex-direction: column; justify-content: center; gap: .2rem; padding: .55rem .35rem; border-radius: 10px; font-size: clamp(.72rem, 3.4vw, .9rem); line-height: 1.15; white-space: normal; text-align: center; }
+  .plan-360 { white-space: nowrap; }
+}
+@media (max-width: 379px) {
+  .plan { padding-inline: .5rem; }
+  .tabs { gap: 2px; padding: 3px; }
+  .tab { font-size: .7rem; padding-inline: .2rem; letter-spacing: -.01em; }
+  .plan-360 { font-size: .8rem; padding-inline: .7rem; }
+}
+/* 1280–1439: los enlaces del menú caben sin la etiqueta de propuesta */
+@media (min-width: 1280px) and (max-width: 1439px) {
+  .proposal-tag { display: none; }
+  .nav-links { gap: .95rem; }
+}
+
 /* ---------------- Ajustes responsivos (auditoría) ---------------- */
 .faq summary { text-wrap: balance; }
 h2 em { text-wrap: balance; }

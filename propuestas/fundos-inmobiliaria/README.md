@@ -16,6 +16,7 @@ Sitio estático (HTML, CSS y JavaScript, sin build ni dependencias). Funciona ab
 | **Hero con paisaje vivo** | Ilustración por capas (volcán, cipreses y surcos dorados del isotipo) que se mueve con el cursor y el scroll. Primera impresión premium, sin fotos de stock. |
 | **Buscador** | Destino + presupuesto con conteo en vivo ("27 parcelas disponibles hoy"). Lleva directo al plano ya filtrado. |
 | **Proyectos comparables** | Misma ficha para los tres: desde, superficie, reserva y disponibilidad. Ficha ampliada con destacados, cercanías y mapa. |
+| **Recorrido virtual 360°** ★ | Los tours de cada proyecto se ven dentro de la página: una lente "Entrar" abre el recorrido como un portal, se cambia de proyecto sin salir, hay pantalla completa y, al terminar, "Ver lotes", "Agendar visita" o "Compartir" por WhatsApp. Accesos desde el hero, cada tarjeta ("Recorrido 360°"), el plano (botón 360°) y la ficha del proyecto. Enlace directo: `#recorrido-puerto-varas`. |
 | **Plano interactivo de lotes** ★ | La función estrella. Estado, precio y superficie de cada lote. Filtros por estado, precio y sector; vista de lista ordenable; favoritos que se envían por WhatsApp; enlace directo a un lote (`#lote-malalcahuello-12`); "Reservar este lote" precarga el formulario. En un lote vendido, sugiere el disponible más parecido. |
 | **Cómo comprar en 6 pasos** | El mismo embudo de Fundos 360° (reserva → validación → gastos → escritura → inscripción en el CBR), explicado sin letra chica. |
 | **Mi compra (Fundos 360°)** | Portal del comprador: avance de su compra, documentos y próximos hitos. Diferencia real frente a la competencia. |
@@ -51,6 +52,13 @@ lib/manifest.js   Datos: contacto, proyectos, lotes, financiamiento
 assets/img/       Isotipo (del manual), favicon y og-fundos.jpg para compartir
 .htaccess         Caché para hosting Apache/Hostinger
 ```
+
+### Recorridos 360°
+
+- Las URL están en `lib/manifest.js`, campo `tour` de cada proyecto (y repetidas en el HTML para que los enlaces funcionen sin JavaScript).
+- El recorrido **no se carga hasta que la persona entra**: la página sigue liviana y en el celular no se consumen datos sin permiso. Al acercarse a la sección se hace una conexión anticipada con cada servidor para que abra más rápido.
+- Si el sitio donde se publique prohíbe incrustar otras páginas (política de seguridad), la sección lo detecta y ofrece abrir el recorrido en una pestaña nueva. Esto pasa, por ejemplo, en la vista previa de Claude; en biplot.cl o el hosting de Fundos se ve incrustado.
+- Los recorridos están en Netlify y GitHub Pages, que por defecto permiten incrustarlos. Si algún día se les agrega `X-Frame-Options` o `frame-ancestors`, hay que permitir el dominio de Fundos.
 
 ### Planos y lotes
 

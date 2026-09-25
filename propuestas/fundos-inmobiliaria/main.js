@@ -77,6 +77,7 @@
   var Visit = { prefill: function () {} };
   var Plan = { apply: function () {}, show: function () {} };
   var Sim = { set: function () {} };
+  var Tour = { open: function () {} };
 
   /* =============================================================
      Contacto: un solo lugar para número, correo y horario
@@ -1212,10 +1213,12 @@
       f.actions.innerHTML = p.estado === "preventa"
         ? '<a class="btn btn-gold" href="#visita" data-act="preventa">Inscribirme en la preventa' + arrow + '</a><a class="btn btn-line" href="' + esc(waHref("Hola Fundos, quiero saber más de la preventa de " + p.nombre + ".")) + '" target="_blank" rel="noopener">Preguntar por WhatsApp</a>'
         : '<a class="btn btn-dark" href="#plano" data-act="plano">Ver lotes disponibles' + arrow + '</a><a class="btn btn-line" href="#visita" data-act="visita">Agendar una visita</a>';
+      if (p.tour) f.actions.insertAdjacentHTML("beforeend", '<a class="btn btn-line" href="#recorrido" data-act="tour"><svg class="i" aria-hidden="true"><use href="#i-360"/></svg>Recorrido 360°</a>');
       $$("[data-act]", f.actions).forEach(function (a) {
         a.addEventListener("click", function () {
           var act = a.getAttribute("data-act");
           if (act === "plano") Plan.show(p.id);
+          if (act === "tour") Tour.open(p.id, true);
           if (act === "visita") Visit.prefill({ proyecto: p.nombre, mensaje: "" });
           if (act === "preventa") Visit.prefill({ proyecto: p.nombre, mensaje: "Quiero inscribirme en la preventa de " + p.nombre + "." });
           dlg.close();
@@ -1229,6 +1232,215 @@
     });
     $("[data-pd-close]", dlg).addEventListener("click", function () { dlg.close(); });
     dlg.addEventListener("click", function (e) { if (e.target === dlg) dlg.close(); });
+  }
+
+  /* =============================================================
+     Recorrido virtual 360°: se abre dentro de la página
+     El marco se crea solo cuando la persona entra (no carga nada antes)
+     ============================================================= */
+  function initTour() {
+    var root = $("[data-tour]");
+    if (!root) return;
+    var stage = $("[data-tour-stage]", root), poster = $("[data-tour-poster]", root), frame = $("[data-tour-frame]", root);
+    var lens = $("[data-tour-enter]", root), status = $("[data-tour-status]", root), fullBtn = $("[data-tour-full]", root);
+    var picks = $$("[data-tour-pick]", root);
+    var first = proyectos.filter(function (p) { return p.tour; })[0];
+    if (!stage || !first) return;
+    var cur = "", blocked = false, iframe = null, timer = 0, token = 0;
+
+    function T() { return proyecto(cur); }
+    function state(v) { if (v) stage.setAttribute("data-state", v); return stage.getAttribute("data-state"); }
+    function setText(sel, txt) { $$(sel, root).forEach(function (el) { el.textContent = txt; }); }
+    function art(id) { return $('.project[data-project="' + id + '"] .project-art svg'); }
+
+    // Miniaturas del selector, tomadas de la ilustración de cada proyecto
+    picks.forEach(function (a) {
+      var p = proyecto(a.getAttribute("data-tour-pick"));
+      if (!p || !p.tour) { a.hidden = true; return; }
+      a.href = p.tour;
+      var src = art(p.id), box = $(".tour-pick-art", a);
+      if (src && box) box.appendChild(src.cloneNode(true));
+      a.addEventListener("click", function (e) {
+        if (blocked) return; // sin marco: el enlace abre el recorrido en otra pestaña
+        e.preventDefault();
+        select(p.id, state() === "live" || state() === "loading");
+      });
+    });
+
+    function select(id, go) {
+      var p = proyecto(id);
+      if (!p || !p.tour) return;
+      var changed = id !== cur;
+      cur = id;
+      picks.forEach(function (a) { a.setAttribute("aria-current", a.getAttribute("data-tour-pick") === id ? "true" : "false"); });
+      if (changed) {
+        poster.innerHTML = "";
+        var src = art(id);
+        if (src) poster.appendChild(src.cloneNode(true));
+        setText("[data-tour-name], [data-tour-hud-name], [data-tour-dock-name]", p.nombre);
+        setText("[data-tour-region]", p.region + " · " + p.zona);
+        setText("[data-tour-label]", "al recorrido 360° de " + p.nombre);
+        lens.href = p.tour;
+        $$("[data-tour-newtab]", root).forEach(function (a) { a.href = p.tour; });
+        var share = $("[data-tour-share]", root);
+        if (share) share.href = "https://wa.me/?text=" + encodeURIComponent("Mira el recorrido 360° de " + p.nombre + " de Fundos Inmobiliaria: " + p.tour);
+      }
+      if (go) enter();
+      else if (changed) leave();
+    }
+
+    // Centro del portal: la lente
+    function center() {
+      var s = stage.getBoundingClientRect(), l = lens.getBoundingClientRect();
+      if (!l.width) return;
+      stage.style.setProperty("--cx", Math.round(l.left + l.width / 2 - s.left) + "px");
+      stage.style.setProperty("--cy", Math.round(l.top + l.height / 2 - s.top) + "px");
+    }
+    function drop(f, wait) {
+      window.setTimeout(function () { if (f && f.parentNode) f.parentNode.removeChild(f); }, wait);
+    }
+
+    function enter() {
+      if (blocked) return;
+      var p = T(), my = ++token;
+      window.clearTimeout(timer);
+      if (state() === "live") { state("loading"); drop(iframe, reduced ? 0 : 650); iframe = null; }
+      else { drop(iframe, 0); iframe = null; }
+      center();
+      state("loading");
+      setText("[data-tour-cta]", "Cargando");
+      status.textContent = "Cargando el recorrido de " + p.nombre + "…";
+      var f = document.createElement("iframe");
+      f.src = p.tour;
+      f.title = "Recorrido virtual 360° de " + p.nombre;
+      f.setAttribute("allow", "fullscreen; accelerometer; gyroscope; magnetometer; xr-spatial-tracking; autoplay");
+      f.setAttribute("allowfullscreen", "");
+      f.setAttribute("referrerpolicy", "strict-origin-when-cross-origin");
+      f.addEventListener("load", function () { window.setTimeout(function () { reveal(my); }, 180); });
+      // Se espera al cierre del portal anterior antes de montar el nuevo
+      window.setTimeout(function () { if (my === token && !blocked) { frame.appendChild(f); iframe = f; } }, frame.firstChild ? (reduced ? 0 : 650) : 0);
+      timer = window.setTimeout(function () { reveal(my); }, 12000);
+    }
+    function reveal(my) {
+      if (my !== token || blocked || state() !== "loading") return;
+      window.clearTimeout(timer);
+      state("live");
+      setText("[data-tour-cta]", "Entrar");
+      status.textContent = "Recorrido de " + T().nombre + " abierto. Arrastra para mirar alrededor.";
+    }
+    function leave() {
+      token++;
+      window.clearTimeout(timer);
+      if (blocked) return;
+      var was = state();
+      state("poster");
+      setText("[data-tour-cta]", "Entrar");
+      exitFull();
+      drop(iframe, was === "live" && !reduced ? 700 : 0); // el marco se retira al cerrarse el portal
+      iframe = null;
+      if (was === "live") status.textContent = "Saliste del recorrido.";
+    }
+
+    // Donde no se permite incrustar otros sitios (política de seguridad), se ofrece abrirlo aparte
+    document.addEventListener("securitypolicyviolation", function (e) {
+      var d = e.effectiveDirective || e.violatedDirective || "";
+      if (blocked || state() !== "loading" || !/^(frame|child|default)-src/.test(d)) return;
+      blocked = true;
+      token++;
+      window.clearTimeout(timer);
+      drop(iframe, 0); iframe = null;
+      state("blocked");
+      setText("[data-tour-cta]", "Abrir");
+      status.textContent = "El recorrido no se puede mostrar aquí. Puedes abrirlo en una pestaña nueva.";
+    });
+
+    lens.addEventListener("click", function (e) {
+      if (blocked) return;
+      e.preventDefault();
+      if (state() === "poster") enter();
+    });
+    $("[data-tour-close]", root).addEventListener("click", function () { leave(); lens.focus({ preventScroll: true }); });
+
+    // Pantalla completa: nativa si el navegador la permite; si no, a toda la ventana
+    function isFull() { return document.fullscreenElement === stage || stage.classList.contains("is-immersive"); }
+    function syncFull() {
+      var on = isFull();
+      fullBtn.setAttribute("aria-label", on ? "Salir de pantalla completa" : "Ver en pantalla completa");
+      fullBtn.title = on ? "Salir de pantalla completa" : "Pantalla completa";
+      $("use", fullBtn).setAttribute("href", on ? "#i-shrink" : "#i-expand");
+    }
+    function immersive() { stage.classList.add("is-immersive"); document.body.classList.add("tour-lock"); syncFull(); }
+    function exitFull() {
+      if (document.fullscreenElement === stage && document.exitFullscreen) {
+        var r = document.exitFullscreen();
+        if (r && r.catch) r.catch(function () {});
+      }
+      stage.classList.remove("is-immersive");
+      document.body.classList.remove("tour-lock");
+      syncFull();
+    }
+    fullBtn.addEventListener("click", function () {
+      if (isFull()) { exitFull(); return; }
+      if (stage.requestFullscreen && document.fullscreenEnabled) {
+        var r = stage.requestFullscreen();
+        if (r && r.then) r.then(syncFull, immersive);
+      } else immersive();
+    });
+    document.addEventListener("fullscreenchange", syncFull);
+    document.addEventListener("keydown", function (e) { if (e.key === "Escape" && stage.classList.contains("is-immersive")) exitFull(); });
+
+    // La ilustración responde al cursor mientras espera
+    if (fineHover && !reduced) {
+      stage.addEventListener("pointermove", function (e) {
+        if (state() === "live") return;
+        var r = stage.getBoundingClientRect();
+        stage.style.setProperty("--mx", (((e.clientX - r.left) / r.width - 0.5) * 2).toFixed(3));
+        stage.style.setProperty("--my", (((e.clientY - r.top) / r.height - 0.5) * 2).toFixed(3));
+      });
+    }
+
+    // Acciones de cierre
+    var plan = $("[data-tour-plan]", root), visit = $("[data-tour-visit]", root);
+    if (plan) plan.addEventListener("click", function () { Plan.show(cur); });
+    if (visit) visit.addEventListener("click", function () {
+      Visit.prefill({ proyecto: T().nombre, mensaje: "Vi el recorrido 360° de " + T().nombre + " y me gustaría visitarlo." });
+    });
+
+    // Conexión anticipada a los recorridos cuando la sección se acerca
+    if ("IntersectionObserver" in window) {
+      var io = new IntersectionObserver(function (en) {
+        if (!en[0].isIntersecting) return;
+        io.disconnect();
+        var seen = {};
+        proyectos.forEach(function (p) {
+          if (!p.tour) return;
+          var o = p.tour.split("/").slice(0, 3).join("/");
+          if (seen[o]) return;
+          seen[o] = 1;
+          var l = document.createElement("link");
+          l.rel = "preconnect"; l.href = o;
+          document.head.appendChild(l);
+        });
+      }, { rootMargin: "600px 0px" });
+      io.observe(root);
+    }
+
+    // Accesos desde otras partes de la página
+    Tour.open = function (id, go) { select(id, go); };
+    $$("[data-tour-open]").forEach(function (a) {
+      a.addEventListener("click", function () {
+        var id = a.getAttribute("data-tour-open");
+        if (id === "plan") {
+          var t = $('#plano [data-tab][aria-selected="true"]');
+          id = t ? t.getAttribute("data-tab") : cur;
+        }
+        select(id, true);
+      });
+    });
+
+    var m = /^#recorrido-([a-z0-9-]+)$/.exec(location.hash);
+    select(m && proyecto(m[1]) ? m[1] : first.id, false);
+    if (m) window.setTimeout(function () { scrollToEl($("#recorrido")); }, 80);
   }
 
   /* =============================================================
@@ -1271,6 +1483,7 @@
     safe(initVisit, "initVisit");
     safe(initSim, "initSim");
     safe(initPlan, "initPlan");
+    safe(initTour, "initTour");
     safe(initFinder, "initFinder");
     safe(initDialog, "initDialog");
     safe(initMobileBar, "initMobileBar");

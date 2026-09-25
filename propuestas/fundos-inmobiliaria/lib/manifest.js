@@ -52,6 +52,8 @@
         cercanias: [["Centro de ski Corralco", "13 km"], ["Curacautín", "28 km"], ["Temuco", "115 km"]],
         cercaniasNota: "Distancias aproximadas desde el pueblo de Malalcahuello.",
         mapa: "https://www.google.com/maps/search/?api=1&query=Malalcahuello%2C+Araucan%C3%ADa%2C+Chile",
+        // Recorrido virtual 360° (se incrusta en la sección #recorrido)
+        tour: "https://cmaulenb.github.io/fundoslonquimaynieve/",
         // Colores y precios del masterplan "Precios lista"
         leyenda: "Precios lista",
         categorias: {
@@ -89,6 +91,8 @@
         cercanias: [["Pichilemu", "43 km"], ["Santa Cruz", "49 km"], ["Santiago", "180 km"]],
         cercaniasNota: "Distancias aproximadas desde Marchigüe.",
         mapa: "https://www.google.com/maps/search/?api=1&query=Marchig%C3%BCe%2C+O%27Higgins%2C+Chile",
+        // Recorrido virtual 360° (se incrusta en la sección #recorrido)
+        tour: "https://marchigue.netlify.app/",
         sectores: ["Sector Norte", "Sector Sur"],
         // Plano ilustrativo: reemplazar por el masterplan real de Marchigüe
         leyenda: "Precios",
@@ -123,6 +127,8 @@
         cercanias: [["Puerto Montt", "20 km"], ["Aeropuerto El Tepual", "20 km"], ["Frutillar", "32 km"]],
         cercaniasNota: "Distancias aproximadas desde Puerto Varas.",
         mapa: "https://www.google.com/maps/search/?api=1&query=Puerto+Varas%2C+Los+Lagos%2C+Chile",
+        // Recorrido virtual 360° (se incrusta en la sección #recorrido)
+        tour: "https://6aab0a2a79cbb906fe66b800--tourspuertovaras.netlify.app/",
         sectores: [],
         leyenda: "Precios",
         categorias: {

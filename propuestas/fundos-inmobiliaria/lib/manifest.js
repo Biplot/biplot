@@ -107,26 +107,32 @@
         // Ej.: "https://youtu.be/XXXXXXXXXXX" · "https://vimeo.com/123456789" · "assets/video/malalcahuello.mp4"
         video: "",
         logo: "assets/img/logo-marchigue.webp",
-        sectores: ["Sector Norte", "Sector Sur"],
-        // Plano ilustrativo: reemplazar por el masterplan real de Marchigüe
-        leyenda: "Precios",
+        sectores: [],
+        // Colores y precios del masterplan "Precio oferta"
+        leyenda: "Precio oferta",
         categorias: {
-          a: { color: "#C9C43A", precio: 12990000 },
-          b: { color: "#2A97C4", precio: 13990000 },
-          c: { color: "#35A83A", precio: 14990000 }
+          lima:  { color: "#BACF16", lista: 15990000, precio: 10990000 },
+          verde: { color: "#7FBE62", lista: 13990000, precio: 8990000 },
+          azul:  { color: "#01A0CE", lista: 12990000, precio: 7990000 }
         },
-        vendidaColor: "#A8AAA5",
+        vendidaColor: "#A8A8A8",
+        vendidaMarca: "V",      // en el masterplan las vendidas llevan una "V"
+        fondoPredio: "#A2A3A1",  // base del predio bajo los lotes (como el masterplan)
         etiqueta: "circulo",
-        plano: {
-          tipo: "lomas",
-          camino: [[70, 412], [280, 360], [510, 350], [745, 290], [975, 250]],
-          filas: [{ lado: -1, desde: 18, hasta: 142, lotes: 10 }, { lado: 1, desde: 18, hasta: 142, lotes: 10 }]
-        },
         lotes: lotes([
-          [1, "b", D], [2, "a", D], [3, "a", V], [4, "a", D], [5, "b", R], [6, "b", D],
-          [7, "b", D], [8, "b", V], [9, "c", D], [10, "c", R],
-          [11, "c", D], [12, "b", D], [13, "b", R], [14, "c", D], [15, "c", V], [16, "c", D],
-          [17, "c", D], [18, "c", R], [19, "c", D], [20, "c", R]
+          [1, null, V], [2, null, V], [3, null, V], [4, null, V], [5, null, V], [6, null, V],
+          [7, null, V], [8, null, V], [9, null, V], [10, null, V], [11, null, V], [12, null, V],
+          [13, null, V], [14, null, V], [15, null, V], [16, null, V], [17, null, V], [18, null, V],
+          [19, null, V], [20, null, V], [21, null, V], [22, null, V], [23, null, V], [24, null, V],
+          [25, null, V], [26, null, V], [27, null, V], [28, null, V], [29, "lima", D], [30, null, V],
+          [31, "lima", D], [32, "lima", D], [33, null, V], [34, null, V], [35, null, V], [36, null, V],
+          [37, "verde", D], [38, null, V], [39, null, V], [40, "verde", D], [41, null, V], [42, "verde", D],
+          [43, null, V], [44, "lima", D], [45, "lima", D], [46, null, V], [47, "azul", D], [48, null, V],
+          [49, null, V], [50, null, V], [51, null, V], [52, null, V], [53, null, V], [54, null, V],
+          [55, null, V], [56, null, V], [57, null, V], [58, null, V], [59, "lima", D], [60, "lima", D],
+          [61, null, V], [62, null, V], [63, null, V], [64, null, V], [65, null, V], [66, null, V],
+          [67, "lima", D], [68, null, V], [69, null, V], [70, null, V], [71, null, V], [72, null, V],
+          [73, null, V], [74, null, V], [75, null, V], [76, null, V], [77, null, V]
         ])
       },
       {

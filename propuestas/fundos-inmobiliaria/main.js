@@ -513,7 +513,9 @@
       (contorno ? '<clipPath id="pl-predio"><path d="' + contorno + '"/></clipPath>' : "") + "</defs>");
     var full = 'x="' + vb[0] + '" y="' + vb[1] + '" width="' + vb[2] + '" height="' + vb[3] + '"';
     s.push('<rect ' + full + ' fill="#1A2317"/><rect ' + full + ' filter="url(#pl-terreno)" opacity=".9"/>');
-    s.push('<g' + (contorno ? ' clip-path="url(#pl-predio)"' : "") + '><rect ' + full + ' fill="#5E6B4C"/><rect ' + full + ' filter="url(#pl-terreno)"/><rect ' + full + ' filter="url(#pl-grano)" opacity=".35"/></g>');
+    s.push('<g' + (contorno ? ' clip-path="url(#pl-predio)"' : "") + '>' + (p.fondoPredio
+      ? '<rect ' + full + ' fill="' + p.fondoPredio + '"/>'
+      : '<rect ' + full + ' fill="#5E6B4C"/><rect ' + full + ' filter="url(#pl-terreno)"/>') + '<rect ' + full + ' filter="url(#pl-grano)" opacity=".35"/></g>');
     s.push('<g class="lots">');
     lots.forEach(function (o) {
       var l = o.l, c = cats[l.cat];
@@ -538,6 +540,13 @@
     s.push('<g class="pl-labels" aria-hidden="true">');
     lots.forEach(function (o) {
       var x = o.cx, y = o.cy, n = o.l.n;
+      if (p.vendidaMarca && o.l.estado === "vendida") {
+        // Vendida con la marca del masterplan: "V" en un círculo y el número debajo
+        s.push('<circle class="pl-badge pl-badge-v" data-n="' + n + '" cx="' + x + '" cy="' + y + '" r="' + (R - 2) + '"/>');
+        s.push('<text class="lot-num lot-v" data-n="' + n + '" x="' + x + '" y="' + (y + 0.5) + '" font-size="' + FS + '">' + esc(p.vendidaMarca) + "</text>");
+        s.push('<text class="lot-sub" data-n="' + n + '" x="' + x + '" y="' + (y + R + 5) + '">' + n + "</text>");
+        return;
+      }
       s.push(hex ? '<polygon class="pl-badge" data-n="' + n + '" points="' + hexPts(x, y, R) + '"/>' : '<circle class="pl-badge" data-n="' + n + '" cx="' + x + '" cy="' + y + '" r="' + R + '"/>');
       s.push('<text class="lot-num" data-n="' + n + '" x="' + x + '" y="' + (y + 0.5) + '" font-size="' + FS + '">' + n + "</text>");
       s.push('<circle class="lot-fav" data-n="' + n + '" cx="' + (x + R * 0.8).toFixed(1) + '" cy="' + (y - R * 0.8).toFixed(1) + '" r="' + (hex ? 4.5 : 5.5) + '"/>');
@@ -556,7 +565,9 @@
     if ((P.calles || []).some(function (k) { return k.tipo === "servidumbre"; })) h.push('<li><i class="sw sw-servidumbre"></i>Servidumbre de tránsito</li>');
     if (P.caminoPrincipal) h.push('<li><i class="sw sw-principal"></i>Camino principal</li>');
     if (p.lotes.some(function (l) { return l.estado === "reservada"; })) h.push('<li><i class="sw sw-reservada"></i>Reservadas</li>');
-    h.push('<li><i class="sw' + hex + '" style="--c:' + (p.vendidaColor || "#A8AAA5") + '"></i>Vendidas</li>');
+    h.push(p.vendidaMarca
+      ? '<li><i class="sw sw-v" style="--c:' + (p.vendidaColor || "#A8AAA5") + '">' + esc(p.vendidaMarca) + '</i>Vendidas</li>'
+      : '<li><i class="sw' + hex + '" style="--c:' + (p.vendidaColor || "#A8AAA5") + '"></i>Vendidas</li>');
     h.push('<li><i class="sw sw-fav"></i>Tu favorito</li></ul>');
     return h.join("");
   }
@@ -612,6 +623,7 @@
       shapes = {};
       $$(".lot", svg).forEach(function (el) { shapes[el.getAttribute("data-n")] = { path: el }; });
       $$(".lot-num", svg).forEach(function (el) { var s = shapes[el.getAttribute("data-n")]; if (s) s.num = el; });
+      $$(".lot-sub", svg).forEach(function (el) { var s = shapes[el.getAttribute("data-n")]; if (s) s.sub = el; });
       $$(".lot-fav", svg).forEach(function (el) { var s = shapes[el.getAttribute("data-n")]; if (s) s.dot = el; });
       ring = $(".lot-ring", svg);
       scaleLabels();
@@ -660,6 +672,7 @@
         sh.path.classList.toggle("is-dim", !ok);
         sh.path.setAttribute("tabindex", ok ? "0" : "-1");
         if (sh.num) sh.num.classList.toggle("is-dim", !ok);
+        if (sh.sub) sh.sub.classList.toggle("is-dim", !ok);
       });
       if (S.view === "lista") renderList();
       updateSummary();

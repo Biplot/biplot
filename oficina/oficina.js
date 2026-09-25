@@ -1,20 +1,23 @@
 /*
  * Oficina BiPlot · interfaz
- * Cámara (arrastrar, rueda, pellizco, teclado), menú "Recorre la oficina", recorrido guiado y paneles.
- * Todo lo que se puede hacer con el mouse en la escena también se puede hacer desde el menú con teclado.
+ * Cámara (arrastrar, rueda, pellizco, teclado), pisos, menú "Recorre la oficina", recorrido guiado, paneles y el chat de
+ * Plotty. Todo lo que se puede hacer con el mouse en la escena también se puede hacer desde el menú con teclado.
  */
 (function () {
   'use strict';
 
   var D = window.OFICINA_DATOS, E = window.Elenco;
   var $ = function (s, r) { return (r || document).querySelector(s); };
-  var PERSONAL = {}; D.personal.forEach(function (p) { PERSONAL[p.id] = p; });
+  var PERSONAL = {}; D.personal.concat(D.mascotas).forEach(function (p) { PERSONAL[p.id] = p; });
   var PROYECTOS = {}; D.proyectos.forEach(function (p) { PROYECTOS[p.id] = p; });
+  var CASOS = {}; D.casos.forEach(function (c) { CASOS[c.id] = c; });
+  var SALAS = D.salas;
   var reducido = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   function esc(t) { return String(t).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
   function guardar(k, v) { try { localStorage.setItem('oficina-' + k, v); } catch (e) { /* sin almacenamiento */ } }
   function leer(k) { try { return localStorage.getItem('oficina-' + k); } catch (e) { return null; } }
+  function quieta() { return document.documentElement.classList.contains('oficina-quieta'); }
 
   /* ── Escena ── */
   var escenaEl = $('#escena'), svg = $('#svg-escena');
@@ -27,15 +30,19 @@
     raiz.appendChild(n);
   });
   svg.appendChild(raiz);
-  var L = esc3.limites, P = esc3.P;
+  var L = esc3.limites, P = esc3.P, pisoActual = 0;
   var capaResalte = svg.querySelector('.capa-resalte');
 
-  /* ── Sprites de avatares (quietos) ── */
+  /* ── Sprites de avatares (quietos): la cabeza y el torso de cada uno; las mascotas, enteras ── */
   var sprite = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
   sprite.setAttribute('class', 'sprite-quieto'); sprite.setAttribute('aria-hidden', 'true');
-  sprite.innerHTML = E.ids.map(function (id) { return '<symbol id="av-' + id + '" viewBox="-135 -270 270 285">' + E.svg(id) + '</symbol>'; }).join('');
+  sprite.innerHTML = E.defs() + E.ids.concat(E.mascotas).map(function (id) {
+    var a = E.alto[id], w = E.ancho[id], masc = E.mascotas.indexOf(id) > -1;
+    var vb = masc ? [-w / 2 - 8, -a - 8 - (w - a) / 2 * (w > a ? 1 : 0), w + 16, Math.max(w, a) + 16] : [-66, -a - 4, 132, 132];
+    return '<symbol id="av-' + id + '" viewBox="' + vb.map(Math.round).join(' ') + '">' + E.svg(id).replace('class="pj ', 'class="pj pj-retrato ') + '</symbol>';
+  }).join('');
   document.body.appendChild(sprite);
-  function avatar(id, clase) { return '<svg class="avatar ' + (clase || '') + '" viewBox="0 0 270 285" aria-hidden="true" focusable="false"><use href="#av-' + id + '" width="270" height="285"/></svg>'; }
+  function avatar(id, clase) { return '<svg class="avatar ' + (clase || '') + '" viewBox="0 0 100 100" aria-hidden="true" focusable="false"><use href="#av-' + id + '" width="100" height="100"/></svg>'; }
 
   /* ── Cámara ── */
   var cam = { x: (L.x0 + L.x1) / 2, y: (L.y0 + L.y1) / 2, z: 1 }, vuelo = null;
@@ -51,6 +58,7 @@
     }
     var guia = $('#guia'); if (guia && !guia.hidden && !m.aba) m.aba = r.bottom - guia.getBoundingClientRect().top + 8;
     var intro = $('#intro'); if (intro && !intro.hidden && !m.aba && window.innerWidth < 900) m.aba = r.bottom - intro.getBoundingClientRect().top + 8;
+    var pisos = $('#pisos'); if (pisos) m.arr = Math.max(0, pisos.getBoundingClientRect().bottom - r.top);
     return m;
   }
   function zAjuste() {
@@ -94,29 +102,61 @@
     return Math.max(lz[0], Math.min(lz[1], Math.min(w / ventana, h / (ventana * .62))));
   }
   function zonaPorId(id) { return esc3.zonas.filter(function (z) { return z.id === id; })[0]; }
+  function pisoDe(obj) { if (obj.tipo === 'zona') { var z = zonaPorId(obj.id); return z ? z.piso : pisoActual; } return obj.tipo === 'actor' ? 0 : pisoActual; }
+  function altoActor(a) { return a.z + E.alto[a.id] * window.Escena.ESCALA_ACTOR / 39; }
   function irA(obj, dur) {
     if (obj.tipo === 'actor') {
-      var a = esc3.actores[obj.id], p = P(a.x, a.y, 0.9);
+      var a = esc3.actores[obj.id], p = P(a.x, a.y, a.z + 0.9);
       volar(p[0], p[1], Math.min(zPara(window.innerWidth < 700 ? 330 : 360), 2.3), dur);
-    } else {
+    } else if (obj.tipo === 'zona') {
       var zn = zonaPorId(obj.id); if (!zn) return;
       var q = P(zn.foco[0], zn.foco[1], zn.foco[2]);
-      volar(q[0], q[1], zPara(zn.id === 'muro' || zn.id === 'recepcion' ? 560 : 520), dur);
+      var ventana = zn.id === 'muro' || zn.id === 'recepcion' || zn.id === 'planos' ? 580 : zn.piso === 1 ? 470 : 520;
+      volar(q[0], q[1], zPara(ventana), dur);
     }
   }
+
+  /* ── Pisos ── */
+  var pisosEl = $('#pisos');
+  function marcarPisos() {
+    pisosEl.querySelectorAll('button').forEach(function (b) { b.setAttribute('aria-pressed', +b.getAttribute('data-piso') === pisoActual ? 'true' : 'false'); });
+    escenaEl.setAttribute('aria-label', (pisoActual === 1 ? 'Piso 1, las salas de proyecto' : 'Planta baja de la oficina') + '. Usa las flechas para moverte, + y − para acercarte y 0 para ver todo.');
+  }
+  // Cambia de piso; con `encuadrar`, muestra el piso completo. Devuelve true si cambió.
+  function irAlPiso(n, encuadrar) {
+    if (n === pisoActual) return false;
+    pisoActual = n; L = esc3.piso(n);
+    resaltar(null); marcarPisos();
+    if (n === 1) esc3.detener(); else if (!quieta()) esc3.iniciar();
+    if (!reducido) { svg.classList.remove('cambia-piso'); void svg.getBoundingClientRect(); svg.classList.add('cambia-piso'); }
+    if (encuadrar) encuadrePiso(0);
+    return true;
+  }
+  // En celular el piso 1 completo queda muy chico: se muestra más de cerca, centrado en el pasillo.
+  function encuadrePiso(dur) {
+    if (window.innerWidth < 700 && pisoActual === 1) { var p = P(7, 5, 0.4); volar(p[0], p[1], zPara(560), dur); }
+    else verTodo(dur);
+  }
+  pisosEl.addEventListener('click', function (e) {
+    var b = e.target.closest('button[data-piso]'); if (!b) return;
+    var n = +b.getAttribute('data-piso');
+    if (!panel.hidden && abierto && abierto.tipo !== 'chat' && pisoDe(abierto) !== n) cerrarPanel();
+    if (irAlPiso(n, true)) escenaEl.focus({ preventScroll: true });
+  });
 
   /* ── Resalte y rótulo ── */
   var resaltado = null;
   function resaltar(obj) {
     resaltado = obj; capaResalte.innerHTML = '';
-    if (!obj) { ocultarRotulo(); return; }
+    if (!obj || obj.tipo === 'chat') { ocultarRotulo(); return; }
     var ns = 'http://www.w3.org/2000/svg';
     if (obj.tipo === 'zona') {
-      var zn = zonaPorId(obj.id);
+      var zn = zonaPorId(obj.id); if (!zn || zn.piso !== pisoActual) { ocultarRotulo(); return; }
       var pg = document.createElementNS(ns, 'polygon'); pg.setAttribute('points', zn.silueta); pg.setAttribute('class', 'resalte');
       var pb = document.createElementNS(ns, 'polygon'); pb.setAttribute('points', zn.suelo); pb.setAttribute('class', 'resalte-suelo');
       capaResalte.appendChild(pb); capaResalte.appendChild(pg);
     } else {
+      if (pisoActual !== 0) { ocultarRotulo(); return; }
       var el = document.createElementNS(ns, 'ellipse'); el.setAttribute('class', 'resalte-actor'); el.setAttribute('rx', 30); el.setAttribute('ry', 13);
       capaResalte.appendChild(el);
     }
@@ -125,13 +165,18 @@
   var rotulo = $('#rotulo');
   function textoRotulo(obj) {
     if (obj.tipo === 'actor') { var p = PERSONAL[obj.id]; return '<b>' + esc(p.nombre) + '</b><span>' + esc(p.rol) + ' · ' + p.placa + '</span>'; }
-    var zn = zonaPorId(obj.id); return '<b>' + esc(zn.nombre) + '</b><span>' + (PROYECTOS[obj.id] ? 'Entrar a la sala' : 'Ver más') + '</span>';
+    var zn = zonaPorId(obj.id), accion = 'Ver más';
+    if (obj.id === 'libre') accion = 'Conversar con Plotty';
+    else if (PROYECTOS[obj.id]) accion = 'Entrar a la sala';
+    else if (obj.id === 'ascensor') accion = 'Subir al piso 1';
+    else if (obj.id === 'puerta-404') accion = 'No se abre';
+    return '<b>' + esc(zn.nombre) + '</b><span>' + accion + '</span>';
   }
   function moverRotulo() {
-    if (!resaltado) return;
+    if (!resaltado || resaltado.tipo === 'chat') return;
     var r = rect(), vb = svg.viewBox.baseVal, sx, sy;
     if (resaltado.tipo === 'actor') {
-      var a = esc3.actores[resaltado.id], p0 = P(a.x, a.y, 0), p1 = P(a.x, a.y, 2.0);
+      var a = esc3.actores[resaltado.id], p0 = P(a.x, a.y, 0), p1 = P(a.x, a.y, altoActor(a) + 0.1);
       var el = capaResalte.querySelector('.resalte-actor'); if (el) { el.setAttribute('cx', p0[0]); el.setAttribute('cy', p0[1]); }
       sx = p1[0]; sy = p1[1];
     } else {
@@ -155,7 +200,7 @@
     var r = rect(), vb = svg.viewBox.baseVal;
     var sx = vb.x + (clx - r.left) * vb.width / r.width, sy = vb.y + (cly - r.top) * vb.height / r.height;
     var x = (sx / 32 + sy / 16) / 2, y = (sy / 16 - sx / 32) / 2;
-    var z = esc3.zonas.filter(function (zn) { var b = zn.caja; return x >= b[0] && x <= b[2] && y >= b[1] && y <= b[3]; })[0];
+    var z = esc3.zonas.filter(function (zn) { var b = zn.caja; return zn.piso === pisoActual && x >= b[0] && x <= b[2] && y >= b[1] && y <= b[3]; })[0];
     return z ? { tipo: 'zona', id: z.id } : null;
   }
   function objetoEn(el, clx, cly) {
@@ -241,31 +286,28 @@
     b.querySelector('.txt').textContent = si ? 'Seguir' : 'Pausar';
     b.setAttribute('aria-label', si ? 'Reanudar la animación' : 'Pausar la animación');
     document.documentElement.classList.toggle('oficina-quieta', si);
-    if (si) esc3.detener(); else esc3.iniciar();
+    if (si || pisoActual === 1) esc3.detener(); else esc3.iniciar();
     guardar('pausa', si ? '1' : '0');
   }
 
   /* ── Menú: recorre la oficina ── */
-  var SALAS_MENU = [
-    ['recepcion', 'Recepción', 'Donde todo parte'], ['sala-e1', 'Sala de diagnóstico', 'Cómo trabajamos (E1)'],
-    ['estanteria', 'Estantería del núcleo', 'Casos de referencia'], ['muro', 'Muro del personal', 'Los siete'],
-    ['socios', 'Oficina de los socios', 'Quién te atiende']
-  ];
-  var PROY_MENU = [['nuhome', 'Nu Home 360'], ['fundos', 'Fundos 360'], ['haru', 'Haru 360'], ['eleven', 'Eleven 360'], ['rumbo', 'Rumbo']];
+  var ZONAS_PB = ['recepcion', 'vitrina', 'diagnostico', 'planos', 'set', 'laboratorio', 'estanteria', 'muro', 'ascensor', 'puerta-404'];
+  function subZona(id) { return id === 'vitrina' ? 'Casos para tu rubro' : SALAS[id].sub; }
+  function nombreZona(id) { return id === 'vitrina' ? 'La vitrina' : SALAS[id].nombre; }
   function construirMenu() {
     var h = '<h2 class="menu-t" id="recorrer-t">Recorre la oficina</h2>' +
       '<button type="button" class="menu-guia" data-guia="1"><span class="ico" aria-hidden="true">' + icono('ruta') + '</span>Hacer el recorrido guiado</button>' +
-      '<h3 class="menu-sub">El personal</h3><ul class="menu-lista menu-personal">';
-    E.ids.forEach(function (id) {
+      '<button type="button" class="menu-guia menu-chat" data-chat="1">' + avatar('plotty', 'mini') + 'Conversar con Plotty</button>' +
+      '<h3 class="menu-sub">El equipo</h3><ul class="menu-lista menu-personal">';
+    E.ids.concat(E.mascotas).forEach(function (id) {
       var p = PERSONAL[id];
       h += '<li><button type="button" data-tipo="actor" data-id="' + id + '">' + avatar(id) + '<span class="mt"><b>' + esc(p.nombre) + '</b><span>' + esc(p.rol) + '</span></span><span class="placa-mini">' + p.placa + '</span></button></li>';
     });
-    h += '</ul><h3 class="menu-sub">Las salas</h3><ul class="menu-lista">';
-    SALAS_MENU.forEach(function (s) { h += '<li><button type="button" data-tipo="zona" data-id="' + s[0] + '"><span class="mt"><b>' + s[1] + '</b><span>' + s[2] + '</span></span></button></li>'; });
-    h += '</ul><h3 class="menu-sub">Salas de proyecto</h3><ul class="menu-lista">';
-    PROY_MENU.forEach(function (s) {
-      var pr = PROYECTOS[s[0]];
-      h += '<li><button type="button" data-tipo="zona" data-id="' + s[0] + '"><span class="punto" style="background:' + pr.acento + '" aria-hidden="true"></span><span class="mt"><b>' + s[1] + '</b><span>' + esc(pr.rubro) + '</span></span></button></li>';
+    h += '</ul><h3 class="menu-sub">Planta baja</h3><ul class="menu-lista">';
+    ZONAS_PB.forEach(function (id) { h += '<li><button type="button" data-tipo="zona" data-id="' + id + '"><span class="mt"><b>' + esc(nombreZona(id)) + '</b><span>' + esc(subZona(id)) + '</span></span></button></li>'; });
+    h += '</ul><h3 class="menu-sub">Piso 1 · Proyectos</h3><ul class="menu-lista">';
+    D.proyectos.forEach(function (pr) {
+      h += '<li><button type="button" data-tipo="zona" data-id="' + pr.id + '"><span class="punto' + (pr.libre ? ' libre' : '') + '" style="background:' + pr.acento + '" aria-hidden="true"></span><span class="mt"><b>' + esc(pr.nombre) + '</b><span>' + esc(pr.rubro) + '</span></span></button></li>';
     });
     h += '</ul>';
     $('#recorrer-cuerpo').innerHTML = h;
@@ -275,15 +317,16 @@
   menu.addEventListener('click', function (e) {
     var b = e.target.closest('button'); if (!b) return;
     if (b.id === 'recorrer-toggle') { alternarMenu(); return; }
-    if (b.hasAttribute('data-guia')) { if (window.innerWidth < 900) alternarMenu(false); iniciarGuia(0); return; }
-    var obj = { tipo: b.getAttribute('data-tipo'), id: b.getAttribute('data-id') };
     if (window.innerWidth < 900) alternarMenu(false);
-    abrir(obj, false, b);
+    if (b.hasAttribute('data-guia')) { iniciarGuia(0); return; }
+    if (b.hasAttribute('data-chat')) { abrir({ tipo: 'chat', id: 'plotty' }, false, b); return; }
+    abrir({ tipo: b.getAttribute('data-tipo'), id: b.getAttribute('data-id') }, false, b);
   });
   // Al recorrer el menú con teclado, la cámara muestra dónde está cada cosa.
   menu.addEventListener('focusin', function (e) {
     var b = e.target.closest('button[data-id]'); if (!b || !b.matches(':focus-visible')) return;
     var obj = { tipo: b.getAttribute('data-tipo'), id: b.getAttribute('data-id') };
+    if (pisoDe(obj) !== pisoActual) return;
     resaltar(obj); irA(obj);
   });
   function alternarMenu(abrirlo) {
@@ -299,18 +342,29 @@
 
   /* ── Panel ── */
   var panel = $('#panel'), panelCuerpo = $('#panel-cuerpo'), invocador = null, abierto = null;
+  function tituloPanel(obj) {
+    if (obj.tipo === 'actor') return PERSONAL[obj.id].rol + ' · ' + PERSONAL[obj.id].placa;
+    if (obj.tipo === 'chat') return 'Recepción · E0';
+    if (PROYECTOS[obj.id]) return 'Piso 1 · ' + (PROYECTOS[obj.id].libre ? 'Sala disponible' : 'Sala de proyecto');
+    return obj.id === 'vitrina' ? 'Recepción · La vitrina' : SALAS[obj.id].etiqueta;
+  }
   function abrir(obj, desdeEscena, boton) {
+    if (obj.tipo === 'zona' && !zonaPorId(obj.id)) return;
     detenerMedios();
     invocador = boton || document.activeElement;
     abierto = obj;
-    panelCuerpo.innerHTML = obj.tipo === 'actor' ? htmlPersonaje(obj.id) : htmlZona(obj.id);
+    var destino = pisoDe(obj);
+    if (obj.tipo !== 'chat' && destino !== pisoActual) irAlPiso(destino, false);
+    panelCuerpo.innerHTML = obj.tipo === 'actor' ? htmlPersonaje(obj.id) : obj.tipo === 'chat' ? htmlChatPanel() : htmlZona(obj.id);
     panel.hidden = false; document.body.classList.add('panel-abierto');
-    $('#panel-nombre').textContent = obj.tipo === 'actor' ? PERSONAL[obj.id].rol + ' · ' + PERSONAL[obj.id].placa : zonaPorId(obj.id).nombre;
-    panel.setAttribute('aria-label', obj.tipo === 'actor' ? PERSONAL[obj.id].nombre : zonaPorId(obj.id).nombre);
+    $('#panel-nombre').textContent = tituloPanel(obj);
+    panel.setAttribute('aria-label', obj.tipo === 'actor' ? PERSONAL[obj.id].nombre : obj.tipo === 'chat' ? 'Conversación con Plotty' : zonaPorId(obj.id).nombre);
     panel.scrollTop = 0; panelCuerpo.scrollTop = 0;
     activarMedios();
-    resaltar(obj);
-    requestAnimationFrame(function () { irA(obj); });
+    if (panelCuerpo.querySelector('.chat')) iniciarChat(panelCuerpo.querySelector('.chat'));
+    if (obj.tipo === 'actor') conIlustraciones(function () { pintarIlustracion(obj.id); });
+    if (obj.tipo === 'chat') resaltar({ tipo: 'actor', id: 'plotty' }); else resaltar(obj);
+    requestAnimationFrame(function () { irA(obj.tipo === 'chat' ? (pisoActual === 0 ? { tipo: 'actor', id: 'plotty' } : { tipo: 'zona', id: 'libre' }) : obj); });
     var t = $('#panel-titulo'); if (t) t.focus({ preventScroll: true });
     cerrarIntro();
   }
@@ -332,14 +386,21 @@
     var b = e.target.closest('[data-abrir]');
     if (b) { e.preventDefault(); var v = b.getAttribute('data-abrir').split(':'); abrir({ tipo: v[0], id: v[1] }, false, invocador); return; }
     var g = e.target.closest('[data-grande]');
-    if (g) { e.preventDefault(); abrirLightbox(g.getAttribute('data-grande'), g.getAttribute('data-grande-v')); }
+    if (g) { e.preventDefault(); abrirLightbox(g.getAttribute('data-grande'), g.getAttribute('data-grande-v')); return; }
+    var pi = e.target.closest('[data-piso]');
+    if (pi) { e.preventDefault(); cerrarPanel(); irAlPiso(+pi.getAttribute('data-piso'), true); return; }
+    var go = e.target.closest('[data-golpe]');
+    if (go) { var gs = SALAS['puerta-404'].golpes, out = panelCuerpo.querySelector('.golpe'); out.textContent = gs[golpes++ % gs.length]; }
   });
+  var golpes = 0;
 
   function icono(n) {
     var I = {
       ruta: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="18" r="2.5"/><circle cx="18" cy="6" r="2.5"/><path d="M8.5 18H15a3 3 0 0 0 0-6H9a3 3 0 0 1 0-6h6.5"/></svg>',
       afuera: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg>',
-      play: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>'
+      play: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>',
+      sube: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M6 11l6-6 6 6"/></svg>',
+      baja: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M6 13l6 6 6-6"/></svg>'
     };
     return I[n] || '';
   }
@@ -353,81 +414,132 @@
       return '<li><a href="#" data-abrir="actor:' + id + '">' + avatar(id) + '<span><b>' + esc(p.nombre) + '</b>' + esc(p.rol) + '</span></a></li>';
     }).join('') + '</ul>';
   }
+  function botonChat(texto) { return '<button type="button" class="bp-btn primario" data-abrir="chat:plotty">' + avatar('plotty', 'mini') + esc(texto || 'Conversar con Plotty') + '</button>'; }
   function vistaSala(id) {
     var zn = zonaPorId(id), b = zn.caja;
     var pts = [P(b[0], b[1], b[4] + .6), P(b[2], b[1], b[4] + .6), P(b[2], b[3], 0), P(b[0], b[3], 0), P(b[2], b[1], 0), P(b[0], b[1], 0)];
     var x0 = Math.min.apply(null, pts.map(function (p) { return p[0]; })) - 30, x1 = Math.max.apply(null, pts.map(function (p) { return p[0]; })) + 30;
     var y0 = Math.min.apply(null, pts.map(function (p) { return p[1]; })) - 20, y1 = Math.max.apply(null, pts.map(function (p) { return p[1]; })) + 20;
     var w = x1 - x0, h = w * 9 / 16, cy = (y0 + y1) / 2;
-    return '<div class="media media-sala"><svg viewBox="' + [x0, cy - h / 2, w, h].map(Math.round).join(' ') + '" role="img" aria-label="Vista de la sala ' + esc(zn.nombre) + '"><use href="#escena-raiz"/></svg></div>';
+    return '<div class="media media-sala"><svg viewBox="' + [x0, cy - h / 2, w, h].map(Math.round).join(' ') + '" role="img" aria-label="Vista de ' + esc(zn.nombre) + '"><use href="#escena-raiz"/></svg></div>';
+  }
+  // Las salas del piso 1 se muestran con su primer plano dibujado
+  function salaP1(id) {
+    var s = window.Piso1 && window.Piso1.salas[id]; if (!s) return '';
+    return '<div class="media media-sala sala-p1' + (reducido ? ' quieto' : '') + '"><svg viewBox="' + s.vb + '" role="img" aria-label="La sala ' + esc(PROYECTOS[id].nombre) + ': ' + esc(PROYECTOS[id].esencia) + '">' + s.svg + '</svg></div>';
   }
   function htmlMedia(pr) {
-    if (!pr.media) return vistaSala(pr.id);
+    if (!pr.media) return salaP1(pr.id);
     return '<div class="media"><video class="panel-video" muted loop playsinline preload="none" poster="' + esc(pr.media.poster) + '" data-src="' + esc(pr.media.h) + '" aria-label="Video de ' + esc(pr.nombre) + '"></video>' +
       '<button type="button" class="media-grande" data-grande="' + esc(pr.media.h) + '" data-grande-v="' + esc(pr.media.v || '') + '">' + icono('play') + 'Ver con sonido</button></div>';
   }
 
+  /* ── Fichas: la ilustración se carga recién con la primera ficha ── */
+  var ilusCargando = false, ilusEspera = [];
+  function conIlustraciones(fn) {
+    if (window.Ilustraciones) { fn(); return; }
+    ilusEspera.push(fn); if (ilusCargando) return; ilusCargando = true;
+    var s = document.createElement('script'); s.src = 'ilustraciones.js';
+    s.onload = function () { ilusEspera.splice(0).forEach(function (f) { f(); }); };
+    s.onerror = function () { ilusEspera = []; ilusCargando = false; };
+    document.head.appendChild(s);
+  }
+  function pintarIlustracion(id) {
+    var I = window.Ilustraciones && window.Ilustraciones[id], hueco = panelCuerpo.querySelector('.ficha-pj[data-id="' + id + '"]');
+    if (!I || !hueco) return;
+    var p = PERSONAL[id], nuevo = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    nuevo.setAttribute('class', 'ficha-pj ficha-ilus' + (E.mascotas.indexOf(id) > -1 ? ' mascota' : ''));
+    nuevo.setAttribute('viewBox', I.vb); nuevo.setAttribute('role', 'img'); nuevo.setAttribute('aria-label', p.nombre + ': ' + p.look);
+    nuevo.innerHTML = I.svg;
+    hueco.parentNode.replaceChild(nuevo, hueco);
+  }
   function htmlPersonaje(id) {
-    var p = PERSONAL[id], proys = D.proyectos.filter(function (pr) { return pr.equipo.indexOf(id) > -1; });
+    var p = PERSONAL[id], masc = E.mascotas.indexOf(id) > -1;
+    var proys = D.proyectos.filter(function (pr) { return pr.equipo.indexOf(id) > -1; });
     var fases = D.fases.filter(function (f) { return f.quien.indexOf(id) > -1; });
     var ahora = p.ahora[Math.floor(Math.random() * p.ahora.length)];
-    return '<div class="ficha-hero"><svg class="ficha-pj" viewBox="-140 -275 280 290" role="img" aria-label="' + esc(p.nombre + ': ' + p.look) + '">' + E.svg(id) + '</svg>' +
-      '<svg class="ficha-placa" viewBox="0 0 300 190" aria-hidden="true">' + E.placaTarjeta(p, true, { isoSimple: true }).replace('class="pj pj-', 'class="pj pj-retrato pj-') + '</svg></div>' +
-      '<p class="bp-etiqueta">' + esc(p.rol) + ' · ' + p.fases.join(' · ') + '</p>' +
+    var a = E.alto[id], w = E.ancho[id];
+    var vb = masc ? [-w / 2 - 20, -a - 60, w + 40, a + 80] : [-140, -a - 16, 280, a + 30];
+    var vive = p.vive && (zonaPorId(p.vive) || p.vive === 'estaciones') ? p.vive : null;
+    return '<div class="ficha-hero"><svg class="ficha-pj" data-id="' + id + '" viewBox="' + vb.map(Math.round).join(' ') + '" role="img" aria-label="' + esc(p.nombre + ': ' + p.look) + '">' + E.svg(id) + '</svg>' +
+      '<svg class="ficha-placa" viewBox="0 0 300 190" aria-hidden="true">' + E.placaTarjeta(p, true, { isoSimple: true }).replace(/class="pj pj-/g, 'class="pj pj-retrato pj-') + '</svg></div>' +
+      '<p class="bp-etiqueta">' + esc(p.rol) + (p.fases.length ? ' · ' + p.fases.join(' · ') : ' · ' + esc(p.placa)) + '</p>' +
       '<h2 id="panel-titulo" tabindex="-1">' + esc(p.nombre) + '</h2>' +
+      (p.completo ? '<p class="completo">' + esc(p.completo) + (p.alias ? ' · le dicen ' + esc(p.alias) : '') + '</p>' : '') +
       '<p class="lema">' + esc(p.lema) + '</p>' +
       '<p class="ahora"><span class="pulso" aria-hidden="true"></span>Ahora: ' + esc(ahora) + '</p>' +
+      (id === 'plotty' ? '<div class="acciones">' + botonChat('Responder las tres preguntas') + '</div>' : '') +
       '<h3>Qué hace</h3><p>' + esc(p.resumen) + '</p>' +
-      '<h3>Cómo es</h3><ul class="rasgos">' + p.rasgos.map(function (r) { return '<li>' + esc(r) + '</li>'; }).join('') + '</ul>' +
+      '<h3>' + (masc ? 'Sus tareas' : 'Cómo es') + '</h3><ul class="rasgos">' + p.rasgos.map(function (r) { return '<li>' + esc(r) + '</li>'; }).join('') + '</ul>' +
       '<blockquote class="frase">«' + esc(p.frase) + '»</blockquote>' +
-      '<h3>En el motor</h3><ul class="fases-mini">' + fases.map(function (f) { return '<li><span class="cod">' + f.id + '</span>' + esc(f.nombre) + '</li>'; }).join('') + '</ul>' +
+      (fases.length ? '<h3>En el motor</h3><ul class="fases-mini">' + fases.map(function (f) { return '<li><span class="cod">' + f.id + '</span>' + esc(f.nombre) + '</li>'; }).join('') + '</ul>' : '') +
       (proys.length ? '<h3>Trabajó en</h3><ul class="chips">' + proys.map(function (pr) { return '<li><a href="#" data-abrir="zona:' + pr.id + '">' + esc(pr.nombre) + '</a></li>'; }).join('') + '</ul>' : '') +
+      (p.de ? '<h3>Es la mascota de</h3>' + chipsEquipo([p.de]) : '') +
+      (vive && vive !== 'estaciones' ? '<h3>Dónde está</h3><ul class="chips"><li><a href="#" data-abrir="zona:' + vive + '">' + esc(nombreZona(vive)) + '</a></li></ul>' : '') +
       '<p class="look"><b>Cómo ' + (p.genero === 'f' ? 'reconocerla' : 'reconocerlo') + ':</b> ' + esc(p.look) + '</p>';
+  }
+
+  function listaVitrina() {
+    return '<ul class="vitrina">' + vitrinaIds.map(function (id) {
+      var pr = PROYECTOS[id], c = CASOS[id];
+      if (pr) return '<li><span class="punto" style="background:' + pr.acento + '" aria-hidden="true"></span><div><b>' + esc(pr.nombre) + '</b><span>' + esc(pr.rubro) + '</span><a href="#" data-abrir="zona:' + id + '">Ver la sala</a></div></li>';
+      if (c) return '<li><span class="num">' + c.num + '</span><div><b>' + esc(c.nombre) + '</b><span>' + esc(c.rubro) + ' · caso de referencia</span><a href="' + esc(c.demo) + '">Ver la demo</a> · <a href="' + esc(c.caso) + '">Leer el caso</a></div></li>';
+      return '';
+    }).join('') + '</ul>';
   }
 
   function htmlZona(id) {
     if (PROYECTOS[id]) {
       var pr = PROYECTOS[id];
+      if (pr.libre) {
+        return salaP1(id) + '<p class="bp-etiqueta">' + esc(pr.rubro) + '</p>' +
+          '<h2 id="panel-titulo" tabindex="-1">' + esc(pr.nombre) + '</h2>' +
+          '<p class="lema">' + esc(pr.esencia) + '</p><p>' + esc(pr.resumen) + '</p>' + htmlChat();
+      }
       return htmlMedia(pr) +
         '<p class="bp-etiqueta">' + esc(pr.rubro) + '</p>' +
         '<h2 id="panel-titulo" tabindex="-1">' + esc(pr.nombre) + '</h2>' +
         '<p class="lema">' + esc(pr.cliente) + ' · <span class="estado">' + esc(pr.estado) + '</span></p>' +
+        '<p class="esencia">' + esc(pr.esencia) + '</p>' +
         '<p>' + esc(pr.resumen) + '</p>' +
         '<ul class="puntos">' + pr.puntos.map(function (x) { return '<li><b>' + esc(x[0]) + '</b>' + esc(x[1]) + '</li>'; }).join('') + '</ul>' +
         (pr.enlaces.length ? '<div class="acciones">' + pr.enlaces.map(function (l) { return enlaceExterno(l.texto, l.url); }).join('') + '</div>' : '') +
         (pr.nota ? '<p class="nota">' + esc(pr.nota) + '</p>' : '') +
         '<h3>Quién trabajó aquí</h3>' + chipsEquipo(pr.equipo);
     }
-    var cta = '<a class="bp-btn" href="' + esc(D.cta.url) + '" target="_blank" rel="noopener">Agenda tu diagnóstico<span class="ico" aria-hidden="true">' + icono('afuera') + '</span><span class="sr">(se abre en otra pestaña)</span></a>';
+    var S = SALAS[id] || {}, cab = function () { return '<p class="bp-etiqueta">' + esc(S.etiqueta) + '</p><h2 id="panel-titulo" tabindex="-1">' + esc(S.titulo) + '</h2><p>' + esc(S.texto) + '</p>'; };
+    var puntos = function () { return S.puntos ? '<ul class="puntos">' + S.puntos.map(function (x) { return '<li><b>' + esc(x[0]) + '</b>' + esc(x[1]) + '</li>'; }).join('') + '</ul>' : ''; };
     if (id === 'recepcion') {
       return '<div class="media"><video class="panel-video" muted loop playsinline preload="none" poster="../assets/casos/teaser-biplot-h.jpg" data-src="../assets/casos/teaser-biplot-h.mp4" aria-label="Teaser de BiPlot"></video>' +
         '<button type="button" class="media-grande" data-grande="../assets/casos/teaser-biplot-h.mp4" data-grande-v="../assets/casos/teaser-biplot-v.mp4">' + icono('play') + 'Ver con sonido</button></div>' +
-        '<p class="bp-etiqueta">Recepción</p><h2 id="panel-titulo" tabindex="-1">Pasa, esta es la oficina</h2>' +
-        '<p>Somos dos socios. El resto del equipo lo ves aquí dibujado: siete especialistas, cada uno con una parte del trabajo, desde el primer diagnóstico hasta guardar lo que sirve para el próximo cliente.</p>' +
-        '<p>Aquí te recibe Lupe. Antes de hablar de software, pregunta cómo trabajas hoy.</p>' +
-        chipsEquipo(['lupe']) +
-        '<h3>Cómo moverte</h3><ul class="rasgos"><li>Arrastra para moverte y usa la rueda o los botones para acercarte.</li><li>Toca a alguien del personal o una sala para ver más.</li><li>Con teclado: el menú «Recorre la oficina», las flechas y las teclas + y −.</li></ul>';
+        cab() + '<div class="acciones">' + botonChat() + '</div>' + chipsEquipo(['plotty', 'lupe']) +
+        '<h3>Cómo moverte</h3><ul class="rasgos"><li>Arrastra para moverte y usa la rueda o los botones para acercarte.</li><li>Toca a alguien del equipo o una sala para ver más.</li><li>Arriba están los proyectos: usa el ascensor o el botón «Piso 1».</li><li>Con teclado: el menú «Recorre la oficina», las flechas y las teclas + y −.</li></ul>';
     }
-    if (id === 'sala-e1') {
-      return vistaSala('sala-e1') + '<p class="bp-etiqueta">Sala de diagnóstico · E1</p><h2 id="panel-titulo" tabindex="-1">Diez fases, siete especialistas</h2>' +
-        '<p>Todo proyecto pasa por el mismo motor. Primero entendemos tu negocio. Después elegimos lo justo. A veces la respuesta no es más software.</p>' +
+    if (id === 'vitrina') {
+      return vistaSala('vitrina') + '<p class="bp-etiqueta">Recepción · La vitrina</p><h2 id="panel-titulo" tabindex="-1">' + (rubroElegido ? 'Casos para tu rubro' : 'Nuestros casos') + '</h2>' +
+        '<p>' + (rubroElegido ? 'Plotty dejó aquí los tres casos más cercanos a tu rubro.' : 'Tres casos a la vista. Después de las tres preguntas, Plotty deja aquí los más cercanos a tu rubro.') + '</p>' +
+        listaVitrina() + '<div class="acciones">' + botonChat(rubroElegido ? 'Volver a conversar con Plotty' : 'Conversar con Plotty') + '</div>';
+    }
+    if (id === 'diagnostico') {
+      return vistaSala('diagnostico') + cab() +
         '<ol class="motor">' + D.fases.map(function (f) {
           return '<li><span class="cod">' + f.id + '</span><div><b>' + esc(f.nombre) + '</b><span>' + esc(f.texto) + '</span></div><span class="quien">' +
             f.quien.map(function (q) { return '<a href="#" data-abrir="actor:' + q + '" title="' + esc(PERSONAL[q].nombre) + '">' + avatar(q) + '<span class="sr">' + esc(PERSONAL[q].nombre) + '</span></a>'; }).join('') + '</span></li>';
         }).join('') + '</ol>' +
-        '<p class="nota">Tú hablas con los socios. Ellos arman el proyecto contigo y se lo pasan al equipo.</p>';
+        '<p class="nota">En las reuniones te atiende una persona del equipo, con su nombre y su rol.</p>';
     }
-    if (id === 'socios') {
-      return vistaSala('socios') + '<p class="bp-etiqueta">Oficina de los socios</p><h2 id="panel-titulo" tabindex="-1">Aquí te atienden los socios</h2>' +
-        '<p>Los socios no salen en los dibujos: los conoces en persona. Son tus jefes de proyecto. Arman el proyecto contigo, se lo pasan al equipo y responden por el resultado.</p>' +
-        '<ul class="puntos"><li><b>Parte con 45 minutos</b>una conversación sin costo para ver si tiene sentido trabajar juntos</li>' +
-        '<li><b>Después, el diagnóstico</b>tu proceso real, lo que te cuesta en horas y pesos, y por dónde partir</li>' +
-        '<li><b>Un solo interlocutor</b>no tienes que hablar con siete: el equipo trabaja detrás</li></ul>' +
-        '<div class="acciones">' + cta + '</div>';
+    if (id === 'planos') return vistaSala('planos') + cab() + puntos() + chipsEquipo(['architect', 'engine', 'atlas']);
+    if (id === 'set') return vistaSala('set') + cab() + chipsEquipo(['aby']);
+    if (id === 'laboratorio') return vistaSala('laboratorio') + cab() + puntos() + chipsEquipo(['celda', 'lupe']);
+    if (id === 'ascensor') {
+      return vistaSala('ascensor') + cab() + '<div class="acciones"><button type="button" class="bp-btn primario" data-piso="1"><span class="ico" aria-hidden="true">' + icono('sube') + '</span>Subir al piso 1</button></div>' +
+        '<h3>En el piso 1</h3><ul class="chips">' + D.proyectos.map(function (pr) { return '<li><a href="#" data-abrir="zona:' + pr.id + '">' + esc(pr.nombre) + '</a></li>'; }).join('') + '</ul>';
+    }
+    if (id === 'puerta-404') {
+      return vistaSala('puerta-404') + cab() + '<div class="acciones"><button type="button" class="bp-btn" data-golpe="1">Golpear la puerta</button></div><p class="golpe" aria-live="polite"></p>';
     }
     if (id === 'estanteria') {
-      return vistaSala('estanteria') + '<p class="bp-etiqueta">Estantería del núcleo</p><h2 id="panel-titulo" tabindex="-1">Lo que ya sabemos hacer</h2>' +
-        '<p>Aquí Pepa guarda lo que sirvió en un proyecto y le sirve al siguiente. Por eso cada sistema nuevo parte con ventaja.</p>' +
+      return vistaSala('estanteria') + cab() +
         '<h3>Casos de referencia</h3><ul class="casos">' + D.casos.map(function (c) {
           return '<li><span class="num">' + c.num + '</span><div><b>' + esc(c.nombre) + '</b><span class="rubro">' + esc(c.rubro) + ' · ' + esc(c.camino) + '</span><p>' + esc(c.hallazgo) + '</p>' +
             '<p class="links"><a href="' + esc(c.demo) + '">Ver la demo</a> · <a href="' + esc(c.caso) + '">Leer el caso</a></p></div></li>';
@@ -436,11 +548,60 @@
         chipsEquipo(['pepa']);
     }
     if (id === 'muro') {
-      return '<p class="bp-etiqueta">Muro del personal</p><h2 id="panel-titulo" tabindex="-1">El personal</h2>' +
-        '<p>Siete especialistas, uno por parte del trabajo. Los reconoces por su placa: la fase del motor que llevan.</p>' +
-        '<ul class="muro">' + E.ids.map(function (i) { var p = PERSONAL[i]; return '<li><a href="#" data-abrir="actor:' + i + '">' + avatar(i) + '<b>' + esc(p.nombre) + '</b><span>' + esc(p.rol) + '</span><span class="placa-mini">' + p.placa + '</span></a></li>'; }).join('') + '</ul>';
+      return cab() + '<ul class="muro">' + E.ids.map(function (i) { var p = PERSONAL[i]; return '<li><a href="#" data-abrir="actor:' + i + '">' + avatar(i) + '<b>' + esc(p.nombre) + '</b><span>' + esc(p.rol) + '</span><span class="placa-mini">' + p.placa + '</span></a></li>'; }).join('') + '</ul>';
     }
     return '';
+  }
+
+  /* ── El chat de Plotty: tres preguntas, un camino y la vitrina para tu rubro ── */
+  var C = D.plotty, rubroElegido = leer('rubro'), vitrinaIds = D.vitrina.porDefecto.slice();
+  if (rubroElegido && D.vitrina.rubros[rubroElegido]) { vitrinaIds = D.vitrina.rubros[rubroElegido].slice(); esc3.vitrina(vitrinaIds, 'PARA TU RUBRO'); } else rubroElegido = null;
+  function htmlChat() {
+    return '<section class="chat" aria-label="Conversación con Plotty"><div class="chat-cab">' + avatar('plotty', 'chat-av') + '<div><b>Plotty</b><span>Recepción · E0</span></div><span class="antena" aria-hidden="true"></span></div>' +
+      '<ol class="chat-mensajes" aria-live="polite"></ol><div class="chat-opciones" role="group" aria-label="Tus respuestas"></div></section>';
+  }
+  function htmlChatPanel() {
+    return '<p class="bp-etiqueta">Recepción · E0</p><h2 id="panel-titulo" tabindex="-1">Tres preguntas</h2><p class="lema">' + esc(PERSONAL.plotty.frase) + '</p>' + htmlChat();
+  }
+  function iniciarChat(caja) {
+    var lista = caja.querySelector('.chat-mensajes'), opciones = caja.querySelector('.chat-opciones'), resp = {}, paso = 0;
+    function decir(txt, quien) {
+      var li = document.createElement('li'); li.className = 'msg ' + (quien || 'plotty'); li.textContent = txt;
+      lista.appendChild(li); li.scrollIntoView({ block: 'nearest', behavior: reducido ? 'auto' : 'smooth' });
+    }
+    function preguntar() {
+      var q = C.preguntas[paso];
+      decir(q.texto);
+      opciones.innerHTML = q.opciones.map(function (o) { return '<button type="button" data-v="' + o[0] + '">' + esc(o[1]) + '</button>'; }).join('');
+      var b = opciones.querySelector('button'); if (b && paso > 0) b.focus({ preventScroll: true });
+    }
+    function etiqueta(q, v) { var o = C.preguntas.filter(function (x) { return x.id === q; })[0].opciones.filter(function (x) { return x[0] === v; })[0]; return o ? o[1] : v; }
+    function minus(t) { return t.charAt(0).toLowerCase() + t.slice(1); }
+    function terminar() {
+      opciones.innerHTML = '';
+      var califica = C.noCalifican.indexOf(resp.horas) === -1;
+      caja.classList.toggle('califica', califica);
+      decir(califica ? C.califica : C.noCalifica);
+      rubroElegido = resp.rubro; guardar('rubro', resp.rubro);
+      vitrinaIds = (D.vitrina.rubros[resp.rubro] || D.vitrina.porDefecto).slice();
+      esc3.vitrina(vitrinaIds, 'PARA TU RUBRO');
+      decir(C.vitrina);
+      var msj = C.mensaje.replace('{rubro}', minus(etiqueta('rubro', resp.rubro))).replace('{donde}', minus(etiqueta('donde', resp.donde))).replace('{horas}', minus(etiqueta('horas', resp.horas)));
+      var fin = document.createElement('div'); fin.className = 'chat-fin';
+      fin.innerHTML = '<a class="bp-cta" href="https://wa.me/' + D.whatsapp + '?text=' + encodeURIComponent(msj) + '" target="_blank" rel="noopener">Agenda tu diagnóstico<span class="sr"> (se abre WhatsApp en otra pestaña)</span></a>' +
+        '<button type="button" class="bp-btn" data-abrir="zona:vitrina">Ver la vitrina</button><button type="button" class="bp-btn chat-otra">Empezar de nuevo</button>';
+      caja.appendChild(fin);
+      fin.querySelector('.bp-cta').focus({ preventScroll: true });
+      fin.querySelector('.chat-otra').addEventListener('click', function () { fin.remove(); lista.innerHTML = ''; caja.classList.remove('califica'); resp = {}; paso = 0; decir(C.saludo); preguntar(); });
+    }
+    opciones.addEventListener('click', function (e) {
+      var b = e.target.closest('button[data-v]'); if (!b) return;
+      var q = C.preguntas[paso]; resp[q.id] = b.getAttribute('data-v');
+      decir(b.textContent, 'tu');
+      paso++;
+      if (paso < C.preguntas.length) preguntar(); else terminar();
+    });
+    decir(C.saludo); preguntar();
   }
 
   /* ── Videos ── */
@@ -462,44 +623,54 @@
   $('#lightbox-cerrar').addEventListener('click', cerrarLightbox);
   lightbox.addEventListener('click', function (e) { if (e.target === lightbox) cerrarLightbox(); });
 
-  /* ── Recorrido guiado ── */
+  /* ── Recorrido guiado: lo guía Atlas, que ve todo desde arriba ── */
   var GUIA = [
-    ['zona', 'recepcion', 'Recepción', 'Entras y te recibe Lupe. Antes de hablar de software, pregunta cómo trabajas hoy.'],
-    ['zona', 'sala-e1', 'Sala de diagnóstico', 'Aquí se hace el diagnóstico: el proceso real, los dolores en horas y pesos, y la línea base contra la que se mide todo.'],
-    ['actor', 'celda', 'Celda · Datos', 'Abre tus planillas y exportaciones, encuentra lo que no cuadra y deja los datos listos.'],
+    ['zona', 'recepcion', 'Recepción', 'Entras y te recibe Plotty. Tres preguntas y te dice por dónde partir.'],
+    ['zona', 'diagnostico', 'Sala de diagnóstico', 'Lupe hace el diagnóstico: el proceso real, los dolores en horas y pesos, y la línea base contra la que se mide todo.'],
+    ['zona', 'planos', 'Planos y máquinas', 'The Architect traza el mapa y The Engine lo convierte en sistemas. Una sola mesa, de punta a punta.'],
+    ['actor', 'celda', 'Celda · Datos y métricas', 'Abre tus planillas, encuentra lo que no cuadra y deja los datos listos.'],
     ['actor', 'grilla', 'Grilla · Diseño', 'Dibuja la maqueta antes de construir, para que la pruebes con tu equipo.'],
     ['actor', 'bucle', 'Bucle · Desarrollo', 'Construye por rebanadas: entregas cortas que funcionan solas.'],
     ['actor', 'tamandua', 'Tamandúa · Validación', 'Prueba todo en cuatro pantallas y con cada perfil antes de que llegue a ti.'],
     ['actor', 'faro', 'Faro · Puesta en marcha', 'Sube cada entrega a producción y enseña a usarla.'],
-    ['zona', 'estanteria', 'Estantería del núcleo', 'Pepa guarda aquí lo que sirve para el próximo cliente. También están los casos de referencia.'],
-    ['zona', 'nuhome', 'Sala Nu Home 360', 'Casas modulares: del primer contacto a la entrega, en una sola plataforma.'],
-    ['zona', 'fundos', 'Sala Fundos 360', 'Venta de parcelas: contacto, reserva, escritura y posventa, conectados.'],
-    ['zona', 'haru', 'Sala Haru 360', 'Un restaurante con ventas, cocina, delivery y caja en un solo sistema.'],
-    ['zona', 'eleven', 'Sala Eleven 360', 'Una propuesta para que un gimnasio gane socios y los retenga.'],
-    ['zona', 'rumbo', 'Sala Rumbo', 'Nuestra app para ordenar la vida personal.'],
-    ['zona', 'socios', 'Oficina de los socios', 'Y aquí te atienden los socios. ¿Conversamos?']
+    ['zona', 'laboratorio', 'Laboratorio de métricas', 'A los 30, 60 y 90 días se mide contra la línea base. Si no bajó, se dice.'],
+    ['zona', 'estanteria', 'Estantería del núcleo', 'Pepa guarda aquí lo que sirve para el próximo. También están los casos de referencia.'],
+    ['zona', 'set', 'El set', 'Aquí graba Aby, la corresponsal. La única cara real de la oficina.'],
+    ['zona', 'ascensor', 'Ascensor', 'Arriba están los proyectos: una sala por cada uno.'],
+    ['zona', 'fundos', 'Fundos 360', 'Venta de parcelas: el terreno sobre la mesa y el ciclo de venta completo.'],
+    ['zona', 'haru', 'Haru 360', 'Una barra de sushi con ventas, cocina, delivery y caja en un solo sistema.'],
+    ['zona', 'eleven', 'Eleven 360', 'Un gimnasio que suma socios y no los suelta.'],
+    ['zona', 'nuhome', 'Nu Home 360', 'Casas modulares: del primer contacto a la entrega, en una sola plataforma.'],
+    ['zona', 'rumbo', 'Rumbo', 'Nuestra app para ordenar lo personal, un día a la vez.'],
+    ['zona', 'libre', 'Tu proyecto aquí', 'Esta sala está esperando el próximo proyecto. ¿Conversamos?']
   ];
   var guia = $('#guia'), pasoGuia = 0;
+  $('#guia-atlas').innerHTML = avatar('atlas');
   function iniciarGuia(i) {
-    if (!panel.hidden) { detenerMedios(); panel.hidden = true; }
+    if (!panel.hidden) { detenerMedios(); panel.hidden = true; document.body.classList.remove('panel-abierto'); }
     cerrarIntro();
     guia.hidden = false; mostrarPaso(i || 0);
     $('#guia-sig').focus({ preventScroll: true });
   }
   function mostrarPaso(i) {
     pasoGuia = Math.max(0, Math.min(GUIA.length - 1, i));
-    var g = GUIA[pasoGuia], obj = { tipo: g[0], id: g[1] };
+    var g = GUIA[pasoGuia], obj = { tipo: g[0], id: g[1] }, cambio = false;
+    var destino = pisoDe(obj);
+    if (destino !== pisoActual) { irAlPiso(destino, true); cambio = true; }
     $('#guia-n').textContent = (pasoGuia + 1) + ' de ' + GUIA.length;
     $('#guia-t').textContent = g[2];
     $('#guia-txt').textContent = g[3];
     $('#guia-ant').disabled = pasoGuia === 0;
-    $('#guia-sig').textContent = pasoGuia === GUIA.length - 1 ? 'Terminar' : 'Siguiente';
+    $('#guia-sig').textContent = pasoGuia === GUIA.length - 1 ? 'Conversar con Plotty' : 'Siguiente';
     resaltar(obj);
-    requestAnimationFrame(function () { irA(obj, 900); });
+    requestAnimationFrame(function () { irA(obj, cambio ? 0 : 900); });
   }
   function terminarGuia() { guia.hidden = true; resaltar(null); verTodo(); }
   $('#guia-ant').addEventListener('click', function () { mostrarPaso(pasoGuia - 1); });
-  $('#guia-sig').addEventListener('click', function () { if (pasoGuia === GUIA.length - 1) terminarGuia(); else mostrarPaso(pasoGuia + 1); });
+  $('#guia-sig').addEventListener('click', function () {
+    if (pasoGuia === GUIA.length - 1) { guia.hidden = true; abrir({ tipo: 'chat', id: 'plotty' }, false, $('#recorrer-toggle')); }
+    else mostrarPaso(pasoGuia + 1);
+  });
   $('#guia-mas').addEventListener('click', function () { var g = GUIA[pasoGuia]; guia.hidden = true; abrir({ tipo: g[0], id: g[1] }, false, $('#recorrer-toggle')); });
   $('#guia-salir').addEventListener('click', terminarGuia);
 
@@ -511,21 +682,24 @@
   if (leer('visto') === '1') intro.hidden = true;
 
   /* ── Inicio ── */
+  marcarPisos();
   if (window.innerWidth < 900 || leer('menu') === '0') alternarMenu(false);
   window.addEventListener('resize', function () { aplicar(); });
   if (leer('pausa') === '1' || reducido) pausar(true); else esc3.iniciar();
   document.addEventListener('visibilitychange', function () {
-    if (document.hidden) esc3.detener(); else if (!document.documentElement.classList.contains('oficina-quieta')) esc3.iniciar();
+    if (document.hidden) esc3.detener(); else if (!quieta() && pisoActual === 0) esc3.iniciar();
   });
   // Encuadre inicial: toda la oficina en escritorio; la recepción en celular.
   function encuadreInicial(animar) {
-    if (window.innerWidth < 700) { var p = P(19.5, 15.5, 0.8); volar(p[0], p[1], zPara(620), animar ? 600 : 0); }
+    if (window.innerWidth < 700 && pisoActual === 0) { var p = P(19.5, 15.5, 0.8); volar(p[0], p[1], zPara(620), animar ? 600 : 0); }
     else verTodo(animar ? 600 : 0);
   }
   requestAnimationFrame(function () { encuadreInicial(false); document.documentElement.classList.add('lista'); });
-  // Enlace directo: oficina/#nuhome o #lupe
+  // Enlace directo: oficina/#fundos, #lupe, #piso-1 o #conversar
   function desdeHash() {
     var h = decodeURIComponent(location.hash.replace('#', '')); if (!h) return;
+    if (h === 'piso-1' || h === 'planta-baja') { irAlPiso(h === 'piso-1' ? 1 : 0, true); return; }
+    if (h === 'conversar') { abrir({ tipo: 'chat', id: 'plotty' }); return; }
     if (PERSONAL[h]) abrir({ tipo: 'actor', id: h }); else if (zonaPorId(h)) abrir({ tipo: 'zona', id: h });
   }
   setTimeout(desdeHash, 60);

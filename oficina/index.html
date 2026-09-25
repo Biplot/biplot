@@ -4,19 +4,19 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>La oficina de BiPlot</title>
-<meta name="description" content="Entra a la oficina de BiPlot: conoce al personal que diagnostica, ordena datos, diseña, construye, prueba y pone en marcha cada sistema, y recorre las salas de sus proyectos.">
+<meta name="description" content="Entra a la oficina de BiPlot: conoce al equipo que diagnostica, diseña, construye y pone en marcha cada sistema, sube a las salas de sus proyectos y conversa con Plotty.">
 <meta name="theme-color" content="#0E2A47">
 <link rel="canonical" href="https://biplot.cl/oficina/">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="BiPlot">
 <meta property="og:locale" content="es_CL">
 <meta property="og:title" content="La oficina de BiPlot">
-<meta property="og:description" content="Dos socios y siete especialistas dibujados. Pasa, conoce al personal y entra a las salas de cada proyecto.">
+<meta property="og:description" content="Una oficina que puedes recorrer: el equipo trabajando, una sala por proyecto y Plotty en la recepción.">
 <meta property="og:url" content="https://biplot.cl/oficina/">
 <meta property="og:image" content="https://biplot.cl/oficina/kit/png/oficina-og.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="Ilustración isométrica de la oficina de BiPlot con su personal trabajando">
+<meta property="og:image:alt" content="Ilustración isométrica de la oficina de BiPlot con su equipo trabajando">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://biplot.cl/oficina/kit/png/oficina-og.png">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230E2A47'/%3E%3Cpath d='M9 8 V24 H25' stroke='%233f6da0' stroke-width='1.7' fill='none' stroke-linecap='round'/%3E%3Ccircle cx='11.5' cy='20.5' r='2.2' fill='%2317C3B2'/%3E%3Ccircle cx='16' cy='17' r='2.2' fill='%2317C3B2'/%3E%3Ccircle cx='23' cy='11' r='2.8' fill='%23FF6B4A'/%3E%3C/svg%3E">
@@ -51,9 +51,14 @@
   <div class="escena" id="escena" tabindex="0" role="region" aria-roledescription="plano interactivo" aria-label="Plano de la oficina. Usa las flechas para moverte, + y − para acercarte y 0 para ver todo." aria-describedby="escena-desc">
     <svg id="svg-escena" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="escena-titulo escena-desc" preserveAspectRatio="xMidYMid meet">
       <title id="escena-titulo">La oficina de BiPlot</title>
-      <desc id="escena-desc">Ilustración isométrica de la oficina: la recepción, el muro del personal, siete integrantes trabajando en sus estaciones, la sala E1, la estantería del núcleo, la oficina de los socios y cinco salas de proyecto. Todo lo que se puede abrir está también en el menú «Recorre la oficina».</desc>
+      <desc id="escena-desc">Ilustración isométrica de la oficina en dos pisos. En la planta baja: la recepción con Plotty y la vitrina, el muro del equipo, las estaciones de trabajo, la sala de diagnóstico, la estantería del núcleo, la Sala de planos y máquinas, el set, el laboratorio, el ascensor y la Puerta 404. En el piso 1: una sala por proyecto y una sala libre. Todo lo que se puede abrir está también en el menú «Recorre la oficina».</desc>
     </svg>
     <div class="rotulo" id="rotulo" hidden aria-hidden="true"></div>
+  </div>
+
+  <div class="pisos" id="pisos" role="group" aria-label="Pisos de la oficina">
+    <button type="button" data-piso="0" aria-pressed="true"><span class="piso-n">PB</span>Oficina</button>
+    <button type="button" data-piso="1" aria-pressed="false"><span class="piso-n">1</span>Proyectos</button>
   </div>
 
   <nav class="recorrer" id="recorrer" aria-labelledby="recorrer-t">
@@ -74,7 +79,7 @@
   <section class="intro" id="intro" aria-labelledby="intro-t">
     <p class="bp-etiqueta">Bienvenida</p>
     <h2 id="intro-t">Pasa. Esta es la oficina de BiPlot.</h2>
-    <p>Somos dos socios. El resto del equipo lo ves aquí dibujado: siete especialistas, cada uno con una parte del trabajo. Conócelos y entra a las salas de cada proyecto.</p>
+    <p>Aquí trabaja el equipo que diagnostica, diseña, construye y pone en marcha cada sistema. Conócelos, sube al piso de los proyectos y conversa con Plotty en la recepción.</p>
     <div class="intro-acciones">
       <button type="button" class="bp-btn primario" id="intro-guia">Hacer el recorrido</button>
       <button type="button" class="bp-btn" id="intro-libre">Explorar por mi cuenta</button>
@@ -82,7 +87,7 @@
   </section>
 
   <section class="guia" id="guia" hidden aria-live="polite" aria-labelledby="guia-t">
-    <p class="guia-n" id="guia-n"></p>
+    <p class="guia-n"><span class="guia-atlas" id="guia-atlas" aria-hidden="true"></span><span>Con Atlas · </span><span id="guia-n"></span></p>
     <h2 class="guia-t" id="guia-t"></h2>
     <p class="guia-txt" id="guia-txt"></p>
     <div class="guia-acciones">
@@ -107,12 +112,13 @@
 <noscript>
   <div class="sin-js">
     <h2>La oficina necesita JavaScript</h2>
-    <p>Mientras tanto, estos son los proyectos: <a href="https://nuhome-crm-nu.vercel.app/cotizador">Nu Home 360</a>, Fundos 360, <a href="https://haru-carta.vercel.app">Haru Isidora</a>, <a href="https://eleven-360.vercel.app">Eleven Club</a> y <a href="https://rumbo.biplot.cl">Rumbo</a>. <a href="../">Volver a biplot.cl</a>.</p>
+    <p>Mientras tanto, estos son los proyectos: Fundos 360, <a href="https://haru-carta.vercel.app">Haru 360</a>, <a href="https://eleven-360.vercel.app">Eleven 360</a>, <a href="https://nuhome-crm-nu.vercel.app/cotizador">Nu Home 360</a> y <a href="https://rumbo.biplot.cl">Rumbo</a>. <a href="../">Volver a biplot.cl</a>.</p>
   </div>
 </noscript>
 
 <script src="datos.js"></script>
 <script src="elenco.js"></script>
+<script src="piso1.js"></script>
 <script src="escena.js"></script>
 <script src="oficina.js"></script>
 </body>

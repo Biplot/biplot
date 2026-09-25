@@ -516,7 +516,7 @@
     var R = badgeR(lots), FS = +(R * 0.84).toFixed(1), SUB = +(R * 0.66).toFixed(1);
     var cats = p.categorias || {};
     var s = [];
-    s.push('<svg class="plan-svg" viewBox="' + vb.join(" ") + '" xmlns="http://www.w3.org/2000/svg" role="group" aria-label="Plano de lotes de ' + esc(p.nombre) + '">');
+    s.push('<svg class="plan-svg" viewBox="' + vb.join(" ") + '" data-base="' + vb.join(" ") + '" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg" role="group" aria-label="Plano de lotes de ' + esc(p.nombre) + '">');
     s.push('<defs>' +
       '<filter id="pl-terreno" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency="0.018" numOctaves="4" seed="4"/>' +
       '<feColorMatrix type="matrix" values="0 0 0 0 0.12  0 0 0 0 0.17  0 0 0 0 0.09  1.4 0 0 0 -0.45"/></filter>' +
@@ -526,7 +526,8 @@
       '<pattern id="lot-hatch" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="7" height="7" fill="#E9E3D7" fill-opacity=".85"/><rect width="2.6" height="7" fill="#8C8474"/></pattern>' +
       (contorno ? '<clipPath id="pl-predio"><path d="' + contorno + '"/></clipPath>' : "") + "</defs>");
     var full = 'x="' + vb[0] + '" y="' + vb[1] + '" width="' + vb[2] + '" height="' + vb[3] + '"';
-    s.push('<rect ' + full + ' fill="#1A2317"/><rect ' + full + ' filter="url(#pl-terreno)" opacity=".9"/>');
+    var wide = 'x="' + (vb[0] - vb[2]) + '" y="' + (vb[1] - vb[3]) + '" width="' + (vb[2] * 3) + '" height="' + (vb[3] * 3) + '"';
+    s.push('<rect ' + wide + ' fill="#1A2317"/><rect ' + wide + ' filter="url(#pl-terreno)" opacity=".9"/>');
     // Predio: base uniforme con sombra suave y borde, igual en todos los planos
     if (contorno) s.push('<path class="pl-predio" d="' + contorno + '" filter="url(#pl-sombra)"/>');
     s.push('<g' + (contorno ? ' clip-path="url(#pl-predio)"' : "") + '><rect ' + full + ' fill="' + PLANO.predio + '"/><rect ' + full + ' filter="url(#pl-grano)" opacity=".35"/></g>');
@@ -651,15 +652,174 @@
       ring = $(".lot-ring", svg);
       scaleLabels();
     }
-    // En pantallas chicas el plano mantiene un ancho legible y se desliza de lado
-    function scaleLabels() {
+    /* ---- Zoom y desplazamiento del plano ----
+       Botones + / − / completo, pellizco, arrastre, doble toque y Ctrl + rueda.
+       En pantallas chicas el plano parte acercado a una escala legible, centrado en los lotes disponibles. */
+    var Z = { base: null, W: 0, H: 0, fitW: 0, fitH: 0, k: 1, cx: 0, cy: 0, anim: 0 };
+    var zoomUi = $("[data-zoom-ui]", root);
+    var MAXK = 6, LEGIBLE = 0.62;
+    function isSmall() { return window.innerWidth < 720; }
+    function scaleLabels() { layoutPlan(true); }
+    function layoutPlan(reset) {
       var svg = $("svg", canvas);
-      if (!svg) return;
-      var vb = svg.viewBox.baseVal, wide = vb && vb.width / vb.height > 2;
-      var min = window.innerWidth < 720 ? (wide ? 980 : 640) : 0;
-      svg.style.minWidth = min ? min + "px" : "";
-      if (hint) hint.hidden = !min || S.view !== "plano";
+      if (!svg || canvas.hidden) return;
+      var b = (svg.getAttribute("data-base") || "0 0 1000 640").split(" ").map(Number);
+      Z.base = b;
+      var W = canvas.clientWidth || 1;
+      var H = W * b[3] / b[2];
+      if (isSmall()) H = Math.max(H, clamp(b[3] * LEGIBLE, 280, Math.min(window.innerHeight * 0.62, 520)));
+      if (!reset && Z.W === W && Z.H) H = Z.H;
+      canvas.style.height = Math.round(H) + "px";
+      Z.W = W; Z.H = H;
+      var a = W / H;
+      if (b[2] / b[3] > a) { Z.fitW = b[2]; Z.fitH = b[2] / a; } else { Z.fitH = b[3]; Z.fitW = b[3] * a; }
+      if (reset) {
+        Z.k = 1; Z.cx = b[0] + b[2] / 2; Z.cy = b[1] + b[3] / 2;
+        if (isSmall()) {
+          Z.k = clamp(LEGIBLE * Z.fitW / W, 1, MAXK);
+          var disp = P().lotes.filter(function (l) { return l.estado === "disponible"; });
+          var pl = (B.planos || {})[S.id], pts = disp.map(function (l) { return pl && pl.lotes[l.n] && pl.lotes[l.n].l; }).filter(Boolean);
+          if (pts.length) {
+            Z.cx = pts.reduce(function (t, q) { return t + q[0]; }, 0) / pts.length;
+            Z.cy = pts.reduce(function (t, q) { return t + q[1]; }, 0) / pts.length;
+          }
+        }
+      }
+      applyView();
+      if (hint) hint.hidden = !isSmall() || S.view !== "plano";
     }
+    function clampView() {
+      var b = Z.base, vw = Z.fitW / Z.k, vh = Z.fitH / Z.k;
+      Z.cx = vw >= b[2] ? b[0] + b[2] / 2 : clamp(Z.cx, b[0] + vw / 2, b[0] + b[2] - vw / 2);
+      Z.cy = vh >= b[3] ? b[1] + b[3] / 2 : clamp(Z.cy, b[1] + vh / 2, b[1] + b[3] - vh / 2);
+    }
+    function applyView() {
+      var svg = $("svg", canvas);
+      if (!svg || !Z.base) return;
+      Z.k = clamp(Z.k, 1, MAXK);
+      clampView();
+      var vw = Z.fitW / Z.k, vh = Z.fitH / Z.k;
+      svg.setAttribute("viewBox", [(Z.cx - vw / 2).toFixed(2), (Z.cy - vh / 2).toFixed(2), vw.toFixed(2), vh.toFixed(2)].join(" "));
+      canvas.classList.toggle("is-zoomed", Z.k > 1.01);
+      if (zoomUi) {
+        $('[data-zoom="in"]', zoomUi).disabled = Z.k >= MAXK - 0.01;
+        $('[data-zoom="out"]', zoomUi).disabled = Z.k <= 1.01;
+        $('[data-zoom="fit"]', zoomUi).disabled = Z.k <= 1.01;
+      }
+    }
+    // Punto de la pantalla -> coordenadas del plano
+    function toPlan(clientX, clientY) {
+      var r = canvas.getBoundingClientRect(), vw = Z.fitW / Z.k, vh = Z.fitH / Z.k;
+      return [Z.cx - vw / 2 + (clientX - r.left) / r.width * vw, Z.cy - vh / 2 + (clientY - r.top) / r.height * vh];
+    }
+    // Acerca o aleja manteniendo fijo el punto (px, py) del plano
+    function zoomAt(k, px, py) {
+      var k0 = Z.k;
+      k = clamp(k, 1, MAXK);
+      if (px == null) { px = Z.cx; py = Z.cy; }
+      Z.cx = px - (px - Z.cx) * k0 / k;
+      Z.cy = py - (py - Z.cy) * k0 / k;
+      Z.k = k;
+      applyView();
+    }
+    function animateTo(k, cx, cy) {
+      window.cancelAnimationFrame(Z.anim);
+      if (reduced) { Z.k = k; Z.cx = cx; Z.cy = cy; applyView(); return; }
+      var s0 = { k: Z.k, cx: Z.cx, cy: Z.cy }, t0 = performance.now();
+      (function step(t) {
+        var u = Math.min(1, (t - t0) / 260), e = 1 - Math.pow(1 - u, 3);
+        Z.k = s0.k + (k - s0.k) * e; Z.cx = s0.cx + (cx - s0.cx) * e; Z.cy = s0.cy + (cy - s0.cy) * e;
+        applyView();
+        if (u < 1) Z.anim = window.requestAnimationFrame(step);
+      })(t0);
+    }
+    function zoomBy(f, px, py) {
+      var k = clamp(Z.k * f, 1, MAXK), k0 = Z.k;
+      if (px == null) { px = Z.cx; py = Z.cy; }
+      animateTo(k, px - (px - Z.cx) * k0 / k, py - (py - Z.cy) * k0 / k);
+    }
+    // Lleva un lote a la vista si quedó fuera (selección desde la lista, enlaces o teclado)
+    function reveal(n) {
+      var pl = (B.planos || {})[S.id], q = pl && pl.lotes[n];
+      if (!q || !Z.base) return;
+      var vw = Z.fitW / Z.k, vh = Z.fitH / Z.k, x = q.l[0], y = q.l[1];
+      var inside = x > Z.cx - vw / 2 + vw * 0.12 && x < Z.cx + vw / 2 - vw * 0.12 && y > Z.cy - vh / 2 + vh * 0.12 && y < Z.cy + vh / 2 - vh * 0.12;
+      if (!inside) animateTo(Z.k, x, y);
+    }
+    if (zoomUi) zoomUi.addEventListener("click", function (e) {
+      var b = e.target.closest("[data-zoom]");
+      if (!b) return;
+      var a = b.getAttribute("data-zoom");
+      if (a === "in") zoomBy(1.6);
+      else if (a === "out") zoomBy(1 / 1.6);
+      else animateTo(1, Z.base[0] + Z.base[2] / 2, Z.base[1] + Z.base[3] / 2);
+    });
+    canvas.addEventListener("wheel", function (e) {
+      if (!(e.ctrlKey || e.metaKey) || canvas.hidden) return;   // la rueda sola sigue desplazando la página
+      e.preventDefault();
+      var q = toPlan(e.clientX, e.clientY);
+      zoomAt(Z.k * Math.exp(-e.deltaY * 0.0022), q[0], q[1]);
+    }, { passive: false });
+    canvas.addEventListener("dblclick", function (e) {
+      var q = toPlan(e.clientX, e.clientY);
+      zoomBy(Z.k >= MAXK - 0.01 ? 1 / MAXK : 2, q[0], q[1]);
+    });
+    // Arrastre (mouse o un dedo en horizontal) y pellizco (dos dedos)
+    var ptrs = {}, drag = null, moved = false;
+    canvas.addEventListener("pointerdown", function (e) {
+      if (e.pointerType === "mouse" && e.button !== 0) return;
+      ptrs[e.pointerId] = { x: e.clientX, y: e.clientY };
+      moved = false;
+      var ids = Object.keys(ptrs);
+      if (ids.length === 1) drag = { x: e.clientX, y: e.clientY, cx: Z.cx, cy: Z.cy };
+      else if (ids.length === 2) {
+        var a = ptrs[ids[0]], c = ptrs[ids[1]];
+        drag = { pinch: Math.hypot(a.x - c.x, a.y - c.y), k: Z.k, mid: toPlan((a.x + c.x) / 2, (a.y + c.y) / 2) };
+      }
+    });
+    canvas.addEventListener("pointermove", function (e) {
+      if (!ptrs[e.pointerId] || !drag) return;
+      ptrs[e.pointerId] = { x: e.clientX, y: e.clientY };
+      var ids = Object.keys(ptrs), r = canvas.getBoundingClientRect();
+      if (ids.length >= 2 && drag.pinch) {
+        var a = ptrs[ids[0]], c = ptrs[ids[1]], d = Math.hypot(a.x - c.x, a.y - c.y);
+        Z.k = clamp(drag.k * d / drag.pinch, 1, MAXK);
+        var vw = Z.fitW / Z.k, vh = Z.fitH / Z.k, mx = (a.x + c.x) / 2 - r.left, my = (a.y + c.y) / 2 - r.top;
+        Z.cx = drag.mid[0] - (mx / r.width - 0.5) * vw;
+        Z.cy = drag.mid[1] - (my / r.height - 0.5) * vh;
+        moved = true;
+        applyView();
+        return;
+      }
+      if (Z.k <= 1.01 || drag.pinch) return;
+      var dx = e.clientX - drag.x, dy = e.clientY - drag.y;
+      if (!moved && Math.hypot(dx, dy) < 5) return;
+      if (!moved) { moved = true; try { canvas.setPointerCapture(e.pointerId); } catch (err) { /* sin captura */ } }
+      canvas.classList.add("is-dragging");
+      Z.cx = drag.cx - dx / r.width * (Z.fitW / Z.k);
+      Z.cy = drag.cy - dy / r.height * (Z.fitH / Z.k);
+      tip.hidden = true;
+      applyView();
+    });
+    function endPtr(e) {
+      delete ptrs[e.pointerId];
+      var ids = Object.keys(ptrs);
+      if (!ids.length) { drag = null; canvas.classList.remove("is-dragging"); }
+      else if (ids.length === 1) { var q = ptrs[ids[0]]; drag = { x: q.x, y: q.y, cx: Z.cx, cy: Z.cy }; }
+    }
+    canvas.addEventListener("pointerup", endPtr);
+    canvas.addEventListener("pointercancel", endPtr);
+    // Un arrastre no debe seleccionar el lote donde termina
+    canvas.addEventListener("click", function (e) { if (moved) { e.stopPropagation(); moved = false; } }, true);
+    var rzT = 0, lastW = window.innerWidth;
+    window.addEventListener("resize", function () {
+      window.clearTimeout(rzT);
+      rzT = window.setTimeout(function () {
+        var crossed = (lastW < 720) !== isSmall();
+        lastW = window.innerWidth;
+        layoutPlan(crossed);
+      }, 120);
+    });
     function renderList() {
       var p = P();
       var key = function (l) { return S.sort === "precio" ? (l.precio || 1e12) : l[S.sort]; };
@@ -777,6 +937,7 @@
       var row = $('tr[data-n="' + n + '"]', list);
       if (row) row.classList.add("is-active");
       fillPanel(p, l);
+      reveal(n);
       if (opts.hash !== false) {
         try { history.replaceState(null, "", "#lote-" + p.id + "-" + n); } catch (e) { /* marco sin historial */ }
       }
@@ -850,6 +1011,7 @@
       root.classList.toggle("is-preventa", pre);
       prev.hidden = !pre;
       [viewToggle, statusBox, rangeBox, sectorBox, panel].forEach(function (el) { if (el) el.hidden = pre; });
+      if (zoomUi) zoomUi.hidden = pre || S.view !== "plano";
       if (legend) legend.hidden = pre || S.view !== "plano";
       var ppArt = $("[data-preventa-art]", root);
       if (pre) {
@@ -892,7 +1054,8 @@
       list.hidden = v !== "lista";
       if (legend) legend.hidden = v !== "plano";
       if (v === "lista") renderList();
-      scaleLabels();
+      if (zoomUi) zoomUi.hidden = v !== "plano";
+      layoutPlan(!Z.base);
     }
 
     /* ---- Eventos ---- */
@@ -940,7 +1103,9 @@
     function showTip(el, x, y) {
       var p = P(), l = lotOf(p, +el.getAttribute("data-n"));
       if (!l) return;
-      tip.innerHTML = "Lote " + l.n + " · " + precioTxt(l) + "<small>" + (l.lista ? "Antes " + clp(l.lista) + " · " : "") + ESTADO[l.estado] + "</small>";
+      tip.innerHTML = l.estado === "vendida"
+        ? "Lote " + l.n + " · Vendido<small>Haz clic y te sugerimos uno similar</small>"
+        : "Lote " + l.n + " · " + precioTxt(l) + "<small>" + ESTADO[l.estado] + " · " + m2(l.m2) + (l.lista ? " · antes " + clp(l.lista) : "") + "</small>";
       tip.hidden = false;
       tip.style.left = x + "px";
       tip.style.top = y + "px";
@@ -965,7 +1130,12 @@
       var el = e.target.closest && e.target.closest(".lot");
       if (el && !el.contains(e.relatedTarget)) tip.hidden = true;
     });
-    canvas.addEventListener("focusin", function (e) { var el = e.target.closest && e.target.closest(".lot"); if (el) tipAt(el); });
+    canvas.addEventListener("focusin", function (e) {
+      var el = e.target.closest && e.target.closest(".lot");
+      if (!el) return;
+      reveal(+el.getAttribute("data-n"));
+      tipAt(el);
+    });
     canvas.addEventListener("focusout", function () { tip.hidden = true; });
 
     // Lista
@@ -1013,8 +1183,6 @@
     desktop.addEventListener && desktop.addEventListener("change", function () { closeSheet(true); scaleLabels(); });
     favClear.addEventListener("click", function () { favs = []; saveFavs(favs); refreshFavs(); });
 
-    var rt = 0;
-    window.addEventListener("resize", function () { window.cancelAnimationFrame(rt); rt = window.requestAnimationFrame(scaleLabels); });
 
     /* ---- API para otros módulos ---- */
     Plan.show = function (id) { if (id !== S.id) setProject(id); };

@@ -493,6 +493,7 @@ input[type="range"]:focus-visible { outline: 2px solid var(--gold); outline-offs
   display: grid; overflow: hidden; border-radius: 10px;
   background: rgba(247, 245, 240, .95); box-shadow: 0 8px 22px -10px rgba(0, 0, 0, .6), 0 0 0 1px rgba(10, 20, 14, .08);
 }
+html:not(.js) .plan-zoom { display: none; }
 .plan-zoom button { display: grid; place-items: center; width: 40px; height: 40px; color: var(--g900); transition: background-color .2s, opacity .2s; }
 .plan-zoom button + button { border-top: 1px solid rgba(10, 20, 14, .1); }
 .plan-zoom button:hover:not(:disabled) { background: rgba(200, 161, 101, .22); }

@@ -74,11 +74,12 @@ Todo se configura en `lib/manifest.js`; si un campo queda vacío, no aparece nad
 
 ### Planos y lotes
 
-Los planos de **Malalcahuello**, **Marchigüe** y **Puerto Varas** replican los masterplan de Fundos: misma geometría de lotes, colores por categoría de precio, vendidas en gris (Malalcahuello) o negro (Puerto Varas), servidumbres, río o estero, camino principal y la leyenda "Precios lista" con el precio anterior tachado.
+Los tres planos (**Malalcahuello**, **Marchigüe** y **Puerto Varas**) replican la geometría de sus masterplan y comparten un **formato estándar Fundos**:
 
-- **Precios y estados** se editan en `lib/manifest.js`. Cada lote es `[número, categoría, estado]` (`disponible`, `reservada` o `vendida`); el precio sale de la categoría (`categorias`), con `lista` para el precio tachado.
-- **Geometría** en `lib/planos.js`. Se generó automáticamente desde las imágenes de los masterplan (segmentación de bordes de lotes, servidumbres y agua). Si cambia un loteo, conviene regenerarla desde el nuevo plano.
-- **Marchigüe** marca las vendidas con una "V" como su masterplan (`vendidaMarca` en `lib/manifest.js`) y usa la leyenda "Precio oferta".
+- **Mismas piezas en todos:** predio gris con borde blanco y sombra, lotes con el color de su categoría de precio, vendidas en gris con una "V" y el número debajo, reservadas con trama, servidumbres y caminos en arena con borde punteado, agua en azul y números en círculo oscuro con un tamaño ajustado al lote típico de cada plano.
+- **Misma leyenda:** encabezado "Plano de loteo · Fundos de …" con disponibles, vendidas y total, y precios por categoría con el precio anterior tachado y cuántos lotes quedan ("Agotado" si no queda ninguno). El título es "Precio oferta" cuando hay precio rebajado y "Precios" si no.
+- **Qué se edita y dónde:** el formato vive en `main.js` (`PLANO`, `svgPlan`, `legendHtml`) y `styles.css`. Por proyecto solo cambian las categorías, precios y estados (`lib/manifest.js`) y la geometría (`lib/planos.js`). Cada lote es `[número, categoría, estado]` (`disponible`, `reservada` o `vendida`).
+- **Geometría:** se generó automáticamente desde las imágenes de los masterplan (segmentación de bordes de lotes, servidumbres y agua). Si cambia un loteo, conviene regenerarla desde el nuevo plano.
 
 ## Notas de marca y técnicas
 

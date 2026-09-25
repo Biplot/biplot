@@ -14,10 +14,10 @@ Sitio estático (HTML, CSS y JavaScript, sin build ni dependencias). Funciona ab
 | Sección | Qué gana el cliente |
 |---|---|
 | **Hero con paisaje vivo** | Ilustración por capas (volcán, cipreses y surcos dorados del isotipo) que se mueve con el cursor y el scroll. Primera impresión premium, sin fotos de stock. |
-| **Buscador** | Destino + presupuesto con conteo en vivo ("27 parcelas disponibles hoy"). Lleva directo al plano ya filtrado. |
+| **Buscador** | Destino + presupuesto con conteo en vivo y desglose por proyecto ("14 en Malalcahuello · 12 en Marchigüe"). Lleva directo al plano ya filtrado y avisa si hay más en otros proyectos. Si nada entra en el presupuesto, dice desde cuánto parten y ofrece verlas igual. |
 | **Proyectos comparables** | Misma ficha para los tres: desde, superficie, reserva y disponibilidad. Ficha ampliada con destacados, cercanías y mapa. |
 | **Recorrido virtual 360°** ★ | Los tours de cada proyecto se ven dentro de la página: una lente "Entrar" abre el recorrido como un portal, se cambia de proyecto sin salir, hay pantalla completa y, al terminar, "Ver lotes", "Agendar visita" o "Compartir" por WhatsApp. Accesos desde el hero, cada tarjeta ("Recorrido 360°"), el plano (botón 360°) y la ficha del proyecto. Enlace directo: `#recorrido-puerto-varas`. |
-| **Plano interactivo de lotes** ★ | La función estrella. Estado, precio y superficie de cada lote. Filtros por estado, precio y sector; vista de lista ordenable; favoritos que se envían por WhatsApp; enlace directo a un lote (`#lote-malalcahuello-12`); "Reservar este lote" precarga el formulario. En un lote vendido, sugiere el disponible más parecido. |
+| **Plano interactivo de lotes** ★ | La función estrella. Planos nítidos con bordes compartidos, números siempre legibles y zoom real (botones, pellizco, arrastre, doble clic y Ctrl + rueda). Chips de precio que resaltan su categoría, filtros por estado y precio, vista de lista ordenable, favoritos que se envían por WhatsApp y enlace directo a un lote (`#lote-malalcahuello-12`). En el celular el detalle abre como hoja inferior sin tapar el lote. "Reservar este lote" precarga el formulario; en un lote vendido se ofrecen los disponibles más cercanos. |
 | **Videos (listo para usar)** | Soporte para video de portada en el hero y visor de video por proyecto (YouTube, Vimeo o archivo propio). No se muestra nada hasta cargar un video en `lib/manifest.js`. |
 | **Cómo comprar en 6 pasos** | El mismo embudo de Fundos 360° (reserva → validación → gastos → escritura → inscripción en el CBR), explicado sin letra chica. |
 | **Mi compra (Fundos 360°)** | Portal del comprador: avance de su compra, documentos y próximos hitos. Diferencia real frente a la competencia. |
@@ -26,7 +26,7 @@ Sitio estático (HTML, CSS y JavaScript, sin build ni dependencias). Funciona ab
 | **Preguntas frecuentes** | Rol propio, construcción, reserva, gastos, plazos, financiamiento, visitas. |
 | **Agenda tu visita** | Formulario validado que abre WhatsApp con el mensaje listo: nombre, proyecto, fecha, horario y lote. |
 
-Además: barra de acción fija en móvil (WhatsApp + Agendar visita), botón flotante de WhatsApp en escritorio, navegación con teclado en el plano, contraste AA y sitio legible sin JavaScript.
+Además: barra de acción fija en móvil (WhatsApp + Agendar visita), botón flotante de WhatsApp en escritorio y sitio legible sin JavaScript. Accesibilidad revisada con lector de pantalla y teclado: plano recorrible con flechas (Inicio/Fin saltan al lote más barato y al más caro), foco visible en fondos claros y oscuros, objetivos táctiles de 44 px, contraste AA y ningún control tapado por la barra móvil.
 
 ## Antes de publicar: qué validar con Fundos
 
@@ -76,10 +76,11 @@ Todo se configura en `lib/manifest.js`; si un campo queda vacío, no aparece nad
 
 Los tres planos (**Malalcahuello**, **Marchigüe** y **Puerto Varas**) replican la geometría de sus masterplan y comparten un **formato estándar Fundos**:
 
-- **Mismas piezas en todos:** predio gris con borde blanco y sombra, lotes con el color de su categoría de precio, vendidas en gris con una "V" y el número debajo, reservadas con trama, servidumbres y caminos en arena con borde punteado, agua en azul y números en círculo oscuro con un tamaño ajustado al lote típico de cada plano.
+- **Mismas piezas en todos:** predio gris con borde blanco, lotes con el color de su categoría de precio, vendidas en gris con una etiqueta "V 12", reservadas con trama, servidumbres y caminos en arena con borde punteado y agua en azul. Los disponibles llevan su número en un círculo blanco con el anillo del color de su precio; al acercarse aparece además el precio corto ("$14,99M"), para no depender solo del color.
+- **Siempre legible:** los números se dibujan a tamaño de pantalla constante, no del plano, así que se leen igual en un celular que en un monitor. Si los lotes quedan muy chicos, se ocultan los números de las vendidas para dar aire a las disponibles. En el celular el plano parte acercado sobre los lotes disponibles.
 - **Misma leyenda:** encabezado "Plano de loteo · Fundos de …" con disponibles, vendidas y total, y precios por categoría con el precio anterior tachado y cuántos lotes quedan ("Agotado" si no queda ninguno). El título es "Precio oferta" cuando hay precio rebajado y "Precios" si no.
-- **Qué se edita y dónde:** el formato vive en `main.js` (`PLANO`, `svgPlan`, `legendHtml`) y `styles.css`. Por proyecto solo cambian las categorías, precios y estados (`lib/manifest.js`) y la geometría (`lib/planos.js`). Cada lote es `[número, categoría, estado]` (`disponible`, `reservada` o `vendida`).
-- **Geometría:** se generó automáticamente desde las imágenes de los masterplan (segmentación de bordes de lotes, servidumbres y agua). Si cambia un loteo, conviene regenerarla desde el nuevo plano.
+- **Qué se edita y dónde:** el formato vive en `main.js` (`PLANO`, `svgPlan`, `catsHtml`, `legendHtml`) y `styles.css`. Por proyecto solo cambian las categorías, precios y estados (`lib/manifest.js`) y la geometría (`lib/planos.js`). Cada lote es `[número, categoría, estado]` (`disponible`, `reservada` o `vendida`).
+- **Geometría:** se generó automáticamente desde las imágenes de los masterplan (segmentación de bordes de lotes, servidumbres y agua) y se limpió como una cobertura continua: lotes vecinos comparten el mismo borde, sin huecos ni solapes, con líneas rectas y ríos suavizados. Cada lote guarda su forma, el punto de su etiqueta y cuánto espacio libre tiene (`{d, l, r}`). Si cambia un loteo, conviene regenerarla desde el nuevo plano.
 
 ## Notas de marca y técnicas
 
@@ -87,5 +88,5 @@ Los tres planos (**Malalcahuello**, **Marchigüe** y **Puerto Varas**) replican 
 - El isotipo se extrajo del PDF del manual, con transparencia, y se usa sin alterar.
 - Sin librerías: JavaScript propio en patrón IIFE, `defer` y cada módulo aislado con `safe()`. Solo se carga Google Fonts.
 - Al subir cambios de CSS/JS, actualiza el `?v=AAAAMMDD` en `index.html`.
-- Con *movimiento reducido* activo se apagan el paralaje, los destellos y la animación del teléfono; el resto sigue igual.
+- Con *movimiento reducido* activo se apagan el paralaje, las entradas animadas, el cinturón de valores, los trazos y las transiciones del plano. El cinturón también se pausa al pasar el cursor.
 - El formulario hoy abre WhatsApp. En producción conviene enviar también cada solicitud al módulo **Leads** de Fundos 360°.

@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Escena · prueba</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Space+Grotesk:wght@500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../oficina.css">
+<style>
+  html, body { margin: 0; height: 100%; background: radial-gradient(120% 90% at 50% -5%, #17446F 0%, #0E2A47 52%, #091D33 100%); }
+  svg { width: 100vw; height: 100vh; display: block; }
+</style>
+</head>
+<body>
+<svg id="s" xmlns="http://www.w3.org/2000/svg"></svg>
+<script src="../datos.js"></script>
+<script src="../elenco.js"></script>
+<script src="../piso1.js"></script>
+<script src="../escena.js"></script>
+<script>
+  var q = new URLSearchParams(location.search);
+  var esc = Escena.construir(document.getElementById('s'), { animado: true });
+  // ?piso=1 muestra el piso de los proyectos
+  if (q.get('piso') === '1') { var L = esc.piso(1); document.getElementById('s').setAttribute('viewBox', [L.x0, L.y0, L.x1 - L.x0, L.y1 - L.y0].join(' ')); }
+  if (q.get('vb')) document.getElementById('s').setAttribute('viewBox', q.get('vb'));
+  esc.iniciar();
+  window.esc = esc;
+</script>
+</body>
+</html>

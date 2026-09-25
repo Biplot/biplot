@@ -1,0 +1,293 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 32 32%27%3E%3Crect width=%2732%27 height=%2732%27 rx=%277%27 fill=%27%230E2A47%27/%3E%3Ccircle cx=%2723%27 cy=%2711%27 r=%273%27 fill=%27%23FF6B4A%27/%3E%3C/svg%3E">
+<style>.steps li::before{grid-row:span 2}</style>
+<title>Caso Centro Aurora</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&family=Space+Mono:wght@400;700&display=swap">
+
+<style>
+:root{
+  --paper:#F2F4F7; --surface:#FFFFFF; --surface-2:#EDF1F5;
+  --ink:#0E2A47; --ink-2:#34485F; --muted:#5F6F82;
+  --line:#DCE3EB; --line-soft:#E8EDF3;
+  --accent:#0B776D; --accent-soft:#D9F3EF; --on-accent:#FFFFFF;
+  --brass:#35679A; --brass-soft:#E1EAF4;
+  --good:#2C6F52; --good-soft:#DFEFE7;
+  --crit:#8F3126; --crit-soft:#FAE2DF;
+  --shadow:0 1px 2px rgba(14,42,71,.05),0 8px 24px -16px rgba(14,42,71,.28);
+  --f-display:"Space Grotesk","Segoe UI",system-ui,sans-serif;
+  --f-body:Inter,"Segoe UI",system-ui,sans-serif;
+  --f-mono:"Space Mono",ui-monospace,Consolas,monospace;
+  --measure:68ch;
+  --s1:.5rem; --s2:.875rem; --s3:1.375rem; --s4:2.25rem; --s5:3.5rem; --s6:5rem;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --paper:#0A1B2E; --surface:#0E2A47; --surface-2:#14345A;
+  --ink:#F2F4F7; --ink-2:#C4D2E0; --muted:#8FA3B8;
+  --line:#23456B; --line-soft:#1A3858;
+  --accent:#17C3B2; --accent-soft:#103F4A; --on-accent:#0E2A47;
+  --brass:#7FA6D0; --brass-soft:#17365A;
+  --good:#5BA982; --good-soft:#12291F;
+  --crit:#CF6A5C; --crit-soft:#2E1A17;
+  --shadow:0 1px 2px rgba(0,0,0,.4),0 8px 24px -16px rgba(0,0,0,.7);
+}}
+:root[data-theme="dark"]{
+  --paper:#0A1B2E; --surface:#0E2A47; --surface-2:#14345A;
+  --ink:#F2F4F7; --ink-2:#C4D2E0; --muted:#8FA3B8;
+  --line:#23456B; --line-soft:#1A3858;
+  --accent:#17C3B2; --accent-soft:#103F4A; --on-accent:#0E2A47;
+  --brass:#7FA6D0; --brass-soft:#17365A;
+  --good:#5BA982; --good-soft:#12291F;
+  --crit:#CF6A5C; --crit-soft:#2E1A17;
+  --shadow:0 1px 2px rgba(0,0,0,.4),0 8px 24px -16px rgba(0,0,0,.7);
+}
+*{box-sizing:border-box}
+body{background:var(--paper);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.6;margin:0;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1040px;margin:0 auto;padding:0 clamp(1.25rem,4vw,3rem)}
+.col{max-width:var(--measure)}
+h1,h2,h3,h4{font-family:var(--f-display);margin:0;line-height:1.14;letter-spacing:-.015em;text-wrap:balance;font-weight:600}
+h1{font-size:clamp(2.2rem,5.4vw,3.5rem);font-weight:700;letter-spacing:-.03em}
+h2{font-size:clamp(1.5rem,3vw,2rem)}
+h3{font-size:1.05rem}
+h4{font-size:.92rem}
+p{margin:0}
+strong{font-weight:600}
+.eyebrow{font-family:var(--f-mono);font-size:.7rem;font-weight:500;letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}
+.lede{font-size:1.16rem;line-height:1.55;color:var(--ink-2)}
+.small{font-size:.93rem;color:var(--muted);line-height:1.55}
+.mono{font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+
+header{border-bottom:1px solid var(--line);background:var(--surface);padding:var(--s5) 0 var(--s4)}
+.brandline{display:flex;align-items:center;gap:.7rem;margin-bottom:var(--s3);flex-wrap:wrap}
+.brandline .dot{width:7px;height:7px;border-radius:50%;background:var(--accent)}
+h1 .thin{display:block;font-weight:500;color:var(--muted);font-size:.34em;letter-spacing:-.01em;margin-top:.55rem}
+.hdr-meta{display:flex;flex-wrap:wrap;gap:var(--s3) var(--s4);margin-top:var(--s4);padding-top:var(--s3);border-top:1px solid var(--line-soft)}
+.hdr-meta div{display:flex;flex-direction:column;gap:.15rem}
+.hdr-meta .k{font-family:var(--f-mono);font-size:.64rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.hdr-meta .v{font-family:var(--f-display);font-size:.92rem;font-weight:500}
+.cta{display:inline-flex;align-items:center;gap:.5rem;margin-top:var(--s3);padding:.55rem 1rem;background:var(--accent);color:var(--on-accent);border-radius:3px;text-decoration:none;font-family:var(--f-display);font-weight:600;font-size:.88rem}
+.cta:hover{filter:brightness(1.08)}
+
+section{padding:var(--s6) 0;border-bottom:1px solid var(--line-soft)}
+.sec-head{display:flex;gap:var(--s3);align-items:baseline;margin-bottom:var(--s4)}
+.sec-num{font-family:var(--f-mono);font-size:.78rem;font-weight:600;color:var(--accent);flex:none;padding-top:.35rem;letter-spacing:.06em}
+.sec-head .col{display:flex;flex-direction:column;gap:var(--s2)}
+.body{display:flex;flex-direction:column;gap:var(--s2)}
+
+.tblwrap{overflow-x:auto;margin-top:var(--s4);border:1px solid var(--line);border-radius:4px;background:var(--surface);box-shadow:var(--shadow)}
+table{border-collapse:collapse;width:100%;min-width:540px;font-size:.9rem}
+th,td{text-align:left;padding:.68rem var(--s2);border-bottom:1px solid var(--line-soft);vertical-align:top}
+th{font-family:var(--f-mono);font-size:.64rem;letter-spacing:.13em;text-transform:uppercase;color:var(--muted);font-weight:600;background:var(--surface-2)}
+td:first-child{font-family:var(--f-display);font-weight:600;font-size:.9rem}
+td.num{font-family:var(--f-mono);font-variant-numeric:tabular-nums;white-space:nowrap}
+td.g{color:var(--good);font-weight:600}
+tr:last-child td{border-bottom:none}
+
+.quotes{display:grid;grid-template-columns:repeat(auto-fit,minmax(258px,1fr));gap:var(--s2);margin-top:var(--s4)}
+.q{background:var(--surface);border:1px solid var(--line);border-left:2px solid var(--brass);border-radius:4px;padding:var(--s3);display:flex;flex-direction:column;gap:.6rem}
+.q p{font-size:.97rem;line-height:1.5;font-style:italic;color:var(--ink)}
+.q .who{font-family:var(--f-mono);font-size:.66rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+
+.arq{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:var(--s2);margin-top:var(--s4)}
+.a{border:1px solid var(--line);background:var(--surface);border-radius:4px;padding:var(--s3);display:flex;flex-direction:column;gap:.4rem;opacity:.55}
+.a.win{opacity:1;border-color:var(--accent);border-width:1.5px;background:var(--accent-soft)}
+.a .t{font-family:var(--f-mono);font-size:.68rem;font-weight:600;letter-spacing:.11em;color:var(--muted)}
+.a.win .t{color:var(--accent)}
+.a p{font-size:.87rem;line-height:1.45;color:var(--ink-2)}
+.a .verdict{font-family:var(--f-mono);font-size:.66rem;letter-spacing:.06em;margin-top:auto;padding-top:.5rem;border-top:1px solid var(--line-soft);color:var(--muted)}
+.a.win .verdict{color:var(--accent);font-weight:600}
+
+.rail{margin-top:var(--s4);border-top:1px solid var(--line)}
+.st{display:grid;grid-template-columns:82px minmax(0,1fr);gap:var(--s3);padding:var(--s3) 0;border-bottom:1px solid var(--line-soft)}
+.st .code{font-family:var(--f-mono);font-size:.92rem;font-weight:600;color:var(--accent);padding-top:.1rem}
+.st .b{display:flex;flex-direction:column;gap:.35rem}
+.st p{font-size:.95rem;line-height:1.55;color:var(--ink-2)}
+.st.hl{background:var(--accent-soft);margin-left:-1rem;padding-left:1rem;padding-right:1rem;border-left:2px solid var(--accent)}
+
+.mods{display:grid;grid-template-columns:repeat(auto-fit,minmax(238px,1fr));gap:var(--s2);margin-top:var(--s4)}
+.m{background:var(--surface);border:1px solid var(--line);border-radius:4px;padding:var(--s3);display:flex;flex-direction:column;gap:.4rem}
+.m h4{color:var(--ink)}
+.m p{font-size:.88rem;line-height:1.45;color:var(--ink-2)}
+.m .tagn{font-family:var(--f-mono);font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;padding:.14rem .4rem;border-radius:2px;align-self:flex-start;background:var(--accent-soft);color:var(--accent)}
+.m .tagv{background:var(--brass-soft);color:var(--brass)}
+
+.steps{margin:var(--s4) 0 0;padding:0;counter-reset:s}
+.steps li{list-style:none;counter-increment:s;display:grid;grid-template-columns:2rem minmax(0,1fr);gap:.7rem;padding:.62rem 0;border-bottom:1px solid var(--line-soft);font-size:.96rem;color:var(--ink-2);line-height:1.5}
+.steps li::before{content:counter(s,decimal-leading-zero);font-family:var(--f-mono);font-size:.72rem;color:var(--accent);font-weight:600;padding-top:.24rem}
+.pull{border-left:2px solid var(--accent);padding:.15rem 0 .15rem var(--s3);margin-top:var(--s4);font-size:1.1rem;line-height:1.55}
+.note{background:var(--surface-2);border:1px solid var(--line-soft);border-radius:4px;padding:var(--s3);font-size:.92rem;line-height:1.55;color:var(--ink-2);margin-top:var(--s4)}
+footer{padding:var(--s5) 0 var(--s6)}
+:where(a,button):focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+
+
+<header>
+  <div class="wrap">
+    <div class="brandline"><span class="dot"></span><span class="eyebrow">BiPlot · Caso 03 de 04 · Arquetipo B</span></div>
+    <h1>Centro Aurora<span class="thin">Una clínica dental que quemaba 31 horas al mes llamando por teléfono para confirmar</span></h1>
+    <div class="hdr-meta">
+      <div><span class="k">Rubro</span><span class="v">Salud dental</span></div>
+      <div><span class="k">Tamaño</span><span class="v">4 sillones · 6 dentistas</span></div>
+      <div><span class="k">Volumen</span><span class="v">~900 pacientes activos</span></div>
+      <div><span class="k">Arquetipo</span><span class="v">B · Automatización</span></div>
+      <div><span class="k">Plazo</span><span class="v">3 semanas</span></div>
+    </div>
+    <a class="cta" href="demo.html">Abrir la demo &rarr;</a>
+  </div>
+</header>
+
+<main class="wrap">
+
+<section>
+  <div class="sec-head"><span class="sec-num">01</span><div class="col">
+    <h2>El negocio</h2>
+    <p class="lede">Centro odontológico en La Serena. Cuatro sillones, seis dentistas que trabajan por horas, dos personas en recepción. Atiende Fonasa, isapres y particulares.</p>
+  </div></div>
+  <div class="col body">
+    <p>El negocio de una clínica dental es sencillo de describir y brutal de operar: <strong>se vende tiempo de sillón</strong>. Un sillón vacío a las 15:00 de un martes no se recupera nunca. No es inventario que se guarde para mañana.</p>
+    <p>Aquí sí había software: un sistema dental que lleva la agenda y las fichas desde 2019, y funciona bien para lo que hace. El problema no era la agenda. Era todo lo que había que hacer <em>alrededor</em> de la agenda: llamar uno por uno para confirmar, anotar en una planilla paralela quién contestó, volver a llamar a los que no, y cuando alguien cancelaba, quedarse mirando el bloque vacío sin tiempo para buscar quién lo tomara.</p>
+  </div>
+</section>
+
+<section>
+  <div class="sec-head"><span class="sec-num">02</span><div class="col">
+    <h2>Cómo se determinaron los dolores</h2>
+    <p class="lede">Aquí el método fue medir el trabajo que no aparece en ningún sistema: el que se hace con el teléfono en la mano.</p>
+  </div></div>
+  <div class="col body">
+    <p><strong>E0 · Calificación (45 min).</strong> El administrador pidió &laquo;cambiar el software dental, porque no sirve&raquo;. Los cinco filtros en verde, pero con una señal de alarma: la petición implicaba tirar a la basura un sistema que llevaba siete años funcionando. Se dejó para el diagnóstico.</p>
+    <p><strong>E1 · Diagnóstico (1 semana, pagado).</strong> Tres actividades:</p>
+  </div>
+  <ol class="steps col">
+    <li><strong>Sentarse cinco medias jornadas en recepción</strong>, con cronómetro, contando llamadas: cuántas, de cuántos minutos, con qué resultado. Nadie sabía este número, y resultó ser el dolor principal.</li>
+    <li><strong>Exportar seis meses de agenda</strong> del software existente y calcular la tasa real de inasistencia, la ocupación efectiva por sillón y qué pasaba con los bloques que se liberaban.</li>
+    <li><strong>Cruzar presupuestos aceptados contra sesiones ejecutadas.</strong> Ahí apareció el segundo hallazgo: tratamientos que el paciente ya había aprobado y que nadie estaba persiguiendo.</li>
+  </ol>
+
+  <div class="quotes col">
+    <div class="q"><p>&laquo;Yo llamo toda la mañana. Si no llamo, no llega ni la mitad.&raquo;</p><span class="who">Recepción</span></div>
+    <div class="q"><p>&laquo;Me molesta llegar y que el paciente no esté. Esa hora la perdí yo, no la clínica.&raquo;</p><span class="who">Dentista</span></div>
+    <div class="q"><p>&laquo;Cuando alguien cancela a las 11, no alcanzo a buscar quién lo tome. Se pierde y ya.&raquo;</p><span class="who">Recepción</span></div>
+    <div class="q"><p>&laquo;El software no sirve, hay que cambiarlo.&raquo;</p><span class="who">Administración</span></div>
+  </div>
+
+  <p class="small col" style="margin-top:var(--s3)">El software sí servía. Lo que no existía era la capa que trabaja sobre él. Reemplazarlo habría costado cuatro meses y no habría resuelto ni una de las tres primeras frases.</p>
+
+  <div class="tblwrap">
+    <table>
+      <thead><tr><th>Dolor encontrado</th><th>Cómo se midió</th><th>Magnitud</th></tr></thead>
+      <tbody>
+        <tr><td>Llamadas de confirmación</td><td>Cronómetro en recepción, 5 medias jornadas</td><td class="num">31 h / mes</td></tr>
+        <tr><td>Inasistencia</td><td>Export de 6 meses de agenda</td><td class="num">22% de las citas</td></tr>
+        <tr><td>Bloques liberados que se pierden</td><td>Cancelaciones vs. reasignaciones</td><td class="num">0% recuperado</td></tr>
+        <tr><td>Ocupación efectiva de sillón</td><td>Horas usadas / horas disponibles</td><td class="num">68%</td></tr>
+        <tr><td>Tratamientos aceptados sin continuar</td><td>Presupuestos vs. sesiones ejecutadas</td><td class="num">46 planes detenidos</td></tr>
+        <tr><td>Pacientes sin control preventivo</td><td>Última visita por ficha</td><td class="num">311 sobre 8 meses</td></tr>
+        <tr><td>Planilla paralela de confirmaciones</td><td>Observación directa</td><td class="num">doble registro diario</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="small col" style="margin-top:var(--s2)">Línea base: 31 h/mes de llamadas &middot; 22% de inasistencia &middot; 0% de huecos recuperados &middot; 68% de ocupación &middot; 46 tratamientos detenidos.</p>
+</section>
+
+<section>
+  <div class="sec-head"><span class="sec-num">03</span><div class="col">
+    <h2>Por qué arquetipo B</h2>
+    <p class="lede">El cliente pedía C &#8212; reemplazar el sistema. Era la respuesta más cara y la que menos resolvía.</p>
+  </div></div>
+  <div class="arq">
+    <div class="a"><span class="t">D &middot; HIGIENE</span><p>¿Hay pasos que se puedan eliminar?</p><span class="verdict">Sí, uno: la planilla paralela de confirmaciones. Se eliminó el primer día y no costó nada.</span></div>
+    <div class="a win"><span class="t">B &middot; AUTOMATIZACIÓN</span><p>El proceso funciona pero quema horas. La agenda existe y es correcta: falta la capa que la vigile y actúe sobre ella.</p><span class="verdict">Elegido. Tres semanas, sin tocar el sistema existente.</span></div>
+    <div class="a"><span class="t">A &middot; VISIBILIDAD</span><p>¿Alcanza con ver mejor los datos?</p><span class="verdict">No. Ver la tasa de inasistencia no la baja. Aquí hay que <em>actuar</em>: enviar, reintentar, reasignar.</span></div>
+    <div class="a"><span class="t">C &middot; SISTEMA</span><p>¿Hay que reemplazar el software dental?</p><span class="verdict">No. Funciona hace siete años, el equipo lo domina y las fichas clínicas están ahí. Cambiarlo eran cuatro meses para no resolver el dolor real.</span></div>
+  </div>
+  <div class="note col">
+    <strong>La regla que se aplicó:</strong> cuando el cliente pide reemplazar un sistema que funciona, casi siempre está describiendo un dolor que ocurre <em>alrededor</em> del sistema, no dentro. La pregunta correcta no es &laquo;¿qué le falta al software?&raquo; sino &laquo;¿qué hace la gente a mano porque el software no lo hace?&raquo;.
+  </div>
+</section>
+
+<section>
+  <div class="sec-head"><span class="sec-num">04</span><div class="col">
+    <h2>El pipeline aplicado</h2>
+    <p class="lede">El proyecto más corto de los cuatro, y el de mejor retorno por peso invertido. Es la característica del arquetipo B.</p>
+  </div></div>
+  <div class="rail">
+    <div class="st"><span class="code">E0</span><div class="b"><h4>Calificación</h4><p>45 minutos. Verde, con la alarma de que lo pedido implicaba botar un sistema funcionando. No se discutió en la reunión.</p></div></div>
+    <div class="st"><span class="code">E1</span><div class="b"><h4>Diagnóstico &#8212; 1 semana, pagado</h4><p>Cronometraje en recepción, export de seis meses de agenda y cruce de presupuestos contra sesiones. El número de 31 h/mes fue el que cambió la conversación: el administrador no lo conocía.</p></div></div>
+    <div class="st hl"><span class="code">E2</span><div class="b"><h4>Arquetipo y rebanada mínima</h4><p>Arquetipo B. La rebanada mínima fueron <strong>dos reglas</strong>: confirmación automática y cobertura de huecos desde lista de espera. Nada más. Métricas comprometidas: <strong>llamadas bajo 8 h/mes</strong> e <strong>inasistencia bajo 15%</strong>.</p></div></div>
+    <div class="st"><span class="code">E3</span><div class="b"><h4>Contrato de datos &#8212; 3 días</h4><p>Lectura de la agenda y las fichas desde el sistema dental, sin escribir en él al principio. La lista de espera no existía en ninguna parte: vivía en post-its. Se creó como entidad nueva.</p></div></div>
+    <div class="st"><span class="code">E4</span><div class="b"><h4>Modelo y permisos &#8212; 2 días</h4><p>Cinco entidades: paciente, cita, tratamiento, lista de espera, profesional. Tres roles: recepción no ve montos de tratamiento, el dentista no ve la lista de espera, administración ve todo.</p></div></div>
+    <div class="st"><span class="code">E5</span><div class="b"><h4>Construcción &#8212; 2 semanas</h4><p>Semana 1: agenda visual por sillón y las dos reglas de la rebanada mínima. Semana 2: tratamientos abandonados, pacientes reincidentes y campaña preventiva.</p></div></div>
+    <div class="st"><span class="code">E6</span><div class="b"><h4>Validación &#8212; 1 semana</h4><p>Marcha blanca con recepción confirmando en paralelo, a mano y con el sistema. Apareció una regla no mencionada: a los pacientes de bloques largos (brackets, coronas) siempre se les llamaba por teléfono además del mensaje. Se incorporó como la regla de reincidentes.</p></div></div>
+    <div class="st"><span class="code">E7</span><div class="b"><h4>Puesta en marcha &#8212; 2 días</h4><p>Muy corto: nadie tuvo que aprender un sistema nuevo. Cuatro videos de dos minutos. Campeón interno: la jefa de recepción, que era quien perdía las 31 horas.</p></div></div>
+    <div class="st"><span class="code">E8</span><div class="b"><h4>Medición &#8212; día 90</h4><p>Ver sección 06. Es el caso con el retorno más rápido de los cuatro.</p></div></div>
+    <div class="st hl"><span class="code">E9</span><div class="b"><h4>Cosecha &#8212; 1 día</h4><p>Al núcleo: el <strong>motor de confirmaciones con reintento y escalamiento</strong>, y el <strong>componente de agenda por recurso</strong> (sillón, box, sala, máquina, cuadrilla). Ambos sirven a cualquier negocio que venda tiempo de un recurso limitado.</p></div></div>
+  </div>
+</section>
+
+<section>
+  <div class="sec-head"><span class="sec-num">05</span><div class="col">
+    <h2>La solución</h2>
+    <p class="lede">Nueve módulos que se apoyan sobre la agenda que ya existía. El sistema dental sigue funcionando exactamente igual.</p>
+  </div></div>
+  <div class="mods">
+    <div class="m"><span class="tagn tagv">vertical</span><h4>Agenda por sillón</h4><p>Cuatro sillones, de 09:00 a 19:00 en bloques de 30 minutos. El estado de cada cita se lee por color. Un clic abre la ficha con historial, confirmación y tratamiento en curso.</p></div>
+    <div class="m"><span class="tagn tagv">vertical</span><h4>Confirmaciones</h4><p>La cola que antes se hacía por teléfono. Muestra qué se envió, cuántos intentos y quién quedó en riesgo. Sólo se llama a los que quedan en rojo.</p></div>
+    <div class="m"><span class="tagn tagv">vertical</span><h4>Lista de espera</h4><p>No existía. Ahora es una entidad con prioridad, antigüedad y preferencia horaria. Cuando se libera un bloque, el sistema busca el primero que calce por horario <em>y</em> por duración de la prestación.</p></div>
+    <div class="m"><span class="tagn tagv">vertical</span><h4>Tratamientos</h4><p>Planes aceptados y su avance real, con los días sin avanzar y el monto pendiente de facturar. Es producción ya vendida que nadie perseguía.</p></div>
+    <div class="m"><span class="tagn tagv">vertical</span><h4>Pacientes</h4><p>Ficha con comportamiento de asistencia: inasistencias acumuladas, tiempo sin control y facturación histórica.</p></div>
+    <div class="m"><span class="tagn">núcleo</span><h4>Motor de automatizaciones</h4><p>Seis reglas. En arquetipo B las reglas <em>son</em> el producto: la agenda ya existía, lo que faltaba era la capa que la vigila.</p></div>
+    <div class="m"><span class="tagn">núcleo</span><h4>Alertas</h4><p>Sólo lo que requiere una persona. Las confirmaciones que salen solas no generan alerta; las que quedan sin respuesta, sí.</p></div>
+    <div class="m"><span class="tagn">núcleo</span><h4>Bitácora</h4><p>Cada envío, reintento y reasignación queda registrado. Es lo que permitió calcular las horas liberadas en E8.</p></div>
+    <div class="m"><span class="tagn">núcleo</span><h4>Roles y panel</h4><p>Tres perfiles y el tablero con ocupación, inasistencia y horas liberadas contra la línea base.</p></div>
+  </div>
+  <div class="note col">
+    <strong>Cómo recorrer la demo en tres minutos:</strong> entra a <em>Agenda</em>, abre una cita y pulsa <strong>Cancelar cita</strong>. Observa el aviso: la lista de espera cubrió el bloque sola. Ahora ve a <em>Automatizaciones</em>, <strong>apaga</strong> la regla de lista de espera, vuelve a la agenda y cancela otra cita: el bloque se pierde y el sistema te dice cuánto costó. Esa comparación es la venta completa. Termina en <em>Tratamientos</em> y ordena por &laquo;Por facturar&raquo;.
+  </div>
+</section>
+
+<section>
+  <div class="sec-head"><span class="sec-num">06</span><div class="col">
+    <h2>El valor entregado</h2>
+    <p class="lede">Medición al día 90 contra la línea base de E1.</p>
+  </div></div>
+  <div class="tblwrap">
+    <table>
+      <thead><tr><th>Indicador</th><th>Antes (E1)</th><th>Día 90</th><th>Efecto</th></tr></thead>
+      <tbody>
+        <tr><td>Llamadas de confirmación</td><td class="num">31 h / mes</td><td class="num g">4 h / mes</td><td class="num g">&minus;87%</td></tr>
+        <tr><td>Tasa de inasistencia</td><td class="num">22%</td><td class="num g">11%</td><td class="num g">la mitad</td></tr>
+        <tr><td>Huecos recuperados</td><td class="num">0%</td><td class="num g">14 / mes</td><td class="num g">bloques revendidos</td></tr>
+        <tr><td>Ocupación de sillón</td><td class="num">68%</td><td class="num g">79%</td><td class="num g">+11 pts</td></tr>
+        <tr><td>Tratamientos retomados</td><td class="num">0 de 46</td><td class="num g">19 de 46</td><td class="num g">producción ya vendida</td></tr>
+        <tr><td>Planilla paralela</td><td class="num">diaria</td><td class="num g">eliminada</td><td class="num g">fase D</td></tr>
+        <tr><td>Sistema dental existente</td><td class="num">en uso</td><td class="num g">sigue en uso</td><td class="num g">no se reemplazó</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="pull col">El cliente pedía cuatro meses de proyecto para cambiar el software. Recibió tres semanas de automatización sobre el software que ya tenía, y once puntos de ocupación adicionales. El sistema que &laquo;no servía&raquo; sigue funcionando.</p>
+</section>
+
+<section style="border-bottom:none">
+  <div class="sec-head"><span class="sec-num">07</span><div class="col">
+    <h2>Qué se llevó BiPlot</h2>
+    <p class="lede">Dos componentes de núcleo con alcance mucho más ancho que la odontología.</p>
+  </div></div>
+  <div class="col body">
+    <p>El <strong>motor de confirmaciones con reintento y escalamiento</strong> sirve a cualquier negocio que agende con anticipación: consulta médica, kinesiología, peluquería, veterinaria, taller con hora reservada, arriendo de canchas.</p>
+    <p>El <strong>componente de agenda por recurso</strong> es más general todavía. Un sillón, un box, una sala de reuniones, una máquina, una cuadrilla en terreno: es el mismo problema de asignar tiempo a un recurso limitado. Se usó de inmediato en el caso 04.</p>
+    <p>Reutilización de núcleo en este proyecto: <strong>≈70%</strong>. La curva sigue: 0% en el caso 01, 60% en el 02, 70% en el 03. Al playbook se agregó el patrón <em>negocio que vende tiempo de un recurso limitado</em>, donde el sillón vacío no se recupera nunca y por eso la automatización paga sola.</p>
+  </div>
+</section>
+
+</main>
+<footer class="wrap">
+  <p class="small col">BiPlot &middot; Caso 03 de 04 &middot; Los datos del negocio son ilustrativos y están construidos sobre la operación real de un centro odontológico de este tamaño. La demo es funcional: el estado vive en el navegador y se reinicia al recargar la página.</p>
+</footer>

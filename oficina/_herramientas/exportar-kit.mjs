@@ -20,8 +20,8 @@ const salida = path.join(raiz, 'oficina', 'kit', 'png');
 const arg = (n, d) => { const i = process.argv.indexOf('--' + n); return i > -1 ? process.argv[i + 1] : d; };
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
-const IDS = ['lupe', 'celda', 'grilla', 'bucle', 'tamandua', 'faro', 'pepa'];
-const PIEZAS = IDS.map((id) => 'ficha-' + id).concat(['oficina', 'elenco', 'motor']);
+const IDS = ['lupe', 'architect', 'celda', 'engine', 'grilla', 'bucle', 'tamandua', 'faro', 'pepa', 'aby'];
+const PIEZAS = IDS.map((id) => 'ficha-' + id).concat(['oficina', 'elenco', 'motor', 'quien']);
 const FORMATOS = { '4x5': [1080, 1350], '9x16': [1080, 1920], og: [1200, 630] };
 let trabajos = [];
 for (const p of PIEZAS) for (const f of ['4x5', '9x16']) trabajos.push([p, f]);
@@ -42,13 +42,14 @@ const servidor = http.createServer((req, res) => {
 await new Promise((r) => servidor.listen(0, '127.0.0.1', r));
 const base = 'http://127.0.0.1:' + servidor.address().port;
 
-const EDGE = ['C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe', 'C:/Program Files/Microsoft/Edge/Application/msedge.exe',
-  '/usr/bin/microsoft-edge', '/usr/bin/google-chrome'].find((p) => fs.existsSync(p));
-if (!EDGE) { console.error('No encontré Edge ni Chrome'); process.exit(2); }
+// Edge o Chrome; NAVEGADOR=<ruta> para usar otro Chromium (en Linux, por ejemplo, el de Playwright).
+const EDGE = [process.env.NAVEGADOR, 'C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe', 'C:/Program Files/Microsoft/Edge/Application/msedge.exe',
+  '/usr/bin/microsoft-edge', '/usr/bin/google-chrome', '/usr/bin/chromium', '/usr/bin/chromium-browser', '/opt/pw-browsers/chromium'].find((p) => p && fs.existsSync(p));
+if (!EDGE) { console.error('No encontré Edge ni Chrome (usa NAVEGADOR=<ruta>)'); process.exit(2); }
 // Puerto de depuración 0: el sistema asigna uno libre y Edge lo escribe en DevToolsActivePort de su perfil.
 // Nunca un puerto fijo: otra sesión puede tener su propio Edge escuchando ahí y terminaríamos manejando su pestaña.
 const perfil = fs.mkdtempSync(path.join(os.tmpdir(), 'kit_'));
-const edge = spawn(EDGE, ['--headless=new', '--remote-debugging-port=0', `--user-data-dir=${perfil}`, '--no-first-run', '--disable-extensions',
+const edge = spawn(EDGE, ['--headless=new', '--remote-debugging-port=0', ...(process.getuid && process.getuid() === 0 ? ['--no-sandbox'] : []), `--user-data-dir=${perfil}`, '--no-first-run', '--disable-extensions',
   '--hide-scrollbars', '--force-color-profile=srgb', '--window-size=1200,1920', 'about:blank'], { stdio: 'ignore' });
 let puerto = 0, objetivos = null;
 for (let i = 0; i < 120 && !objetivos; i++) {
@@ -95,7 +96,7 @@ for (const [pieza, f] of trabajos) {
   console.log('✓', path.relative(raiz, archivo), Math.round(fs.statSync(archivo).size / 1024) + ' KB');
 }
 
-// Capturas de la oficina para el PR (1920, 1440, 1366 y 375 px), con el menú abierto y el panel de un proyecto.
+// Capturas de la oficina para el PR (1920, 1440, 1366 y 375 px): la planta baja, el piso 1, una sala y una ficha.
 const capturas = arg('capturas');
 if (capturas) {
   fs.mkdirSync(capturas, { recursive: true });
@@ -107,6 +108,10 @@ if (capturas) {
     await sleep(1600);
     let c = await cdp('Page.captureScreenshot', { format: 'png' });
     fs.writeFileSync(path.join(capturas, `oficina-${w}.png`), Buffer.from(c.data, 'base64'));
+    await js("document.querySelector('#pisos [data-piso=\"1\"]').click(); true");
+    await sleep(1400);
+    c = await cdp('Page.captureScreenshot', { format: 'png' });
+    fs.writeFileSync(path.join(capturas, `oficina-${w}-piso-1.png`), Buffer.from(c.data, 'base64'));
     await js("document.querySelector('#recorrer [data-id=\"fundos\"]').click(); true");
     await sleep(1800);
     c = await cdp('Page.captureScreenshot', { format: 'png' });

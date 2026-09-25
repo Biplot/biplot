@@ -3,14 +3,15 @@
  * Sin parámetros: galería con todas las piezas. Con ?pieza=<id>&formato=<4x5|9x16|og>: una sola pieza al tamaño
  * exacto, lista para capturar (window.KIT_LISTO = true cuando cargaron las fuentes). La exporta
  * _herramientas/exportar-kit.mjs.
+ * En redes el equipo va en ilustración (ilustraciones.js); el cabezón queda para la oficina y la credencial.
  */
 (function () {
   'use strict';
 
-  var D = window.OFICINA_DATOS, E = window.Elenco;
-  var PERSONAL = {}; D.personal.forEach(function (p) { PERSONAL[p.id] = p; });
+  var D = window.OFICINA_DATOS, E = window.Elenco, I = window.Ilustraciones;
+  var PERSONAL = {}; D.personal.concat(D.mascotas).forEach(function (p) { PERSONAL[p.id] = p; });
   var FORMATOS = { '4x5': [1080, 1350], '9x16': [1080, 1920], og: [1200, 630] };
-  var PIEZAS = E.ids.map(function (id) { return 'ficha-' + id; }).concat(['oficina', 'elenco', 'motor']);
+  var PIEZAS = E.ids.map(function (id) { return 'ficha-' + id; }).concat(['oficina', 'elenco', 'motor', 'quien']);
 
   function esc(t) { return String(t).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
 
@@ -21,32 +22,31 @@
     return '<footer class="k-pie"><span class="k-marca">' + ISO + '<span class="bp-wordmark"><span class="bi">Bi</span><span class="plot">Plot</span></span></span>' +
       '<span class="k-url">' + (texto || 'biplot.cl/oficina') + '</span></footer>';
   }
-
-  // Tarima isométrica bajo los pies (coordenadas locales del personaje).
-  function tarima(ancho) {
-    var a = ancho || 150, b = a / 2, h = 22;
-    return '<g class="k-tarima"><polygon points="' + [-a + ',0', '0,' + (-b), a + ',0', '0,' + b].join(' ') + '" fill="#163A60"/>' +
-      '<polygon points="' + [-a + ',0', '0,' + b, '0,' + (b + h), -a + ',' + h].join(' ') + '" fill="#0E2A47"/>' +
-      '<polygon points="' + ['0,' + b, a + ',0', a + ',' + h, '0,' + (b + h)].join(' ') + '" fill="#091D33"/>' +
-      '<g stroke="rgba(23,195,178,.16)" stroke-width="1.5"><line x1="' + (-a / 2) + '" y1="' + (-b / 2) + '" x2="' + (a / 2) + '" y2="' + (b / 2) + '"/>' +
-      '<line x1="' + (-a / 2) + '" y1="' + (b / 2) + '" x2="' + (a / 2) + '" y2="' + (-b / 2) + '"/></g>' +
-      '<polyline points="' + [-a + ',0', '0,' + b, a + ',0'].join(' ') + '" fill="none" stroke="rgba(127,216,207,.55)" stroke-width="2"/></g>';
+  // Ilustración completa, o sólo la cabeza con «cabeza».
+  function ilustracion(id, clase, cabeza) {
+    var il = I[id];
+    return '<svg class="' + clase + '" viewBox="' + (cabeza ? il.cabeza : il.vb) + '" aria-hidden="true">' + il.svg + '</svg>';
   }
-  function personaje(id, clase, ancho) {
-    return '<svg class="' + (clase || 'k-pj') + '" viewBox="-175 -290 350 400" aria-hidden="true">' + E.defs() + tarima(ancho) + E.svg(id) + '</svg>';
+  // Cabeza y torso del cabezón de la oficina
+  function cabezon(id) {
+    var a = E.alto[id], w = E.ancho[id], masc = E.mascotas.indexOf(id) > -1;
+    var vb = masc ? [-w / 2 - 8, -a - 8 - (w > a ? (w - a) / 2 : 0), w + 16, Math.max(w, a) + 16] : [-66, -a - 4, 132, 132];
+    return '<svg viewBox="' + vb.map(Math.round).join(' ') + '" aria-hidden="true">' + E.svg(id).replace('class="pj ', 'class="pj pj-retrato ') + '</svg>';
   }
+  // Nombre grande que siempre cabe en el ancho de la pieza
+  function tamNombre(t, base, ancho) { return Math.min(base, Math.floor(ancho / (t.length * 0.56))); }
 
-  /* ── Fichas del personal ── */
+  /* ── Fichas del equipo ── */
   function ficha(id, f) {
-    var p = PERSONAL[id];
+    var p = PERSONAL[id], fs = tamNombre(p.nombre, f === '9x16' ? 190 : 172, 900);
     return '<div class="k-halo"></div>' +
-      '<p class="k-eyebrow">El personal</p>' +
-      '<h1 class="k-nombre">' + esc(p.nombre) + '</h1>' +
-      '<p class="k-rol">' + esc(p.rol) + '<span class="k-fases">' + p.fases.join(' · ') + '</span></p>' +
+      '<p class="k-eyebrow">El equipo</p>' +
+      '<h1 class="k-nombre" style="font-size:' + fs + 'px">' + esc(p.nombre) + '</h1>' +
+      '<p class="k-rol">' + esc(p.rol) + '<span class="k-fases">' + (p.fases.length ? p.fases.join(' · ') : esc(p.placa)) + '</span></p>' +
       '<p class="k-lema">' + esc(p.lema) + '</p>' +
-      personaje(id, 'k-pj') +
+      ilustracion(id, 'k-pj') +
       '<div class="k-burbuja">«' + esc(p.frase) + '»</div>' +
-      '<svg class="k-placa" viewBox="0 0 300 190" aria-hidden="true">' + E.defs() + E.placaTarjeta(p, true).replace('class="pj pj-', 'class="pj pj-retrato pj-') + '</svg>' +
+      '<svg class="k-placa" viewBox="0 0 300 190" aria-hidden="true">' + E.defs() + E.placaTarjeta(p, true).replace(/class="pj pj-/g, 'class="pj pj-retrato pj-') + '</svg>' +
       '<ul class="k-rasgos">' + p.rasgos.map(function (r) { return '<li>' + esc(r) + '</li>'; }).join('') + '</ul>' +
       pie(f === '9x16' ? (p.genero === 'f' ? 'Conócela' : 'Conócelo') + ' en <b>biplot.cl/oficina</b>' : null);
   }
@@ -55,53 +55,59 @@
   function oficina(f) {
     var titulo = f === 'og' ? 'La oficina de BiPlot' : 'Pasa.<br>Así trabajamos.';
     return '<div class="k-halo"></div>' +
-      '<p class="k-eyebrow">' + 'La oficina' + '</p>' +
+      '<p class="k-eyebrow">La oficina</p>' +
       '<h1 class="k-titulo">' + titulo + '</h1>' +
-      '<p class="k-bajada">Dos socios y siete especialistas dibujados, en una oficina que puedes recorrer.</p>' +
+      '<p class="k-bajada">Una oficina que puedes recorrer: el equipo trabajando y una sala por proyecto.</p>' +
       (f === 'og' ? '<p class="k-url-og">biplot.cl/oficina</p>' : '') +
       '<svg class="k-escena" id="k-escena" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"></svg>' +
       (f === 'og' ? '' : pie('Recórrela en <b>biplot.cl/oficina</b>'));
   }
   var ENCUADRE = { '4x5': '-660 -150 1450 880', '9x16': '-340 10 900 835', og: '-520 -150 1320 885' };
 
-  /* ── El elenco ── */
+  /* ── El equipo completo ── */
   function elenco(f) {
-    var filas = f === '9x16'
-      ? [[['grilla', -260], ['faro', 0], ['bucle', 260]], [['celda', -175], ['tamandua', 175]], [['lupe', -175], ['pepa', 175]]]
-      : [[['bucle', -375], ['grilla', -125], ['faro', 125], ['celda', 375]], [['tamandua', -250], ['lupe', 0], ['pepa', 250]]];
-    var alto = f === '9x16' ? 1040 : 800, esc0 = f === '9x16' ? 0.92 : 0.86, dy = f === '9x16' ? 290 : 330, y0 = f === '9x16' ? 290 : 300;
-    var s = '<svg class="k-grupo" viewBox="-540 0 1080 ' + alto + '" aria-hidden="true">' + E.defs();
-    // tarima grande
-    var tb = y0 + dy * (filas.length - 1) / 2 + 40, ta = 520, tbb = ta / 2;
-    s += '<polygon points="' + [(-ta) + ',' + tb, '0,' + (tb - tbb), ta + ',' + tb, '0,' + (tb + tbb)].join(' ') + '" fill="#163A60"/>' +
-      '<polygon points="' + [(-ta) + ',' + tb, '0,' + (tb + tbb), '0,' + (tb + tbb + 30), (-ta) + ',' + (tb + 30)].join(' ') + '" fill="#0E2A47"/>' +
-      '<polygon points="' + ['0,' + (tb + tbb), ta + ',' + tb, ta + ',' + (tb + 30), '0,' + (tb + tbb + 30)].join(' ') + '" fill="#091D33"/>' +
-      '<polyline points="' + [(-ta) + ',' + tb, '0,' + (tb + tbb), ta + ',' + tb].join(' ') + '" fill="none" stroke="rgba(127,216,207,.55)" stroke-width="2"/>';
+    var alto = f === '9x16';
+    var filas = alto
+      ? [['lupe', 'architect', 'celda', 'engine'], ['grilla', 'bucle', 'tamandua'], ['faro', 'pepa', 'aby']]
+      : [['lupe', 'architect', 'celda', 'engine', 'grilla'], ['bucle', 'tamandua', 'faro', 'pepa', 'aby']];
+    var k = alto ? 0.47 : 0.6, dy = alto ? 290 : 380, y0 = 0, paso = alto ? 250 : 206, s = '';
     filas.forEach(function (fila, i) {
-      var y = y0 + i * dy;
-      fila.forEach(function (c) {
-        var p = PERSONAL[c[0]];
-        s += '<g transform="translate(' + c[1] + ' ' + y + ') scale(' + esc0 + ')">' + E.svg(c[0]) + '</g>' +
-          '<g transform="translate(' + c[1] + ' ' + (y + 44) + ')"><rect x="-86" y="-24" width="172" height="40" rx="20" fill="#0E2A47" stroke="rgba(127,216,207,.6)" stroke-width="1.5"/>' +
-          '<text x="-8" y="3" text-anchor="middle" font-family="Space Grotesk, sans-serif" font-weight="600" font-size="22" fill="#F2F4F7">' + esc(p.nombre) + '</text>' +
-          '<rect x="' + (46 - (p.nombre.length > 6 ? -2 : 0)) + '" y="-15" width="34" height="22" rx="6" fill="#17C3B2"/><text x="' + (63 - (p.nombre.length > 6 ? -2 : 0)) + '" y="1" text-anchor="middle" font-family="Space Mono, monospace" font-weight="700" font-size="13" fill="#0E2A47">' + p.placa + '</text></g>';
+      fila.forEach(function (id, j) {
+        var p = PERSONAL[id], cx = (j - (fila.length - 1) / 2) * paso, y = y0 + i * dy;
+        s += '<g transform="translate(' + (cx - 150 * k) + ' ' + y + ') scale(' + k + ')">' + I[id].svg + '</g>' +
+          '<g transform="translate(' + cx + ' ' + (y + 520 * k + 6) + ')"><rect x="-92" y="-22" width="184" height="40" rx="20" fill="#0E2A47" stroke="rgba(127,216,207,.6)" stroke-width="1.5"/>' +
+          '<text x="' + (p.placa.length > 3 ? -30 : -14) + '" y="5" text-anchor="middle" font-family="Space Grotesk, sans-serif" font-weight="600" font-size="' + (p.nombre.length > 9 ? 17 : 21) + '" fill="#F2F4F7">' + esc(p.nombre) + '</text>' +
+          '<rect x="' + (p.placa.length > 3 ? 26 : 44) + '" y="-13" width="' + (p.placa.length > 3 ? 60 : 38) + '" height="24" rx="6" fill="#17C3B2"/><text x="' + (p.placa.length > 3 ? 56 : 63) + '" y="4" text-anchor="middle" font-family="Space Mono, monospace" font-weight="700" font-size="' + (p.placa.length > 3 ? 12 : 14) + '" fill="#0E2A47">' + p.placa + '</text></g>';
       });
     });
-    s += '</svg>';
-    return '<div class="k-halo"></div><p class="k-eyebrow">La oficina</p><h1 class="k-titulo">El personal</h1>' +
-      '<p class="k-bajada">Siete especialistas, uno por parte del trabajo. Los reconoces por su placa.</p>' + s +
-      pie(f === '9x16' ? 'Conócelos en <b>biplot.cl/oficina</b>' : null);
+    var h = y0 + filas.length * dy;
+    return '<div class="k-halo"></div><p class="k-eyebrow">La oficina</p><h1 class="k-titulo">El equipo</h1>' +
+      '<p class="k-bajada">Diez integrantes, uno por parte del trabajo. Los reconoces por su placa.</p>' +
+      '<svg class="k-grupo" viewBox="-540 -10 1080 ' + (h + 10) + '" aria-hidden="true">' + s + '</svg>' +
+      pie(alto ? 'Conócelos en <b>biplot.cl/oficina</b>' : null);
   }
 
   /* ── ¿Quién hace qué? ── */
   function motor(f) {
     var filas = D.fases.map(function (fa) {
       return '<li><span class="k-cod">' + fa.id + '</span><span class="k-fase"><b>' + esc(fa.nombre) + '</b>' + esc(fa.texto) + '</span><span class="k-quien">' +
-        fa.quien.map(function (q) { return '<svg viewBox="-150 -280 300 300" aria-hidden="true">' + E.svg(q) + '</svg>'; }).join('') + '</span></li>';
+        fa.quien.map(function (q) { return ilustracion(q, '', true); }).join('') + '</span></li>';
     }).join('');
     return '<div class="k-halo"></div><p class="k-eyebrow">El motor</p><h1 class="k-titulo">¿Quién hace qué?</h1>' +
       '<ol class="k-motor">' + filas + '</ol>' +
-      '<p class="k-cierre">Tú hablas con los socios. <span>Ellos arman el proyecto contigo y se lo pasan al equipo.</span></p>' + pie();
+      '<p class="k-cierre">Tú hablas con una persona del equipo. <span>El motor hace el resto, fase por fase.</span></p>' + pie();
+  }
+
+  /* ── ¿Quién es real? ── */
+  function quien(f) {
+    var ids = E.ids;
+    return '<div class="k-halo"></div><p class="k-eyebrow">La oficina</p><h1 class="k-titulo">¿Quién es real?</h1>' +
+      '<p class="k-bajada">Aby dice que ella. Los demás no contestan.</p>' +
+      '<ul class="k-caras">' + ids.map(function (id) {
+        return '<li' + (id === 'aby' ? ' class="aby"' : '') + '><span class="k-cara">' + ilustracion(id, '', true) + '</span><b>' + esc(PERSONAL[id].nombre) + '</b></li>';
+      }).join('') + '</ul>' +
+      '<p class="k-cierre">Pasa a la oficina y decide tú. <span>Nadie lo confirma. Nadie lo desmiente.</span></p>' +
+      pie(f === '9x16' ? 'Averígualo en <b>biplot.cl/oficina</b>' : null);
   }
 
   function contenido(pieza, f) {
@@ -109,6 +115,7 @@
     if (pieza === 'oficina') return oficina(f);
     if (pieza === 'elenco') return elenco(f);
     if (pieza === 'motor') return motor(f);
+    if (pieza === 'quien') return quien(f);
     return '';
   }
   function montar(destino, pieza, f) {

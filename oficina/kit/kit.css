@@ -14,7 +14,7 @@
 .k-rol { left: 80px; top: 310px; font: 600 40px/1.1 var(--bp-f-display); color: #17C3B2; display: flex; align-items: center; gap: 18px; }
 .k-fases { font: 700 22px/1 var(--bp-f-mono); color: #0E2A47; background: #17C3B2; border-radius: 10px; padding: 9px 12px; letter-spacing: 0; }
 .k-lema { left: 80px; top: 378px; width: 470px; font: 500 40px/1.18 var(--bp-f-display); color: #D5E2EE; }
-.k-pj { right: 10px; top: 330px; width: 650px; height: 743px; overflow: visible; }
+.k-pj { right: 10px; top: 330px; width: 650px; height: 743px; overflow: visible; filter: drop-shadow(0 26px 40px rgba(0, 0, 0, .35)); }
 .k-burbuja { left: 80px; top: 560px; width: 440px; padding: 30px 34px; border-radius: 30px; background: #F2F4F7; color: #0E2A47;
   font: 600 36px/1.22 var(--bp-f-display); letter-spacing: -.01em; box-shadow: 0 24px 50px rgba(0, 0, 0, .35); }
 .k-burbuja::after { content: ""; position: absolute; right: -26px; top: 56px; border: 18px solid transparent; border-left: 30px solid #F2F4F7; border-right: 0; }
@@ -86,6 +86,25 @@
 .f-9x16 .k-fase { white-space: normal; }
 .f-9x16 .k-cierre { top: 1482px; }
 .f-9x16.p-motor .k-pie { bottom: 270px; }
+
+/* ¿Quién es real? */
+.k-caras { left: 60px; right: 60px; top: 470px; list-style: none; padding: 0; display: flex; flex-wrap: wrap; justify-content: center; gap: 34px 18px; }
+.k-caras li { width: 174px; display: grid; justify-items: center; gap: 12px; font: 600 24px/1.1 var(--bp-f-display); color: #D5E2EE; text-align: center; }
+.k-cara { display: block; width: 168px; height: 168px; border-radius: 50%; overflow: hidden; background: #17446F; border: 4px solid rgba(127, 216, 207, .45); }
+.k-cara svg { display: block; width: 100%; height: 100%; }
+.k-caras .aby .k-cara { border-color: #17C3B2; box-shadow: 0 0 0 8px rgba(23, 195, 178, .18); }
+.k-caras .aby b { color: #17C3B2; }
+.p-quien .k-titulo { font-size: 128px; }
+.p-quien .k-bajada { top: 300px; }
+.p-quien .k-cierre { top: 1060px; }
+.f-9x16.p-quien .k-titulo { top: 330px; font-size: 128px; }
+.f-9x16.p-quien .k-bajada { top: 480px; }
+.f-9x16 .k-caras { top: 620px; gap: 34px 24px; }
+.f-9x16 .k-caras li { width: 200px; }
+.f-9x16 .k-cara { width: 186px; height: 186px; }
+.f-9x16.p-quien .k-cierre { top: 1490px; }
+.k-quien { gap: 8px; }
+.k-quien svg { border-radius: 50%; background: #17446F; overflow: hidden; }
 
 /* Galería */
 .galeria { padding: 32px 24px 64px; max-width: 1400px; margin: 0 auto; }

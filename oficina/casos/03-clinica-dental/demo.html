@@ -1,0 +1,870 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 32 32%27%3E%3Crect width=%2732%27 height=%2732%27 rx=%277%27 fill=%27%230E2A47%27/%3E%3Ccircle cx=%2723%27 cy=%2711%27 r=%273%27 fill=%27%23FF6B4A%27/%3E%3C/svg%3E">
+<style>.steps li::before{grid-row:span 2}</style>
+<title>Aurora Agenda</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&family=Space+Mono:wght@400;700&display=swap">
+
+<style>
+:root{
+  --paper:#F2F4F7; --surface:#FFFFFF; --surface-2:#EDF1F5; --surface-3:#E2E7EE;
+  --ink:#0E2A47; --ink-2:#34485F; --muted:#5F6F82; --faint:#8A9AAD;
+  --line:#DCE3EB; --line-soft:#E8EDF3;
+  --accent:#0B776D; --accent-2:#08615A; --accent-soft:#D9F3EF; --accent-tint:#EEF9F7; --on-accent:#FFFFFF;
+  --brass:#35679A; --brass-soft:#E1EAF4;
+  --good:#2C6F52; --good-soft:#DFEFE7;
+  --warn:#96591A; --warn-soft:#FAECD9;
+  --crit:#8F3126; --crit-soft:#FAE2DF;
+  --info:#1F5A7A; --info-soft:#DFEBF3;
+  --shadow-1:0 1px 2px rgba(14,42,71,.06);
+  --shadow-2:0 2px 4px rgba(14,42,71,.05),0 12px 28px -18px rgba(14,42,71,.35);
+  --shadow-3:0 4px 8px rgba(14,42,71,.08),0 24px 48px -20px rgba(14,42,71,.4);
+  --f:Inter,"Segoe UI",system-ui,sans-serif;
+  --m:"Space Mono",ui-monospace,Consolas,monospace;
+  --d:"Space Grotesk","Segoe UI",system-ui,sans-serif;
+  --r:4px;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --paper:#0A1B2E; --surface:#0E2A47; --surface-2:#14345A; --surface-3:#1A3E68;
+  --ink:#F2F4F7; --ink-2:#C4D2E0; --muted:#8FA3B8; --faint:#6B7F96;
+  --line:#23456B; --line-soft:#1A3858;
+  --accent:#17C3B2; --accent-2:#4FD8C9; --accent-soft:#103F4A; --accent-tint:#0E3442; --on-accent:#0E2A47;
+  --brass:#7FA6D0; --brass-soft:#17365A;
+  --good:#5FAE86; --good-soft:#122C21;
+  --warn:#C99050; --warn-soft:#2E2314;
+  --crit:#D47364; --crit-soft:#331A17;
+  --info:#66A5C6; --info-soft:#13272F;
+  --shadow-1:0 1px 2px rgba(0,0,0,.4);
+  --shadow-2:0 2px 4px rgba(0,0,0,.3),0 12px 28px -18px rgba(0,0,0,.8);
+  --shadow-3:0 4px 8px rgba(0,0,0,.4),0 24px 48px -20px rgba(0,0,0,.9);
+}}
+:root[data-theme="dark"]{
+  --paper:#0A1B2E; --surface:#0E2A47; --surface-2:#14345A; --surface-3:#1A3E68;
+  --ink:#F2F4F7; --ink-2:#C4D2E0; --muted:#8FA3B8; --faint:#6B7F96;
+  --line:#23456B; --line-soft:#1A3858;
+  --accent:#17C3B2; --accent-2:#4FD8C9; --accent-soft:#103F4A; --accent-tint:#0E3442; --on-accent:#0E2A47;
+  --brass:#7FA6D0; --brass-soft:#17365A;
+  --good:#5FAE86; --good-soft:#122C21;
+  --warn:#C99050; --warn-soft:#2E2314;
+  --crit:#D47364; --crit-soft:#331A17;
+  --info:#66A5C6; --info-soft:#13272F;
+  --shadow-1:0 1px 2px rgba(0,0,0,.4);
+  --shadow-2:0 2px 4px rgba(0,0,0,.3),0 12px 28px -18px rgba(0,0,0,.8);
+  --shadow-3:0 4px 8px rgba(0,0,0,.4),0 24px 48px -20px rgba(0,0,0,.9);
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--f);font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased}
+h1,h2,h3{font-family:var(--d)}
+button,input,select,textarea{font:inherit;color:inherit}
+h1,h2,h3,h4{margin:0;font-weight:600;line-height:1.2;letter-spacing:-.01em}
+p{margin:0}
+.mono{font-family:var(--m);font-variant-numeric:tabular-nums}
+.lbl{font-family:var(--m);font-size:.62rem;font-weight:600;letter-spacing:.13em;text-transform:uppercase;color:var(--muted)}
+:where(button,a,input,select,[tabindex]):focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:2px}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+
+.app{display:grid;grid-template-columns:212px minmax(0,1fr);min-height:100vh}
+@media(max-width:900px){.app{grid-template-columns:1fr}}
+.side{background:var(--surface);border-right:1px solid var(--line);display:flex;flex-direction:column;position:sticky;top:0;height:100vh;overflow-y:auto}
+@media(max-width:900px){.side{position:static;height:auto;border-right:none;border-bottom:1px solid var(--line)}}
+.brand{padding:16px 16px 14px;border-bottom:1px solid var(--line-soft);display:flex;flex-direction:column;gap:2px}
+.brand .biz{font-size:.95rem;font-weight:700;letter-spacing:-.02em}
+.brand .by{font-family:var(--m);font-size:.58rem;letter-spacing:.14em;text-transform:uppercase;color:var(--faint);display:flex;align-items:center;gap:5px}
+.brand .by i{width:5px;height:5px;border-radius:50%;background:var(--accent);display:inline-block}
+nav{padding:10px 8px;display:flex;flex-direction:column;gap:1px;flex:1}
+nav .grp{padding:12px 8px 5px;font-family:var(--m);font-size:.58rem;letter-spacing:.14em;text-transform:uppercase;color:var(--faint)}
+nav button{display:flex;align-items:center;gap:9px;width:100%;text-align:left;background:none;border:none;padding:7px 8px;border-radius:var(--r);cursor:pointer;color:var(--ink-2);font-size:.85rem;font-weight:500;transition:background .12s,color .12s}
+nav button:hover{background:var(--surface-2);color:var(--ink)}
+nav button.on{background:var(--accent-soft);color:var(--accent);font-weight:600}
+nav button .ic{width:15px;height:15px;flex:none;opacity:.85}
+nav button .bdg{margin-left:auto;font-family:var(--m);font-size:.62rem;font-weight:600;background:var(--crit);color:#fff;padding:1px 5px;border-radius:8px;min-width:17px;text-align:center}
+.side-foot{padding:10px;border-top:1px solid var(--line-soft);display:flex;flex-direction:column;gap:7px}
+.rolebox{display:flex;flex-direction:column;gap:4px}
+.rolebox select{width:100%;padding:5px 7px;border:1px solid var(--line);background:var(--surface-2);border-radius:var(--r);font-size:.78rem}
+
+.top{position:sticky;top:0;z-index:30;background:color-mix(in srgb,var(--paper) 88%,transparent);backdrop-filter:blur(8px);border-bottom:1px solid var(--line);padding:11px 20px;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.top h1{font-size:1.02rem} .top .sub{font-size:.78rem;color:var(--muted)} .top .sp{flex:1}
+.clock{display:flex;align-items:center;gap:7px;font-family:var(--m);font-size:.72rem;color:var(--muted);background:var(--surface);border:1px solid var(--line);padding:4px 8px;border-radius:var(--r)}
+main{padding:20px;display:flex;flex-direction:column;gap:18px;max-width:1440px}
+.view{display:none;flex-direction:column;gap:18px}
+.view.on{display:flex}
+
+.btn{display:inline-flex;align-items:center;gap:6px;padding:6px 11px;border-radius:var(--r);border:1px solid var(--line);background:var(--surface);color:var(--ink);font-size:.8rem;font-weight:500;cursor:pointer;transition:background .12s,border-color .12s;white-space:nowrap}
+.btn:hover{background:var(--surface-2);border-color:var(--muted)}
+.btn.pri{background:var(--accent);border-color:var(--accent);color:var(--on-accent);font-weight:600}
+.btn.pri:hover{background:var(--accent-2);border-color:var(--accent-2)}
+.btn.gd{background:var(--good);border-color:var(--good);color:#fff}
+.btn.dg{background:var(--crit);border-color:var(--crit);color:#fff}
+.btn.sm{padding:3px 8px;font-size:.74rem}
+.btn:disabled{opacity:.42;cursor:not-allowed}
+
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow-1)}
+.card-h{padding:11px 14px;border-bottom:1px solid var(--line-soft);display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.card-h h3{font-size:.87rem} .card-h .sp{flex:1}
+.card-b{padding:14px}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(178px,1fr));gap:10px}
+.kpi{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:12px 13px;display:flex;flex-direction:column;gap:5px;box-shadow:var(--shadow-1);position:relative;overflow:hidden}
+.kpi::before{content:"";position:absolute;left:0;top:0;bottom:0;width:2px;background:var(--accent)}
+.kpi.w::before{background:var(--warn)} .kpi.c::before{background:var(--crit)} .kpi.g::before{background:var(--good)}
+.kpi .v{font-family:var(--m);font-size:1.55rem;font-weight:600;letter-spacing:-.02em;line-height:1}
+.kpi .d{font-size:.72rem;color:var(--muted);display:flex;align-items:center;gap:5px;flex-wrap:wrap}
+.delta{font-family:var(--m);font-size:.68rem;font-weight:600;padding:1px 5px;border-radius:3px}
+.delta.up{background:var(--good-soft);color:var(--good)}
+.delta.dn{background:var(--crit-soft);color:var(--crit)}
+
+.pill{display:inline-flex;align-items:center;gap:4px;font-family:var(--m);font-size:.63rem;font-weight:600;letter-spacing:.05em;text-transform:uppercase;padding:2px 7px;border-radius:10px;white-space:nowrap}
+.p-gray{background:var(--surface-3);color:var(--muted)} .p-info{background:var(--info-soft);color:var(--info)}
+.p-good{background:var(--good-soft);color:var(--good)} .p-warn{background:var(--warn-soft);color:var(--warn)}
+.p-crit{background:var(--crit-soft);color:var(--crit)} .p-acc{background:var(--accent-soft);color:var(--accent)}
+.p-brass{background:var(--brass-soft);color:var(--brass)}
+
+.tools{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.tools input[type=search],.tools select{padding:5px 9px;border:1px solid var(--line);background:var(--surface);border-radius:var(--r);font-size:.8rem}
+.tools input[type=search]{min-width:190px}
+.tw{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:.82rem;min-width:640px}
+th{text-align:left;padding:8px 12px;background:var(--surface-2);border-bottom:1px solid var(--line);font-family:var(--m);font-size:.6rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-weight:600;white-space:nowrap;cursor:pointer;user-select:none}
+th:hover{color:var(--ink)} th .ar{opacity:.45;font-size:.7rem}
+td{padding:8px 12px;border-bottom:1px solid var(--line-soft);vertical-align:middle}
+tbody tr{cursor:pointer;transition:background .1s}
+tbody tr:hover{background:var(--accent-tint)}
+tbody tr.danger{background:color-mix(in srgb,var(--crit-soft) 55%,transparent)}
+td.num{font-family:var(--m);font-variant-numeric:tabular-nums;text-align:right;white-space:nowrap}
+td.k{font-family:var(--m);font-size:.76rem;color:var(--accent);font-weight:600;white-space:nowrap}
+.empty{padding:34px;text-align:center;color:var(--muted);font-size:.85rem}
+
+/* ===== AGENDA ===== */
+.agwrap{overflow-x:auto;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow-1)}
+.ag{display:grid;grid-template-columns:58px repeat(4,minmax(148px,1fr));grid-auto-rows:32px;min-width:680px;position:relative}
+.ag .hd{position:sticky;top:0;z-index:5;background:var(--surface-2);border-bottom:1px solid var(--line);display:flex;flex-direction:column;justify-content:center;padding:6px 9px;grid-row:1}
+.ag .hd .t{font-size:.79rem;font-weight:600}
+.ag .hd .s{font-family:var(--m);font-size:.62rem;color:var(--muted)}
+.ag .hr{grid-column:1;display:flex;align-items:flex-start;justify-content:flex-end;padding:2px 7px 0 0;font-family:var(--m);font-size:.64rem;color:var(--faint);border-right:1px solid var(--line);border-top:1px solid var(--line-soft)}
+.ag .hr.h{color:var(--ink-2);font-weight:600;border-top-color:var(--line)}
+.ag .cell{border-top:1px solid var(--line-soft);border-right:1px solid var(--line-soft);cursor:pointer;transition:background .1s}
+.ag .cell.h{border-top-color:var(--line)}
+.ag .cell:hover{background:var(--accent-tint)}
+.ag .cita{margin:1px 3px;border-radius:3px;padding:3px 6px;overflow:hidden;cursor:pointer;z-index:2;display:flex;flex-direction:column;gap:1px;border-left:2.5px solid;box-shadow:var(--shadow-1);transition:box-shadow .12s,transform .1s}
+.ag .cita:hover{box-shadow:var(--shadow-2);transform:translateY(-1px)}
+.ag .cita .n{font-size:.72rem;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:1.25}
+.ag .cita .t{font-size:.65rem;opacity:.82;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.c-agendada{background:var(--warn-soft);border-color:var(--warn);color:var(--warn)}
+.c-confirmada{background:var(--good-soft);border-color:var(--good);color:var(--good)}
+.c-atendida{background:var(--surface-3);border-color:var(--muted);color:var(--muted)}
+.c-no_show{background:var(--crit-soft);border-color:var(--crit);color:var(--crit)}
+.c-cancelada{background:repeating-linear-gradient(45deg,var(--surface-3),var(--surface-3) 4px,transparent 4px,transparent 8px);border-color:var(--faint);color:var(--faint)}
+.aglegend{display:flex;gap:14px;flex-wrap:wrap}
+.aglegend span{display:flex;align-items:center;gap:5px;font-size:.73rem;color:var(--ink-2)}
+.aglegend i{width:9px;height:9px;border-radius:2px;display:inline-block;border-left:2px solid}
+.daynav{display:flex;align-items:center;gap:6px}
+.daynav .d{font-family:var(--m);font-size:.8rem;min-width:172px;text-align:center;font-weight:500}
+
+.bars{display:flex;flex-direction:column;gap:8px}
+.bar{display:grid;grid-template-columns:132px 1fr 76px;gap:10px;align-items:center;font-size:.79rem}
+.bar.wide{grid-template-columns:186px 1fr 88px}
+.bar .tr{height:16px;background:var(--surface-3);border-radius:2px;overflow:hidden}
+.bar .fl{height:100%;background:var(--accent);border-radius:2px;transition:width .4s}
+.bar .fl.w{background:var(--warn)} .bar .fl.c{background:var(--crit)} .bar .fl.g{background:var(--good)} .bar .fl.b{background:var(--brass)}
+.bar .vv{font-family:var(--m);font-size:.76rem;text-align:right;font-variant-numeric:tabular-nums}
+.bar .nm{color:var(--ink-2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
+.rules{display:flex;flex-direction:column;gap:9px}
+.rule{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:12px 13px;display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:start;box-shadow:var(--shadow-1)}
+.rule.off{opacity:.5}
+.rule .body{display:flex;flex-direction:column;gap:6px;min-width:0}
+.rule h4{font-size:.85rem}
+.rule .logic{font-family:var(--m);font-size:.73rem;line-height:1.6;color:var(--ink-2);background:var(--surface-2);border:1px solid var(--line-soft);border-radius:var(--r);padding:7px 9px;overflow-x:auto}
+.rule .logic b{color:var(--accent);font-weight:600} .rule .logic i{color:var(--brass);font-style:normal;font-weight:600}
+.rule .meta{display:flex;gap:9px;font-size:.71rem;color:var(--muted);flex-wrap:wrap}
+.sw{position:relative;width:34px;height:19px;flex:none;cursor:pointer;background:var(--surface-3);border:1px solid var(--line);border-radius:11px;transition:background .15s;padding:0}
+.sw::after{content:"";position:absolute;top:1px;left:1px;width:15px;height:15px;border-radius:50%;background:var(--surface);box-shadow:var(--shadow-1);transition:transform .15s}
+.sw[aria-checked="true"]{background:var(--accent);border-color:var(--accent)}
+.sw[aria-checked="true"]::after{transform:translateX(15px)}
+
+.alerts{display:flex;flex-direction:column;gap:7px}
+.alert{display:grid;grid-template-columns:auto 1fr auto;gap:11px;align-items:center;padding:10px 12px;background:var(--surface);border:1px solid var(--line);border-left:2px solid var(--warn);border-radius:var(--r)}
+.alert.crit{border-left-color:var(--crit)} .alert.info{border-left-color:var(--info)} .alert.good{border-left-color:var(--good)}
+.alert .ic{width:22px;height:22px;border-radius:50%;display:grid;place-items:center;font-family:var(--m);font-size:.7rem;font-weight:600;background:var(--warn-soft);color:var(--warn);flex:none}
+.alert.crit .ic{background:var(--crit-soft);color:var(--crit)}
+.alert.info .ic{background:var(--info-soft);color:var(--info)}
+.alert.good .ic{background:var(--good-soft);color:var(--good)}
+.alert .tx{display:flex;flex-direction:column;gap:1px;min-width:0}
+.alert .tx b{font-size:.82rem} .alert .tx span{font-size:.74rem;color:var(--muted)}
+.alert.read{opacity:.5}
+
+.scrim{position:fixed;inset:0;background:rgba(10,27,46,.42);z-index:80;opacity:0;pointer-events:none;transition:opacity .18s}
+.scrim.on{opacity:1;pointer-events:auto}
+.panel{position:fixed;top:0;right:0;height:100vh;width:min(540px,100%);background:var(--surface);border-left:1px solid var(--line);z-index:90;transform:translateX(100%);transition:transform .22s cubic-bezier(.4,0,.2,1);display:flex;flex-direction:column;box-shadow:var(--shadow-3)}
+.panel.on{transform:none}
+.panel-h{padding:14px 16px;border-bottom:1px solid var(--line);display:flex;align-items:flex-start;gap:10px}
+.panel-h h3{font-size:1rem} .panel-h .sp{flex:1}
+.xbtn{background:none;border:1px solid var(--line);border-radius:var(--r);width:26px;height:26px;cursor:pointer;color:var(--muted);font-size:1rem;line-height:1;display:grid;place-items:center}
+.xbtn:hover{background:var(--surface-2);color:var(--ink)}
+.panel-b{padding:16px;overflow-y:auto;flex:1;display:flex;flex-direction:column;gap:16px}
+.panel-f{padding:11px 16px;border-top:1px solid var(--line);display:flex;gap:8px;flex-wrap:wrap;background:var(--surface-2)}
+.dl{display:grid;grid-template-columns:auto 1fr;gap:6px 14px;font-size:.82rem}
+.dl dt{color:var(--muted);white-space:nowrap} .dl dd{margin:0;text-align:right;font-weight:500}
+.sect{display:flex;flex-direction:column;gap:8px}
+.sect>.lbl{padding-bottom:5px;border-bottom:1px solid var(--line-soft)}
+.tot{display:flex;justify-content:space-between;padding:9px 10px;background:var(--accent-soft);border-radius:var(--r);font-weight:600}
+.tot .v{font-family:var(--m);color:var(--accent)}
+.tl{display:flex;flex-direction:column;position:relative;padding-left:16px}
+.tl::before{content:"";position:absolute;left:4px;top:6px;bottom:6px;width:1px;background:var(--line)}
+.tl .it{position:relative;padding:5px 0;font-size:.78rem;color:var(--ink-2)}
+.tl .it::before{content:"";position:absolute;left:-15px;top:11px;width:7px;height:7px;border-radius:50%;background:var(--surface);border:1.5px solid var(--accent)}
+.tl .it .t{font-family:var(--m);font-size:.66rem;color:var(--faint);margin-right:6px}
+.wl{display:flex;flex-direction:column;gap:6px}
+.wlrow{display:grid;grid-template-columns:auto 1fr auto;gap:9px;align-items:center;padding:8px 10px;background:var(--surface-2);border:1px solid var(--line-soft);border-radius:var(--r);font-size:.8rem}
+.wlrow .rk{font-family:var(--m);font-size:.68rem;font-weight:600;color:var(--accent);width:17px}
+
+.toasts{position:fixed;bottom:16px;right:16px;z-index:200;display:flex;flex-direction:column;gap:7px;max-width:340px}
+.toast{background:var(--surface);border:1px solid var(--line);border-left:2px solid var(--accent);border-radius:var(--r);padding:10px 13px;box-shadow:var(--shadow-3);display:flex;flex-direction:column;gap:2px;animation:sl .22s ease-out}
+.toast b{font-size:.81rem} .toast span{font-size:.74rem;color:var(--muted)}
+.toast.auto{border-left-color:var(--brass)} .toast.good{border-left-color:var(--good)} .toast.bad{border-left-color:var(--crit)}
+@keyframes sl{from{transform:translateX(16px);opacity:0}to{transform:none;opacity:1}}
+
+.banner{display:flex;gap:11px;align-items:flex-start;padding:11px 14px;background:var(--accent-soft);border:1px solid color-mix(in srgb,var(--accent) 30%,transparent);border-radius:var(--r);font-size:.81rem;color:var(--ink-2);line-height:1.55}
+.banner b{color:var(--accent)}
+.banner.bad{background:var(--crit-soft);border-color:color-mix(in srgb,var(--crit) 32%,transparent)} .banner.bad b{color:var(--crit)}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:12px}
+.hint{font-size:.74rem;color:var(--muted);line-height:1.55}
+</style>
+
+<div class="app">
+  <aside class="side">
+    <div class="brand"><span class="biz">Centro Aurora</span><span class="by"><i></i>BiPlot OS · Demo</span></div>
+    <nav id="nav"></nav>
+    <div class="side-foot"><div class="rolebox"><span class="lbl">Perfil activo</span>
+      <select id="role">
+        <option value="recepcion" selected>Recepción</option>
+        <option value="dentista">Dentista</option>
+        <option value="admin">Administración</option>
+      </select></div></div>
+  </aside>
+  <div>
+    <div class="top">
+      <div><h1 id="vt">Panel</h1><p class="sub" id="vs"></p></div>
+      <div class="sp"></div>
+      <div class="clock"><span id="hoy"></span></div>
+      <button class="btn" id="simBtn" title="Avanza el reloj un día y ejecuta las automatizaciones">Simular día siguiente</button>
+    </div>
+    <main>
+      <div class="view on" id="v-panel"></div>
+      <div class="view" id="v-agenda"></div>
+      <div class="view" id="v-confirm"></div>
+      <div class="view" id="v-espera"></div>
+      <div class="view" id="v-tratamientos"></div>
+      <div class="view" id="v-pacientes"></div>
+      <div class="view" id="v-autos"></div>
+      <div class="view" id="v-alertas"></div>
+      <div class="view" id="v-bitacora"></div>
+    </main>
+  </div>
+</div>
+<div class="scrim" id="scrim"></div>
+<aside class="panel" id="panel" role="dialog" aria-modal="true" aria-label="Detalle">
+  <div class="panel-h"><div class="sp"><h3 id="ph">—</h3><p id="phs" style="font-size:.76rem;color:var(--muted)"></p></div><button class="xbtn" id="pclose" aria-label="Cerrar">&times;</button></div>
+  <div class="panel-b" id="pb"></div><div class="panel-f" id="pf"></div>
+</aside>
+<div class="toasts" id="toasts"></div>
+
+<script>
+(function(){
+"use strict";
+/* ===== NÚCLEO BiPlot ===== */
+const $=(s,r)=>(r||document).querySelector(s), $$=(s,r)=>[...(r||document).querySelectorAll(s)];
+const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const CLP=n=>'$'+Math.round(n).toLocaleString('es-CL');
+const K=n=>n>=1e6?'$'+(n/1e6).toFixed(1).replace('.',',')+'M':n>=1000?'$'+Math.round(n/1000)+'k':'$'+Math.round(n);
+const D=s=>new Date(s+'T12:00:00'); const iso=d=>d.toISOString().slice(0,10);
+const fmt=s=>D(s).toLocaleDateString('es-CL',{day:'2-digit',month:'short'});
+const fmtL=s=>D(s).toLocaleDateString('es-CL',{weekday:'long',day:'2-digit',month:'long',year:'numeric'});
+const fmtD=s=>D(s).toLocaleDateString('es-CL',{weekday:'long',day:'2-digit',month:'long'});
+const days=(a,b)=>Math.round((D(b)-D(a))/864e5);
+const addD=(s,n)=>iso(new Date(D(s)-0+n*864e5));
+const uid=p=>p+'-'+Math.random().toString(36).slice(2,7);
+const pct=n=>Math.round(n*100)+'%';
+let _s=20260830; const rnd=()=>{_s^=_s<<13;_s^=_s>>>17;_s^=_s<<5;return Math.abs(_s%100000)/100000};
+const pick=a=>a[Math.floor(rnd()*a.length)];
+const ri=(a,b)=>a+Math.floor(rnd()*(b-a+1));
+
+const S={hoy:'2026-08-31',sel_dia:'2026-08-31',dia:0,pacientes:[],dentistas:[],citas:[],espera:[],
+  tratamientos:[],bitacora:[],alertas:[],reglas:[],role:'recepcion',view:'panel',sel:null,sort:{},q:{},
+  hhAhorradas:0,huecosCubiertos:0};
+function log(tipo,txt,ref){S.bitacora.unshift({id:uid('b'),f:S.hoy,tipo,txt,ref:ref||'',quien:ROLES[S.role].n})}
+function alerta(nivel,titulo,detalle,ref){S.alertas.unshift({id:uid('a'),f:S.hoy,nivel,titulo,detalle,ref:ref||'',leida:false})}
+function toast(t,d,cls){const el=document.createElement('div');el.className='toast'+(cls?' '+cls:'');
+  el.innerHTML='<b>'+esc(t)+'</b>'+(d?'<span>'+esc(d)+'</span>':'');$('#toasts').appendChild(el);
+  setTimeout(()=>{el.style.transition='opacity .3s';el.style.opacity='0';setTimeout(()=>el.remove(),320)},4600)}
+
+/* ===== CAPA VERTICAL — Centro odontológico ===== */
+const ROLES={
+  recepcion:{n:'Daniela Soto',t:'Recepción',ver:['panel','agenda','confirm','espera','pacientes','alertas']},
+  dentista:{n:'Dra. Valeria Rojas',t:'Dentista',ver:['panel','agenda','tratamientos','pacientes']},
+  admin:{n:'Rodrigo Aliaga',t:'Administración',ver:['panel','agenda','confirm','espera','tratamientos','pacientes','autos','alertas','bitacora']}
+};
+const MODULOS=[
+  {id:'panel',n:'Panel',g:'Clínica',ic:'M2 12h4l2-6 3 12 2-8 2 4h3'},
+  {id:'agenda',n:'Agenda',g:'Clínica',ic:'M4 5h16v15H4zM4 9h16M8 3v4M16 3v4'},
+  {id:'confirm',n:'Confirmaciones',g:'Clínica',ic:'M4 12l5 5L20 6'},
+  {id:'espera',n:'Lista de espera',g:'Clínica',ic:'M12 7v5l3 2M12 21a9 9 0 100-18 9 9 0 000 18z'},
+  {id:'tratamientos',n:'Tratamientos',g:'Pacientes',ic:'M9 3v6l-4 8a4 4 0 004 4h6a4 4 0 004-4l-4-8V3zM9 3h6'},
+  {id:'pacientes',n:'Pacientes',g:'Pacientes',ic:'M12 11a4 4 0 100-8 4 4 0 000 8zM4 21c0-4 4-6 8-6s8 2 8 6'},
+  {id:'autos',n:'Automatizaciones',g:'Inteligencia',ic:'M12 3v4M12 17v4M3 12h4M17 12h4M12 9a3 3 0 100 6 3 3 0 000-6z'},
+  {id:'alertas',n:'Alertas',g:'Inteligencia',ic:'M12 3a6 6 0 016 6c0 5 2 6 2 6H4s2-1 2-6a6 6 0 016-6zM10 20h4'},
+  {id:'bitacora',n:'Bitácora',g:'Inteligencia',ic:'M5 4h14v16H5zM9 8h6M9 12h6M9 16h3'}
+];
+const SILLONES=[{id:0,n:'Sillón 1',e:'General'},{id:1,n:'Sillón 2',e:'General'},{id:2,n:'Sillón 3',e:'Endodoncia'},{id:3,n:'Sillón 4',e:'Ortodoncia'}];
+const SLOTS=(()=>{const a=[];for(let h=9;h<19;h++){a.push(String(h).padStart(2,'0')+':00');a.push(String(h).padStart(2,'0')+':30')}return a})();
+const PRESTA=[
+  {n:'Control y destartraje',dur:2,precio:38000,ses:1},
+  {n:'Obturación composite',dur:2,precio:52000,ses:1},
+  {n:'Endodoncia unirradicular',dur:3,precio:185000,ses:2},
+  {n:'Endodoncia multirradicular',dur:4,precio:265000,ses:3},
+  {n:'Corona de circonio',dur:3,precio:390000,ses:3},
+  {n:'Extracción simple',dur:2,precio:45000,ses:1},
+  {n:'Control ortodoncia',dur:1,precio:35000,ses:1},
+  {n:'Instalación de brackets',dur:4,precio:480000,ses:2},
+  {n:'Blanqueamiento',dur:3,precio:210000,ses:2},
+  {n:'Prótesis removible',dur:3,precio:340000,ses:4},
+  {n:'Higiene y flúor',dur:1,precio:28000,ses:1},
+  {n:'Radiografía y diagnóstico',dur:1,precio:22000,ses:1}
+];
+const EST={agendada:{n:'Sin confirmar',p:'p-warn'},confirmada:{n:'Confirmada',p:'p-good'},
+  atendida:{n:'Atendida',p:'p-gray'},no_show:{n:'No asistió',p:'p-crit'},cancelada:{n:'Cancelada',p:'p-gray'}};
+
+function seed(){
+  S.dentistas=[{id:'d1',n:'Dra. Valeria Rojas',e:'General'},{id:'d2',n:'Dr. Matías Herrera',e:'Endodoncia'},
+    {id:'d3',n:'Dra. Camila Vega',e:'Ortodoncia'},{id:'d4',n:'Dr. Sebastián Muñoz',e:'General'},
+    {id:'d5',n:'Dra. Antonia Lillo',e:'Rehabilitación'},{id:'d6',n:'Dr. Ignacio Pardo',e:'General'}];
+  const nomb=['Camila','Matías','Fernanda','Joaquín','Valentina','Benjamín','Antonia','Vicente','Josefa','Agustín','Isidora','Tomás','Florencia','Cristóbal','Emilia','Martín','Catalina','Diego','Amanda','Lucas','Trinidad','Gabriel','Renata','Bruno','Magdalena','Nicolás','Constanza','Álvaro','Javiera','Felipe'];
+  const apel=['González','Muñoz','Rojas','Díaz','Pérez','Soto','Contreras','Silva','Martínez','Sepúlveda','Morales','Rodríguez','López','Fuentes','Hernández','Torres','Araya','Flores','Espinoza','Valenzuela','Castillo','Tapia','Reyes','Gutiérrez','Castro','Vargas','Álvarez','Vásquez','Sánchez','Fernández'];
+  for(let i=0;i<140;i++){
+    const nm=pick(nomb)+' '+pick(apel)+' '+pick(apel);
+    S.pacientes.push({id:'p'+(i+1),n:nm,
+      rut:ri(8,20)+'.'+String(ri(100,999))+'.'+String(ri(100,999))+'-'+pick(['0','1','2','3','4','5','6','7','8','9','K']),
+      fono:'+56 9 '+ri(4000,9999)+' '+ri(1000,9999),
+      ultimoControl:addD('2026-08-31',-ri(10,400)), noShows:rnd()<.12?ri(1,3):0,
+      prevision:pick(['Fonasa','Isapre','Particular','Isapre','Particular'])});
+  }
+  // tratamientos con sesiones pendientes
+  for(let i=0;i<46;i++){
+    const p=S.pacientes[Math.floor(rnd()*S.pacientes.length)];
+    const pr=PRESTA[Math.floor(rnd()*PRESTA.length)];
+    if(pr.ses<2) continue;
+    const hechas=ri(1,pr.ses-1);
+    S.tratamientos.push({id:'t'+(i+1),pac:p.id,plan:pr.n,total:pr.ses,hechas,
+      monto:pr.precio,ultima:addD('2026-08-31',-ri(8,120)),dent:pick(S.dentistas).id});
+  }
+  // citas: -12 a +12 días
+  let cid=0;
+  for(let d=-12;d<=12;d++){
+    const f=addD('2026-08-31',d), dow=D(f).getDay();
+    if(dow===0||dow===6) continue;
+    SILLONES.forEach(sil=>{
+      let s=0;
+      while(s<SLOTS.length-1){
+        if(rnd()<0.30){ s+=1; continue; }
+        const pr=PRESTA[Math.floor(rnd()*PRESTA.length)];
+        if(s+pr.dur>SLOTS.length) break;
+        const p=S.pacientes[Math.floor(rnd()*S.pacientes.length)];
+        let est;
+        if(d<0) est=rnd()<0.18?'no_show':(rnd()<0.05?'cancelada':'atendida');
+        else if(d===0) est=rnd()<0.72?'confirmada':'agendada';
+        else est=d<=2?(rnd()<0.45?'confirmada':'agendada'):'agendada';
+        S.citas.push({id:'c'+(++cid),f,slot:s,dur:pr.dur,sillon:sil.id,pac:p.id,
+          dent:pick(S.dentistas).id,presta:pr.n,precio:pr.precio,est,
+          confirm:{enviada:est==='confirmada'?addD(f,-2):null,respondida:est==='confirmada'?addD(f,-2):null,intentos:est==='confirmada'?1:0},
+          notas:[{f:addD(f,-ri(3,20)),t:'Cita agendada en recepción'}]});
+        s+=pr.dur+(rnd()<0.4?1:0);
+      }
+    });
+  }
+  // lista de espera
+  const pref=['Cualquier día','Sólo mañanas','Sólo tardes','Esta semana'];
+  for(let i=0;i<16;i++){
+    const p=S.pacientes[Math.floor(rnd()*S.pacientes.length)];
+    S.espera.push({id:'w'+(i+1),pac:p.id,presta:pick(PRESTA).n,prio:ri(1,3),
+      desde:addD('2026-08-31',-ri(1,25)),pref:pick(pref)});
+  }
+  S.espera.sort((a,b)=>a.prio-b.prio||(a.desde<b.desde?-1:1));
+  reglas(); evaluar(true);
+}
+const pac=id=>S.pacientes.find(p=>p.id===id)||{n:'—'};
+const den=id=>S.dentistas.find(d=>d.id===id)||{n:'—'};
+const hora=c=>SLOTS[c.slot];
+const horaFin=c=>{const t=c.slot+c.dur;return t<SLOTS.length?SLOTS[t]:'19:00'};
+const citasDe=f=>S.citas.filter(c=>c.f===f);
+const ocupacion=f=>{const cs=citasDe(f).filter(c=>c.est!=='cancelada');
+  const usados=cs.reduce((a,c)=>a+c.dur,0); return usados/(SLOTS.length*4)};
+
+/* ---- MOTOR DE REGLAS ---- */
+function reglas(){
+  S.reglas=[
+  {id:'r1',n:'Confirmación automática',on:true,disparos:0,
+   cuando:'una cita está a <i>2 días</i> y sigue <b>sin confirmar</b>',
+   entonces:'enviar el mensaje de confirmación al paciente',
+   ahorro:'~31 h/mes de llamadas de recepción'},
+  {id:'r2',n:'Segundo intento y riesgo',on:true,disparos:0,
+   cuando:'pasó <i>un día</i> del primer aviso, la cita es <i>inminente</i> y sigue <b>sin respuesta</b>',
+   entonces:'reintentar y marcar la cita como riesgo de inasistencia',
+   ahorro:'anticipa el no-show en vez de sufrirlo'},
+  {id:'r3',n:'Hueco cubierto con lista de espera',on:true,disparos:0,
+   cuando:'una cita se <b>cancela</b> o se marca <b>no asistió</b>',
+   entonces:'ofrecer el bloque al primero de la lista de espera que calce',
+   ahorro:'el sillón vacío es el costo más caro de la clínica'},
+  {id:'r4',n:'Tratamiento abandonado',on:true,disparos:0,
+   cuando:'un tratamiento tiene sesiones pendientes y lleva <i>más de 45 días</i> sin agendar',
+   entonces:'avisar a recepción para retomar el plan',
+   ahorro:'recupera tratamientos ya vendidos'},
+  {id:'r5',n:'Control preventivo vencido',on:false,disparos:0,
+   cuando:'un paciente lleva <i>más de 8 meses</i> sin control',
+   entonces:'incorporarlo a la campaña de higiene del mes',
+   ahorro:'llena la agenda de los meses bajos'},
+  {id:'r6',n:'Paciente reincidente',on:true,disparos:0,
+   cuando:'un paciente acumula <i>2 o más</i> inasistencias',
+   entonces:'exigir confirmación telefónica antes de reservar bloque',
+   ahorro:'protege los bloques largos'}
+  ];
+}
+function evaluar(silent){
+  let n=0; const R=id=>S.reglas.find(r=>r.id===id);
+  if(R('r1').on) S.citas.filter(c=>c.est==='agendada'&&days(S.hoy,c.f)<=2&&days(S.hoy,c.f)>=0&&!c.confirm.enviada).forEach(c=>{
+    c.confirm.enviada=S.hoy; c.confirm.intentos=1; R('r1').disparos++; n++; S.hhAhorradas+=0.12;
+    c.notas.push({f:S.hoy,t:'Confirmación automática enviada a '+pac(c.pac).fono});
+    log('auto','Confirmación enviada — '+pac(c.pac).n+' · '+fmt(c.f)+' '+hora(c),c.id);
+  });
+  if(R('r2').on) S.citas.filter(c=>c.est==='agendada'&&c.confirm.enviada&&!c.confirm.respondida
+      &&days(c.confirm.enviada,S.hoy)>=1&&days(S.hoy,c.f)<=2&&days(S.hoy,c.f)>=0&&c.confirm.intentos<2).forEach(c=>{
+    c.confirm.intentos=2; c.riesgo=true; R('r2').disparos++; n++; S.hhAhorradas+=0.12;
+    alerta('warn','Sin respuesta a la confirmación',pac(c.pac).n+' · '+fmtD(c.f)+' '+hora(c)+' · '+c.presta+'. Segundo intento enviado, marcada en riesgo.',c.id);
+    c.notas.push({f:S.hoy,t:'Segundo intento de confirmación. Cita marcada en riesgo.'});
+    log('auto','Segundo intento — '+pac(c.pac).n,c.id);
+  });
+  if(R('r4').on) S.tratamientos.filter(t=>t.hechas<t.total&&days(t.ultima,S.hoy)>45&&!t._a4).forEach(t=>{
+    t._a4=true; R('r4').disparos++; n++;
+    const pend=t.total-t.hechas;
+    alerta('info','Tratamiento sin continuar hace '+days(t.ultima,S.hoy)+' días',pac(t.pac).n+' · '+t.plan+' · quedan '+pend+' de '+t.total+' sesiones · '+CLP(t.monto*pend/t.total)+' pendientes de facturar.',t.id);
+    log('auto','Tratamiento abandonado detectado — '+pac(t.pac).n,t.id);
+  });
+  if(R('r5').on) S.pacientes.filter(p=>days(p.ultimoControl,S.hoy)>240&&!p._a5).forEach(p=>{
+    p._a5=true; R('r5').disparos++; n++;
+    alerta('info','Control preventivo vencido',p.n+' · '+days(p.ultimoControl,S.hoy)+' días sin control. Agregado a la campaña de higiene.',p.id);
+  });
+  if(R('r6').on) S.pacientes.filter(p=>p.noShows>=2&&!p._a6).forEach(p=>{
+    p._a6=true; R('r6').disparos++; n++;
+    alerta('warn','Paciente con '+p.noShows+' inasistencias',p.n+' · exige confirmación telefónica antes de reservar bloques largos.',p.id);
+  });
+  if(n&&!silent) toast(n+' automatización'+(n>1?'es':'')+' ejecutada'+(n>1?'s':''),'Revisa la bandeja de alertas','auto');
+  return n;
+}
+/* la joya: cubrir el hueco con lista de espera */
+function cubrirHueco(c,motivo){
+  const r3=S.reglas.find(r=>r.id==='r3');
+  if(!r3.on){ alerta('crit','Bloque perdido',pac(c.pac).n+' · '+fmtD(c.f)+' '+hora(c)+' · '+CLP(c.precio)+'. La regla de lista de espera está apagada.',c.id);
+    toast('Bloque quedó vacío','Enciende la regla de lista de espera para cubrirlo solo','bad'); return null; }
+  const cand=S.espera.find(w=>{
+    if(w.pref==='Sólo mañanas'&&c.slot>=10) return false;
+    if(w.pref==='Sólo tardes'&&c.slot<10) return false;
+    if(w.pref==='Esta semana'&&days(S.hoy,c.f)>7) return false;
+    const p=PRESTA.find(x=>x.n===w.presta);
+    return p && p.dur<=c.dur;   // la prestación tiene que caber en el bloque liberado
+  });
+  if(!cand){ alerta('warn','Hueco sin candidato que calce',fmtD(c.f)+' '+hora(c)+' · bloque de '+(c.dur*30)+' min · '+CLP(c.precio)+' sin cubrir. Nadie en la lista de espera calza con el horario o la duración.',c.id);
+    toast('Hueco sin cubrir','Ningún paciente en espera calza con este bloque'); return null; }
+  const pr=PRESTA.find(p=>p.n===cand.presta);
+  const nueva={id:uid('c'),f:c.f,slot:c.slot,dur:pr.dur,sillon:c.sillon,pac:cand.pac,
+    dent:c.dent,presta:cand.presta,precio:pr.precio,est:'agendada',
+    confirm:{enviada:S.hoy,respondida:null,intentos:1},
+    notas:[{f:S.hoy,t:'Bloque asignado automáticamente desde lista de espera ('+motivo+')'}]};
+  S.citas.push(nueva);
+  S.espera=S.espera.filter(w=>w.id!==cand.id);
+  r3.disparos++; S.huecosCubiertos++; S.hhAhorradas+=0.5;
+  alerta('good','Hueco cubierto automáticamente',fmtD(c.f)+' '+hora(c)+' · '+pac(cand.pac).n+' entró desde la lista de espera · '+CLP(pr.precio)+' recuperados.',nueva.id);
+  log('auto','Hueco cubierto — '+pac(cand.pac).n+' ocupa el bloque de '+pac(c.pac).n,nueva.id);
+  toast('Hueco cubierto solo','' + pac(cand.pac).n+' entró desde la lista de espera · '+CLP(pr.precio)+' recuperados','auto');
+  return nueva;
+}
+function simular(){
+  S.dia++; S.hoy=addD(S.hoy,1);
+  if(D(S.hoy).getDay()===6) S.hoy=addD(S.hoy,2);
+  S.sel_dia=S.hoy;
+  // respuestas de pacientes a confirmaciones
+  let conf=0;
+  S.citas.filter(c=>c.est==='agendada'&&c.confirm.enviada&&!c.confirm.respondida).forEach(c=>{
+    if(rnd()<0.62){ c.confirm.respondida=S.hoy; c.est='confirmada'; c.riesgo=false; conf++;
+      c.notas.push({f:S.hoy,t:'Paciente confirmó su asistencia'}); }
+  });
+  // el día de ayer se cierra
+  let ns=0;
+  S.citas.filter(c=>c.f<S.hoy&&(c.est==='agendada'||c.est==='confirmada')).forEach(c=>{
+    const p=pac(c.pac);
+    if(c.est==='confirmada'? rnd()<0.05 : rnd()<0.34){ c.est='no_show'; ns++;
+      const real=S.pacientes.find(x=>x.id===c.pac); if(real){real.noShows++;real._a6=false}
+      c.notas.push({f:S.hoy,t:'El paciente no asistió'}); }
+    else { c.est='atendida'; const real=S.pacientes.find(x=>x.id===c.pac); if(real) real.ultimoControl=c.f;
+      const t=S.tratamientos.find(t=>t.pac===c.pac&&t.hechas<t.total);
+      if(t){t.hechas++;t.ultima=c.f;t._a4=false} }
+  });
+  const n=evaluar();
+  log('sis','Día simulado — '+fmtL(S.hoy)+' · '+conf+' confirmaciones recibidas, '+ns+' inasistencias, '+n+' automatizaciones');
+  toast('Avanzamos a '+fmtD(S.hoy),conf+' pacientes confirmaron · '+ns+' no asistieron · '+n+' reglas disparadas',n?'auto':'');
+  render();
+}
+
+/* ===== RENDER ===== */
+function ico(d){return '<svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="'+d+'"/></svg>'}
+function navRender(){
+  const vis=ROLES[S.role].ver,gs=[];
+  MODULOS.filter(m=>vis.includes(m.id)).forEach(m=>{if(!gs.includes(m.g))gs.push(m.g)});
+  $('#nav').innerHTML=gs.map(g=>'<div class="grp">'+g+'</div>'+
+    MODULOS.filter(m=>m.g===g&&vis.includes(m.id)).map(m=>{
+      const nu=m.id==='alertas'?S.alertas.filter(a=>!a.leida).length:0;
+      return '<button data-v="'+m.id+'" class="'+(S.view===m.id?'on':'')+'">'+ico(m.ic)+'<span>'+m.n+'</span>'+(nu?'<span class="bdg">'+nu+'</span>':'')+'</button>'}).join('')).join('');
+}
+function tabla(id,cols,rows,onclick,rowcls){
+  const q=(S.q[id]||'').toLowerCase(), s=S.sort[id]||{};
+  let r=rows.filter(x=>!q||cols.some(c=>String(c.raw?c.raw(x):c.v(x)).toLowerCase().includes(q)));
+  if(s.k!=null){const c=cols[s.k];r=[...r].sort((a,b)=>{const A=c.sv?c.sv(a):c.raw?c.raw(a):c.v(a),B=c.sv?c.sv(b):c.raw?c.raw(b):c.v(b);
+    return (typeof A==='number'?A-B:String(A).localeCompare(String(B)))*(s.d?-1:1)})}
+  return `<div class="tw"><table><thead><tr>${cols.map((c,i)=>`<th data-t="${id}" data-i="${i}">${c.h}${s.k===i?`<span class="ar">${s.d?'▼':'▲'}</span>`:''}</th>`).join('')}</tr></thead>
+  <tbody>${r.length?r.map(x=>`<tr class="${rowcls?rowcls(x):''}" ${onclick?`data-row="${onclick(x)}"`:''}>${cols.map(c=>`<td class="${c.c||''}">${c.v(x)}</td>`).join('')}</tr>`).join(''):`<tr><td colspan="${cols.length}"><div class="empty">Sin resultados</div></td></tr>`}</tbody></table></div>`;
+}
+const toolbar=(id,ph,extra)=>`<div class="tools"><input type="search" data-q="${id}" placeholder="${ph}" value="${esc(S.q[id]||'')}">${extra||''}</div>`;
+
+function vPanel(){
+  const hoyC=citasDe(S.hoy).filter(c=>c.est!=='cancelada');
+  const sinConf=S.citas.filter(c=>c.est==='agendada'&&days(S.hoy,c.f)>=0&&days(S.hoy,c.f)<=7);
+  const pasadas=S.citas.filter(c=>c.f<S.hoy&&(c.est==='atendida'||c.est==='no_show'));
+  const nsRate=pasadas.length?pasadas.filter(c=>c.est==='no_show').length/pasadas.length:0;
+  const prod=hoyC.filter(c=>c.est!=='no_show').reduce((a,c)=>a+c.precio,0);
+  const tratPend=S.tratamientos.filter(t=>t.hechas<t.total);
+  const pendMonto=tratPend.reduce((a,t)=>a+t.monto*(t.total-t.hechas)/t.total,0);
+  const sem=[]; for(let i=0;i<7;i++){const f=addD(S.hoy,i); if([0,6].includes(D(f).getDay()))continue; sem.push({f,o:ocupacion(f)})}
+  const porDen=S.dentistas.map(d=>({n:d.n,v:S.citas.filter(c=>c.dent===d.id&&c.f>=S.hoy&&c.est!=='cancelada').length}));
+  const mxd=Math.max(1,...porDen.map(p=>p.v));
+
+  return `<div class="banner"><div><b>Línea base del diagnóstico (E1)</b> — antes de BiPlot recepción dedicaba 31 h/mes a llamar para confirmar, el 22% de las citas terminaba en inasistencia y un sillón que se desocupaba a las 15:00 quedaba vacío el resto del día. La agenda ya existía; lo que faltaba era la capa que la vigila.</div></div>
+  <div class="kpis">
+    <div class="kpi"><span class="lbl">Citas hoy</span><span class="v">${hoyC.length}</span><span class="d">${pct(ocupacion(S.hoy))} de ocupación</span></div>
+    <div class="kpi ${nsRate>.12?'c':'g'}"><span class="lbl">Tasa de inasistencia</span><span class="v">${pct(nsRate)}</span><span class="d"><span class="delta up">−${Math.max(0,22-Math.round(nsRate*100))} pts</span> vs. línea base 22%</span></div>
+    <div class="kpi ${sinConf.length>8?'w':''}"><span class="lbl">Sin confirmar (7 días)</span><span class="v">${sinConf.length}</span><span class="d">el sistema las persigue solo</span></div>
+    <div class="kpi g"><span class="lbl">Huecos cubiertos</span><span class="v">${S.huecosCubiertos}</span><span class="d">desde lista de espera</span></div>
+    <div class="kpi g"><span class="lbl">HH liberadas</span><span class="v">${S.hhAhorradas.toFixed(1)}<span style="font-size:.5em"> h</span></span><span class="d">antes: 31 h/mes en llamadas</span></div>
+    <div class="kpi ${tratPend.length>20?'w':''}"><span class="lbl">Tratamientos abiertos</span><span class="v">${tratPend.length}</span><span class="d">${K(pendMonto)} ya vendidos sin agendar</span></div>
+  </div>
+  <div class="grid2">
+    <div class="card"><div class="card-h"><h3>Ocupación de la semana</h3><div class="sp"></div><span class="hint">4 sillones · 10 h/día</span></div>
+      <div class="card-b"><div class="bars">${sem.map(d=>`<div class="bar wide"><span class="nm">${fmtD(d.f)}</span><div class="tr"><div class="fl ${d.o<.55?'c':d.o<.72?'w':'g'}" style="width:${d.o*100}%"></div></div><span class="vv">${pct(d.o)}</span></div>`).join('')}</div>
+      <p class="hint" style="margin-top:11px">Cada punto de ocupación son ${K(prod/Math.max(1,hoyC.length)*4)} aproximados de producción diaria.</p></div></div>
+    <div class="card"><div class="card-h"><h3>Carga por profesional</h3><div class="sp"></div><span class="hint">citas futuras</span></div>
+      <div class="card-b"><div class="bars">${porDen.map(p=>`<div class="bar wide"><span class="nm">${esc(p.n)}</span><div class="tr"><div class="fl ${p.v<6?'w':'g'}" style="width:${p.v/mxd*100}%"></div></div><span class="vv">${p.v}</span></div>`).join('')}</div></div></div>
+  </div>
+  <div class="grid2">
+    <div class="card"><div class="card-h"><h3>Requiere tu atención</h3><div class="sp"></div><span class="pill ${S.alertas.filter(a=>!a.leida).length?'p-crit':'p-good'}">${S.alertas.filter(a=>!a.leida).length} sin leer</span></div>
+      <div class="card-b">${S.alertas.filter(a=>!a.leida).length?`<div class="alerts">${S.alertas.filter(a=>!a.leida).slice(0,5).map(alertHTML).join('')}</div>`:'<div class="empty">Nada pendiente.</div>'}</div></div>
+    <div class="card"><div class="card-h"><h3>Automatizaciones trabajando</h3><div class="sp"></div><span class="pill p-brass">${S.reglas.filter(r=>r.on).length} activas</span></div>
+      <div class="card-b"><div class="bars">${S.reglas.map(r=>`<div class="bar wide"><span class="nm">${esc(r.n)}</span><div class="tr"><div class="fl ${r.on?'':'c'}" style="width:${r.on?Math.min(100,r.disparos*8+8):0}%"></div></div><span class="vv">${r.on?r.disparos:'off'}</span></div>`).join('')}</div>
+      <p class="hint" style="margin-top:11px">Prueba: en <b>Agenda</b>, cancela una cita y observa cómo la lista de espera cubre el bloque sola.</p></div></div>
+  </div>`;
+}
+
+function vAgenda(){
+  const f=S.sel_dia, cs=citasDe(f);
+  const ocupado={};
+  cs.filter(c=>c.est!=='cancelada').forEach(c=>{for(let i=0;i<c.dur;i++)ocupado[c.sillon+':'+(c.slot+i)]=true});
+  let cells='';
+  SILLONES.forEach(sil=>{
+    SLOTS.forEach((h,i)=>{
+      if(ocupado[sil.id+':'+i]) return;
+      cells+=`<div class="cell ${h.endsWith(':00')?'h':''}" style="grid-column:${sil.id+2};grid-row:${i+2}" data-slot="${sil.id}:${i}"></div>`;
+    });
+  });
+  const citas=cs.map(c=>{
+    const p=pac(c.pac);
+    return `<div class="cita c-${c.est}" style="grid-column:${c.sillon+2};grid-row:${c.slot+2}/span ${c.dur}" data-cita="${c.id}">
+      <span class="n">${esc(p.n.split(' ').slice(0,2).join(' '))}${c.riesgo?' ⚠':''}</span>
+      <span class="t">${hora(c)} · ${esc(c.presta)}</span></div>`;
+  }).join('');
+  const horas=SLOTS.map((h,i)=>`<div class="hr ${h.endsWith(':00')?'h':''}" style="grid-row:${i+2}">${h.endsWith(':00')?h:''}</div>`).join('');
+  const heads='<div class="hd" style="grid-column:1"></div>'+SILLONES.map(s=>`<div class="hd" style="grid-column:${s.id+2}"><span class="t">${s.n}</span><span class="s">${s.e}</span></div>`).join('');
+
+  return `<div class="tools">
+    <div class="daynav">
+      <button class="btn sm" data-dia="-1">←</button>
+      <span class="d">${fmtD(f)}</span>
+      <button class="btn sm" data-dia="1">→</button>
+      <button class="btn sm" data-dia="0">Hoy</button>
+    </div>
+    <div style="flex:1"></div>
+    <div class="aglegend">
+      <span><i style="background:var(--warn-soft);border-color:var(--warn)"></i>Sin confirmar</span>
+      <span><i style="background:var(--good-soft);border-color:var(--good)"></i>Confirmada</span>
+      <span><i style="background:var(--surface-3);border-color:var(--muted)"></i>Atendida</span>
+      <span><i style="background:var(--crit-soft);border-color:var(--crit)"></i>No asistió</span>
+    </div></div>
+  <div class="banner"><div>Ocupación del día: <b>${pct(ocupacion(f))}</b> · ${cs.filter(c=>c.est!=='cancelada').length} citas. Haz clic en una cita para abrirla. <b>Cancélala o márcala como no asistió</b> y mira cómo el sistema cubre el bloque desde la lista de espera, solo.</div></div>
+  <div class="agwrap"><div class="ag">${heads}${horas}${cells}${citas}</div></div>`;
+}
+
+function vConfirm(){
+  const cs=S.citas.filter(c=>c.f>=S.hoy&&c.est!=='cancelada'&&c.est!=='atendida');
+  const cols=[
+    {h:'Fecha',c:'k',v:c=>fmt(c.f)+' '+hora(c),sv:c=>c.f+c.slot},
+    {h:'Paciente',v:c=>esc(pac(c.pac).n),raw:c=>pac(c.pac).n},
+    {h:'Prestación',v:c=>esc(c.presta),raw:c=>c.presta},
+    {h:'Estado',v:c=>`<span class="pill ${EST[c.est].p}">${EST[c.est].n}</span>`,raw:c=>EST[c.est].n},
+    {h:'Aviso enviado',v:c=>c.confirm.enviada?fmt(c.confirm.enviada):'<span class="pill p-gray">pendiente</span>',sv:c=>c.confirm.enviada||''},
+    {h:'Intentos',c:'num',v:c=>c.confirm.intentos||0,sv:c=>c.confirm.intentos||0},
+    {h:'Respondió',v:c=>c.confirm.respondida?'<span class="pill p-good">sí</span>':(c.riesgo?'<span class="pill p-crit">en riesgo</span>':'<span class="pill p-warn">no</span>'),raw:c=>c.confirm.respondida?'si':'no'},
+    {h:'Valor',c:'num',v:c=>CLP(c.precio),sv:c=>c.precio}
+  ];
+  const enviadas=cs.filter(c=>c.confirm.enviada).length, resp=cs.filter(c=>c.confirm.respondida).length;
+  const riesgo=cs.filter(c=>c.riesgo).length;
+  return `<div class="banner"><div><b>Este módulo reemplaza 31 horas al mes de llamadas.</b> Antes recepción tomaba el teléfono cliente por cliente. Ahora el sistema envía, reintenta y marca en riesgo — y sólo se llama a los que quedan en rojo.</div></div>
+  <div class="kpis">
+    <div class="kpi"><span class="lbl">Citas por confirmar</span><span class="v">${cs.length}</span><span class="d">próximos días</span></div>
+    <div class="kpi g"><span class="lbl">Avisos enviados solos</span><span class="v">${enviadas}</span><span class="d">sin intervención de recepción</span></div>
+    <div class="kpi g"><span class="lbl">Confirmadas</span><span class="v">${resp}</span><span class="d">${pct(enviadas?resp/enviadas:0)} de respuesta</span></div>
+    <div class="kpi ${riesgo?'c':'g'}"><span class="lbl">En riesgo</span><span class="v">${riesgo}</span><span class="d">estas sí requieren llamada</span></div>
+  </div>
+  ${toolbar('cf','Buscar paciente o prestación…','<span class="hint" style="margin-left:auto">Clic para abrir la cita</span>')}
+  <div class="card">${tabla('cf',cols,cs,c=>c.id,c=>c.riesgo?'danger':'')}</div>`;
+}
+
+function vEspera(){
+  return `<div class="banner"><div>Cuando una cita se cancela o el paciente no asiste, el sistema recorre esta lista en orden de prioridad, busca el primero cuya preferencia calce con el bloque libre y lo agenda. <b>El sillón vacío es el costo más caro de la clínica.</b></div></div>
+  <div class="kpis">
+    <div class="kpi"><span class="lbl">En lista de espera</span><span class="v">${S.espera.length}</span><span class="d">pacientes esperando cupo</span></div>
+    <div class="kpi g"><span class="lbl">Huecos cubiertos</span><span class="v">${S.huecosCubiertos}</span><span class="d">automáticamente</span></div>
+    <div class="kpi"><span class="lbl">Espera promedio</span><span class="v">${S.espera.length?Math.round(S.espera.reduce((a,w)=>a+days(w.desde,S.hoy),0)/S.espera.length):0}<span style="font-size:.5em"> d</span></span><span class="d">desde que pidieron cupo</span></div>
+    <div class="kpi"><span class="lbl">Valor en espera</span><span class="v">${K(S.espera.reduce((a,w)=>a+((PRESTA.find(p=>p.n===w.presta)||{precio:0}).precio),0))}</span><span class="d">producción no agendada</span></div>
+  </div>
+  <div class="card"><div class="card-h"><h3>Orden de asignación</h3><div class="sp"></div><span class="hint">prioridad, después antigüedad</span></div>
+  <div class="card-b"><div class="wl">${S.espera.length?S.espera.map((w,i)=>{
+    const p=pac(w.pac);
+    return `<div class="wlrow"><span class="rk">${i+1}</span>
+      <span><b>${esc(p.n)}</b> · ${esc(w.presta)}<br><span class="hint">${w.pref} · esperando hace ${days(w.desde,S.hoy)} días · ${p.fono}</span></span>
+      <span class="pill ${w.prio===1?'p-crit':w.prio===2?'p-warn':'p-gray'}">prioridad ${w.prio}</span></div>`}).join(''):'<div class="empty">La lista de espera está vacía. Todos los pacientes fueron ubicados.</div>'}</div></div></div>`;
+}
+
+function vTratamientos(){
+  const ts=S.tratamientos.map(t=>({...t,pend:t.total-t.hechas,dias:days(t.ultima,S.hoy),
+    pendMonto:t.monto*(t.total-t.hechas)/t.total}));
+  const cols=[
+    {h:'Paciente',v:t=>esc(pac(t.pac).n),raw:t=>pac(t.pac).n},
+    {h:'Plan',v:t=>esc(t.plan),raw:t=>t.plan},
+    {h:'Avance',v:t=>{const p=t.hechas/t.total;
+      return `<div style="display:flex;align-items:center;gap:7px"><div style="flex:1;min-width:52px;height:6px;background:var(--surface-3);border-radius:3px;overflow:hidden"><div style="height:100%;width:${p*100}%;background:${p===1?'var(--good)':'var(--accent)'}"></div></div><span class="mono" style="font-size:.72rem">${t.hechas}/${t.total}</span></div>`},sv:t=>t.hechas/t.total},
+    {h:'Última sesión',v:t=>fmt(t.ultima),sv:t=>t.ultima},
+    {h:'Sin avanzar',c:'num',v:t=>`<span class="pill ${t.dias>45?'p-crit':t.dias>25?'p-warn':'p-gray'}">${t.dias} d</span>`,sv:t=>t.dias},
+    {h:'Profesional',v:t=>esc(den(t.dent).n),raw:t=>den(t.dent).n},
+    {h:'Plan total',c:'num',v:t=>CLP(t.monto),sv:t=>t.monto},
+    {h:'Por facturar',c:'num',v:t=>`<b>${CLP(t.pendMonto)}</b>`,sv:t=>t.pendMonto}
+  ];
+  const abandonados=ts.filter(t=>t.pend>0&&t.dias>45);
+  return `<div class="kpis">
+    <div class="kpi"><span class="lbl">Tratamientos abiertos</span><span class="v">${ts.filter(t=>t.pend>0).length}</span><span class="d">con sesiones pendientes</span></div>
+    <div class="kpi ${abandonados.length?'c':'g'}"><span class="lbl">Sin avanzar +45 días</span><span class="v">${abandonados.length}</span><span class="d">el sistema los detecta solo</span></div>
+    <div class="kpi"><span class="lbl">Por facturar</span><span class="v">${K(ts.filter(t=>t.pend>0).reduce((a,t)=>a+t.pendMonto,0))}</span><span class="d">ya vendido, sin ejecutar</span></div>
+    <div class="kpi"><span class="lbl">Avance promedio</span><span class="v">${pct(ts.reduce((a,t)=>a+t.hechas/t.total,0)/Math.max(1,ts.length))}</span><span class="d">de los planes activos</span></div>
+  </div>
+  ${abandonados.length?`<div class="banner bad"><div><b>${abandonados.length} tratamientos aceptados y detenidos.</b> Suman ${CLP(abandonados.reduce((a,t)=>a+t.pendMonto,0))} en producción ya vendida que nadie está persiguiendo. Es el ingreso más barato de recuperar: el paciente ya dijo que sí.</div></div>`:''}
+  ${toolbar('tr','Buscar paciente o plan…')}
+  <div class="card">${tabla('tr',cols,ts,null,t=>t.pend>0&&t.dias>45?'danger':'')}</div>`;
+}
+
+function vPacientes(){
+  const ps=S.pacientes.map(p=>({...p,citas:S.citas.filter(c=>c.pac===p.id).length,
+    facturado:S.citas.filter(c=>c.pac===p.id&&c.est==='atendida').reduce((a,c)=>a+c.precio,0),
+    sinControl:days(p.ultimoControl,S.hoy)}));
+  const cols=[
+    {h:'Paciente',v:p=>esc(p.n),raw:p=>p.n},
+    {h:'RUT',c:'k',v:p=>p.rut},
+    {h:'Previsión',v:p=>`<span class="pill p-gray">${p.prevision}</span>`,raw:p=>p.prevision},
+    {h:'Teléfono',v:p=>`<span class="mono" style="font-size:.75rem">${p.fono}</span>`,raw:p=>p.fono},
+    {h:'Citas',c:'num',v:p=>p.citas,sv:p=>p.citas},
+    {h:'Inasistencias',c:'num',v:p=>p.noShows?`<span class="pill ${p.noShows>=2?'p-crit':'p-warn'}">${p.noShows}</span>`:'—',sv:p=>p.noShows},
+    {h:'Sin control',c:'num',v:p=>`<span class="pill ${p.sinControl>240?'p-crit':p.sinControl>180?'p-warn':'p-good'}">${p.sinControl} d</span>`,sv:p=>p.sinControl},
+    {h:'Facturado',c:'num',v:p=>K(p.facturado),sv:p=>p.facturado}
+  ];
+  return toolbar('pa','Buscar paciente, RUT o teléfono…','<span class="hint" style="margin-left:auto">'+ps.length+' pacientes en ficha</span>')
+    +`<div class="card">${tabla('pa',cols,ps,null,p=>p.noShows>=2?'danger':'')}</div>`;
+}
+
+function vAutos(){
+  const tot=S.reglas.reduce((a,r)=>a+r.disparos,0);
+  return `<div class="banner"><div><b>Mismo motor de reglas que los otros casos.</b> En arquetipo B las reglas <em>son</em> el producto: la agenda ya existía, lo que faltaba era la capa que la vigila. Apaga la regla de lista de espera y cancela una cita para ver la diferencia.</div></div>
+  <div class="kpis">
+    <div class="kpi"><span class="lbl">Reglas activas</span><span class="v">${S.reglas.filter(r=>r.on).length}<span style="font-size:.5em">/${S.reglas.length}</span></span><span class="d">configurables sin programar</span></div>
+    <div class="kpi g"><span class="lbl">Ejecuciones</span><span class="v">${tot}</span><span class="d">tareas que nadie hizo</span></div>
+    <div class="kpi g"><span class="lbl">HH liberadas</span><span class="v">${S.hhAhorradas.toFixed(1)}<span style="font-size:.5em"> h</span></span><span class="d">línea base: 31 h/mes</span></div>
+    <div class="kpi"><span class="lbl">Días simulados</span><span class="v">${S.dia}</span><span class="d">reloj de la demo</span></div>
+  </div>
+  <div class="rules">${S.reglas.map(r=>`<div class="rule ${r.on?'':'off'}">
+    <button class="sw" role="switch" aria-checked="${r.on}" data-rule="${r.id}" aria-label="Activar ${esc(r.n)}"></button>
+    <div class="body"><h4>${esc(r.n)}</h4>
+      <div class="logic"><b>CUANDO</b> ${r.cuando} <b>ENTONCES</b> ${r.entonces}</div>
+      <div class="meta"><span>Valor: ${esc(r.ahorro)}</span><span>·</span><span>Ejecutada ${r.disparos} ${r.disparos===1?'vez':'veces'}</span></div></div>
+    <span class="pill ${r.on?'p-good':'p-gray'}">${r.on?'activa':'apagada'}</span></div>`).join('')}</div>`;
+}
+function alertHTML(a){
+  const m={crit:['crit','!'],warn:['','!'],info:['info','i'],good:['good','✓']};
+  const [cls,ch]=m[a.nivel]||['','!'];
+  return `<div class="alert ${cls} ${a.leida?'read':''}" data-alert="${a.id}"><span class="ic">${ch}</span>
+    <span class="tx"><b>${esc(a.titulo)}</b><span>${esc(a.detalle)}</span></span>
+    <span class="hint mono" style="font-size:.66rem">${fmt(a.f)}</span></div>`;
+}
+function vAlertas(){
+  const nl=S.alertas.filter(a=>!a.leida);
+  return `<div class="tools"><span class="hint">${S.alertas.length} alertas · ${nl.length} sin leer. Todas generadas por el motor de reglas sobre la agenda que ya existía.</span>
+  <div style="flex:1"></div><button class="btn sm" id="marcar">Marcar todas como leídas</button></div>
+  <div class="card"><div class="card-b"><div class="alerts">${S.alertas.length?S.alertas.map(alertHTML).join(''):'<div class="empty">Sin alertas</div>'}</div></div></div>`;
+}
+function vBitacora(){
+  const T={auto:['p-brass','AUTO'],sis:['p-gray','SIS'],cita:['p-acc','CITA']};
+  const cols=[
+    {h:'Fecha',c:'k',v:b=>fmt(b.f),sv:b=>b.f},
+    {h:'Tipo',v:b=>`<span class="pill ${(T[b.tipo]||T.sis)[0]}">${(T[b.tipo]||T.sis)[1]}</span>`,raw:b=>b.tipo},
+    {h:'Evento',v:b=>esc(b.txt)},
+    {h:'Quién',v:b=>esc(b.quien),raw:b=>b.quien}
+  ];
+  return `<div class="banner"><div>Registro completo. Las marcadas <b>AUTO</b> las hizo el sistema. Sobre esta bitácora se construye el informe de valor de la fase E8.</div></div>
+  ${toolbar('bi','Buscar en la bitácora…')}<div class="card">${tabla('bi',cols,S.bitacora,null)}</div>`;
+}
+
+/* ---- detalle de cita ---- */
+function abrirCita(id){
+  const c=S.citas.find(x=>x.id===id); if(!c) return; S.sel=id;
+  const p=pac(c.pac), t=S.tratamientos.find(t=>t.pac===c.pac&&t.hechas<t.total);
+  $('#ph').textContent=p.n;
+  $('#phs').textContent=fmtD(c.f)+' · '+hora(c)+'–'+horaFin(c)+' · '+SILLONES[c.sillon].n;
+  $('#pb').innerHTML=`
+    <div style="display:flex;gap:7px;flex-wrap:wrap"><span class="pill ${EST[c.est].p}">${EST[c.est].n}</span>
+      ${c.riesgo?'<span class="pill p-crit">riesgo de inasistencia</span>':''}
+      ${p.noShows>=2?`<span class="pill p-crit">${p.noShows} inasistencias previas</span>`:''}</div>
+    <dl class="dl">
+      <dt>Prestación</dt><dd>${esc(c.presta)}</dd>
+      <dt>Profesional</dt><dd>${esc(den(c.dent).n)}</dd>
+      <dt>Duración</dt><dd class="mono">${c.dur*30} min</dd>
+      <dt>Previsión</dt><dd>${p.prevision}</dd>
+      <dt>Teléfono</dt><dd class="mono" style="font-size:.78rem">${p.fono}</dd>
+      <dt>Último control</dt><dd class="mono">${fmt(p.ultimoControl)}</dd>
+    </dl>
+    <div class="sect"><span class="lbl">Confirmación</span>
+      <dl class="dl">
+        <dt>Aviso enviado</dt><dd>${c.confirm.enviada?fmt(c.confirm.enviada)+' <span class="pill p-brass">automático</span>':'<span class="pill p-gray">aún no</span>'}</dd>
+        <dt>Intentos</dt><dd class="mono">${c.confirm.intentos||0}</dd>
+        <dt>Respondió</dt><dd>${c.confirm.respondida?'<span class="pill p-good">sí, el '+fmt(c.confirm.respondida)+'</span>':'<span class="pill p-warn">no</span>'}</dd>
+      </dl></div>
+    ${t?`<div class="sect"><span class="lbl">Tratamiento en curso</span>
+      <dl class="dl"><dt>Plan</dt><dd>${esc(t.plan)}</dd>
+      <dt>Sesiones</dt><dd class="mono">${t.hechas} de ${t.total}</dd>
+      <dt>Pendiente de facturar</dt><dd class="mono">${CLP(t.monto*(t.total-t.hechas)/t.total)}</dd></dl></div>`:''}
+    <div class="tot"><span>Valor de la sesión</span><span class="v">${CLP(c.precio)}</span></div>
+    <div class="sect"><span class="lbl">Historial</span>
+      <div class="tl">${c.notas.slice().reverse().map(n=>`<div class="it"><span class="t">${fmt(n.f)}</span>${esc(n.t)}</div>`).join('')}</div></div>`;
+  const acc=[];
+  if(c.est==='agendada'){acc.push('<button class="btn gd" data-act="confirmar">Marcar confirmada</button>');
+    if(!c.confirm.enviada) acc.push('<button class="btn" data-act="enviar">Enviar confirmación</button>');}
+  if(c.est==='agendada'||c.est==='confirmada'){
+    acc.push('<button class="btn" data-act="atendida">Marcar atendida</button>');
+    acc.push('<button class="btn dg" data-act="no_show">No asistió</button>');
+    acc.push('<button class="btn dg" data-act="cancelar">Cancelar cita</button>');}
+  acc.push('<button class="btn" data-act="cerrar">Cerrar</button>');
+  $('#pf').innerHTML=acc.join('');
+  open();
+}
+function abrirHueco(sillon,slot){
+  const f=S.sel_dia;
+  const cand=S.espera.slice(0,5);
+  $('#ph').textContent='Bloque libre';
+  $('#phs').textContent=fmtD(f)+' · '+SLOTS[slot]+' · '+SILLONES[sillon].n;
+  $('#pb').innerHTML=`<p class="hint">Este bloque está disponible. La lista de espera, en orden de asignación:</p>
+    <div class="wl">${cand.length?cand.map((w,i)=>{const p=pac(w.pac);
+      const calza=!((w.pref==='Sólo mañanas'&&slot>=10)||(w.pref==='Sólo tardes'&&slot<10));
+      return `<div class="wlrow"><span class="rk">${i+1}</span>
+        <span><b>${esc(p.n)}</b> · ${esc(w.presta)}<br><span class="hint">${w.pref} · hace ${days(w.desde,S.hoy)} días</span></span>
+        <span class="pill ${calza?'p-good':'p-gray'}">${calza?'calza':'no calza'}</span></div>`}).join(''):'<div class="empty">Lista de espera vacía</div>'}</div>
+    <p class="hint">Ocupación del día: <b>${pct(ocupacion(f))}</b>. Cada bloque de 30 minutos vacío en los cuatro sillones equivale a unos ${CLP(19000)} de producción no realizada.</p>`;
+  $('#pf').innerHTML=cand.length?'<button class="btn pri" data-act="asignar" data-s="'+sillon+':'+slot+'">Asignar al primero que calce</button><button class="btn" data-act="cerrar">Cerrar</button>':'<button class="btn" data-act="cerrar">Cerrar</button>';
+  open();
+}
+function open(){$('#panel').classList.add('on');$('#scrim').classList.add('on')}
+function close(){$('#panel').classList.remove('on');$('#scrim').classList.remove('on');S.sel=null}
+
+const VIEWS={panel:vPanel,agenda:vAgenda,confirm:vConfirm,espera:vEspera,tratamientos:vTratamientos,pacientes:vPacientes,autos:vAutos,alertas:vAlertas,bitacora:vBitacora};
+const TITLES={panel:['Panel','Ocupación, inasistencia y horas liberadas'],agenda:['Agenda','Cuatro sillones, de 09:00 a 19:00'],confirm:['Confirmaciones','La cola que antes se hacía por teléfono'],espera:['Lista de espera','Quién entra cuando se libera un bloque'],tratamientos:['Tratamientos','Planes aceptados y su avance real'],pacientes:['Pacientes','Ficha y comportamiento de asistencia'],autos:['Automatizaciones','Las reglas que vigilan la agenda'],alertas:['Alertas','Todo lo que el sistema detectó'],bitacora:['Bitácora','Registro completo de actividad']};
+function render(){
+  if(!ROLES[S.role].ver.includes(S.view)) S.view=ROLES[S.role].ver[0];
+  navRender();
+  $$('.view').forEach(v=>v.classList.remove('on'));
+  const el=$('#v-'+S.view); el.classList.add('on'); el.innerHTML=VIEWS[S.view]();
+  $('#vt').textContent=TITLES[S.view][0]; $('#vs').textContent=TITLES[S.view][1];
+  $('#hoy').textContent=fmtL(S.hoy);
+}
+document.addEventListener('click',e=>{
+  const t=e.target;
+  const nb=t.closest('nav button'); if(nb){S.view=nb.dataset.v;render();return}
+  if(t.closest('#pclose')||t.closest('#scrim')){close();return}
+  const dn=t.closest('[data-dia]'); if(dn){const v=+dn.dataset.dia;
+    if(v===0) S.sel_dia=S.hoy; else {let f=addD(S.sel_dia,v);
+      while([0,6].includes(D(f).getDay())) f=addD(f,v);S.sel_dia=f}
+    render();return}
+  const th=t.closest('th[data-t]'); if(th){const id=th.dataset.t,i=+th.dataset.i,s=S.sort[id]||{};
+    S.sort[id]=(s.k===i)?{k:i,d:!s.d}:{k:i,d:false};render();return}
+  const tr=t.closest('tr[data-row]'); if(tr){abrirCita(tr.dataset.row);return}
+  const cc=t.closest('[data-cita]'); if(cc){abrirCita(cc.dataset.cita);return}
+  const sl=t.closest('[data-slot]'); if(sl){const[s,i]=sl.dataset.slot.split(':');abrirHueco(+s,+i);return}
+  const sw=t.closest('.sw'); if(sw){const r=S.reglas.find(x=>x.id===sw.dataset.rule);r.on=!r.on;
+    log('sis','Regla "'+r.n+'" '+(r.on?'activada':'apagada'));toast('Regla '+(r.on?'activada':'apagada'),r.n);if(r.on)evaluar();render();return}
+  const al=t.closest('[data-alert]'); if(al){const a=S.alertas.find(x=>x.id===al.dataset.alert);a.leida=!a.leida;render();return}
+  if(t.closest('#marcar')){S.alertas.forEach(a=>a.leida=true);render();return}
+  if(t.closest('#simBtn')){simular();return}
+  const ac=t.closest('[data-act]'); if(!ac)return;
+  const c=S.citas.find(x=>x.id===S.sel);
+  switch(ac.dataset.act){
+    case 'confirmar': c.est='confirmada'; c.confirm.respondida=S.hoy; c.riesgo=false;
+      c.notas.push({f:S.hoy,t:'Confirmada manualmente en recepción'});
+      log('cita','Cita confirmada — '+pac(c.pac).n,c.id); toast('Cita confirmada',pac(c.pac).n,'good');
+      abrirCita(c.id); render(); break;
+    case 'enviar': c.confirm.enviada=S.hoy; c.confirm.intentos=1;
+      c.notas.push({f:S.hoy,t:'Confirmación enviada manualmente'});
+      toast('Confirmación enviada',pac(c.pac).fono); abrirCita(c.id); render(); break;
+    case 'atendida': c.est='atendida';
+      { const real=S.pacientes.find(x=>x.id===c.pac); if(real) real.ultimoControl=c.f;
+        const tt=S.tratamientos.find(t=>t.pac===c.pac&&t.hechas<t.total); if(tt){tt.hechas++;tt.ultima=c.f;tt._a4=false} }
+      c.notas.push({f:S.hoy,t:'Paciente atendido'});
+      log('cita','Cita atendida — '+pac(c.pac).n,c.id); toast('Sesión registrada',pac(c.pac).n+' · '+CLP(c.precio),'good');
+      close(); render(); break;
+    case 'no_show': {c.est='no_show'; const real=S.pacientes.find(x=>x.id===c.pac); if(real){real.noShows++;real._a6=false}
+      c.notas.push({f:S.hoy,t:'El paciente no asistió'});
+      log('cita','Inasistencia — '+pac(c.pac).n,c.id);
+      const nueva=cubrirHueco(c,'inasistencia'); close(); evaluar(true); render(); break}
+    case 'cancelar': {c.est='cancelada'; c.notas.push({f:S.hoy,t:'Cita cancelada'});
+      log('cita','Cita cancelada — '+pac(c.pac).n,c.id);
+      cubrirHueco(c,'cancelación'); close(); evaluar(true); render(); break}
+    case 'asignar': {const[s,i]=ac.dataset.s.split(':');
+      const falso={f:S.sel_dia,slot:+i,dur:2,sillon:+s,pac:null,dent:S.dentistas[0].id,precio:0,id:uid('x')};
+      const nueva=cubrirHueco(falso,'asignación manual'); close(); render(); break}
+    case 'cerrar': close(); break;
+  }
+});
+document.addEventListener('input',e=>{const q=e.target.closest('[data-q]');
+  if(q){S.q[q.dataset.q]=q.value;const k=q.dataset.q;render();
+    const el=document.querySelector('[data-q="'+k+'"]');if(el&&el.type==='search'){el.focus();el.setSelectionRange(el.value.length,el.value.length)}}});
+document.addEventListener('change',e=>{
+  if(e.target.id==='role'){S.role=e.target.value;log('sis','Cambio de perfil a '+ROLES[S.role].t);
+    toast('Perfil: '+ROLES[S.role].t,ROLES[S.role].n);render()}});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')close()});
+
+seed(); render();
+setTimeout(()=>toast('Demo lista','Ve a Agenda, abre una cita y cancélala: el sistema cubre el hueco solo','auto'),700);
+})();
+</script>

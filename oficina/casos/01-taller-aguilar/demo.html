@@ -1,0 +1,1038 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 32 32%27%3E%3Crect width=%2732%27 height=%2732%27 rx=%277%27 fill=%27%230E2A47%27/%3E%3Ccircle cx=%2723%27 cy=%2711%27 r=%273%27 fill=%27%23FF6B4A%27/%3E%3C/svg%3E">
+<style>.steps li::before{grid-row:span 2}</style>
+<title>Taller Aguilar OS</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&family=Space+Mono:wght@400;700&display=swap">
+
+<style>
+:root{
+  --paper:#F2F4F7; --surface:#FFFFFF; --surface-2:#EDF1F5; --surface-3:#E2E7EE;
+  --ink:#0E2A47; --ink-2:#34485F; --muted:#5F6F82; --faint:#8A9AAD;
+  --line:#DCE3EB; --line-soft:#E8EDF3;
+  --accent:#0B776D; --accent-2:#08615A; --accent-soft:#D9F3EF; --accent-tint:#EEF9F7; --on-accent:#FFFFFF;
+  --brass:#35679A; --brass-soft:#E1EAF4;
+  --good:#2C6F52; --good-soft:#DFEFE7;
+  --warn:#96591A; --warn-soft:#FAECD9;
+  --crit:#8F3126; --crit-soft:#FAE2DF;
+  --info:#1F5A7A; --info-soft:#DFEBF3;
+  --shadow-1:0 1px 2px rgba(14,42,71,.06);
+  --shadow-2:0 2px 4px rgba(14,42,71,.05),0 12px 28px -18px rgba(14,42,71,.35);
+  --shadow-3:0 4px 8px rgba(14,42,71,.08),0 24px 48px -20px rgba(14,42,71,.4);
+  --f:Inter,"Segoe UI",system-ui,sans-serif;
+  --m:"Space Mono",ui-monospace,Consolas,monospace;
+  --d:"Space Grotesk","Segoe UI",system-ui,sans-serif;
+  --r:4px;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --paper:#0A1B2E; --surface:#0E2A47; --surface-2:#14345A; --surface-3:#1A3E68;
+  --ink:#F2F4F7; --ink-2:#C4D2E0; --muted:#8FA3B8; --faint:#6B7F96;
+  --line:#23456B; --line-soft:#1A3858;
+  --accent:#17C3B2; --accent-2:#4FD8C9; --accent-soft:#103F4A; --accent-tint:#0E3442; --on-accent:#0E2A47;
+  --brass:#7FA6D0; --brass-soft:#17365A;
+  --good:#5FAE86; --good-soft:#122C21;
+  --warn:#C99050; --warn-soft:#2E2314;
+  --crit:#D47364; --crit-soft:#331A17;
+  --info:#66A5C6; --info-soft:#13272F;
+  --shadow-1:0 1px 2px rgba(0,0,0,.4);
+  --shadow-2:0 2px 4px rgba(0,0,0,.3),0 12px 28px -18px rgba(0,0,0,.8);
+  --shadow-3:0 4px 8px rgba(0,0,0,.4),0 24px 48px -20px rgba(0,0,0,.9);
+}}
+:root[data-theme="dark"]{
+  --paper:#0A1B2E; --surface:#0E2A47; --surface-2:#14345A; --surface-3:#1A3E68;
+  --ink:#F2F4F7; --ink-2:#C4D2E0; --muted:#8FA3B8; --faint:#6B7F96;
+  --line:#23456B; --line-soft:#1A3858;
+  --accent:#17C3B2; --accent-2:#4FD8C9; --accent-soft:#103F4A; --accent-tint:#0E3442; --on-accent:#0E2A47;
+  --brass:#7FA6D0; --brass-soft:#17365A;
+  --good:#5FAE86; --good-soft:#122C21;
+  --warn:#C99050; --warn-soft:#2E2314;
+  --crit:#D47364; --crit-soft:#331A17;
+  --info:#66A5C6; --info-soft:#13272F;
+  --shadow-1:0 1px 2px rgba(0,0,0,.4);
+  --shadow-2:0 2px 4px rgba(0,0,0,.3),0 12px 28px -18px rgba(0,0,0,.8);
+  --shadow-3:0 4px 8px rgba(0,0,0,.4),0 24px 48px -20px rgba(0,0,0,.9);
+}
+
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--f);font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased}
+h1,h2,h3{font-family:var(--d)}
+button,input,select,textarea{font:inherit;color:inherit}
+h1,h2,h3,h4{margin:0;font-weight:600;line-height:1.2;letter-spacing:-.01em}
+p{margin:0}
+.mono{font-family:var(--m);font-variant-numeric:tabular-nums}
+.lbl{font-family:var(--m);font-size:.62rem;font-weight:600;letter-spacing:.13em;text-transform:uppercase;color:var(--muted)}
+:where(button,a,input,select,[tabindex]):focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:2px}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+
+/* ===== SHELL (NÚCLEO) ===== */
+.app{display:grid;grid-template-columns:212px minmax(0,1fr);min-height:100vh}
+@media(max-width:900px){.app{grid-template-columns:1fr}}
+
+.side{background:var(--surface);border-right:1px solid var(--line);display:flex;flex-direction:column;position:sticky;top:0;height:100vh;overflow-y:auto}
+@media(max-width:900px){.side{position:static;height:auto;border-right:none;border-bottom:1px solid var(--line)}}
+.brand{padding:16px 16px 14px;border-bottom:1px solid var(--line-soft);display:flex;flex-direction:column;gap:2px}
+.brand .biz{font-size:.95rem;font-weight:700;letter-spacing:-.02em}
+.brand .by{font-family:var(--m);font-size:.58rem;letter-spacing:.14em;text-transform:uppercase;color:var(--faint);display:flex;align-items:center;gap:5px}
+.brand .by i{width:5px;height:5px;border-radius:50%;background:var(--accent);display:inline-block}
+nav{padding:10px 8px;display:flex;flex-direction:column;gap:1px;flex:1}
+nav .grp{padding:12px 8px 5px;font-family:var(--m);font-size:.58rem;letter-spacing:.14em;text-transform:uppercase;color:var(--faint)}
+nav button{display:flex;align-items:center;gap:9px;width:100%;text-align:left;background:none;border:none;padding:7px 8px;border-radius:var(--r);cursor:pointer;color:var(--ink-2);font-size:.85rem;font-weight:500;transition:background .12s,color .12s}
+nav button:hover{background:var(--surface-2);color:var(--ink)}
+nav button.on{background:var(--accent-soft);color:var(--accent);font-weight:600}
+nav button .ic{width:15px;height:15px;flex:none;opacity:.85}
+nav button .bdg{margin-left:auto;font-family:var(--m);font-size:.62rem;font-weight:600;background:var(--crit);color:#fff;padding:1px 5px;border-radius:8px;min-width:17px;text-align:center}
+nav button.on .bdg{background:var(--crit)}
+.side-foot{padding:10px;border-top:1px solid var(--line-soft);display:flex;flex-direction:column;gap:7px}
+.rolebox{display:flex;flex-direction:column;gap:4px}
+.rolebox select{width:100%;padding:5px 7px;border:1px solid var(--line);background:var(--surface-2);border-radius:var(--r);font-size:.78rem}
+
+.top{position:sticky;top:0;z-index:30;background:color-mix(in srgb,var(--paper) 88%,transparent);backdrop-filter:blur(8px);border-bottom:1px solid var(--line);padding:11px 20px;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.top h1{font-size:1.02rem}
+.top .sub{font-size:.78rem;color:var(--muted)}
+.top .sp{flex:1}
+.clock{display:flex;align-items:center;gap:7px;font-family:var(--m);font-size:.72rem;color:var(--muted);background:var(--surface);border:1px solid var(--line);padding:4px 8px;border-radius:var(--r)}
+main{padding:20px;display:flex;flex-direction:column;gap:18px;max-width:1400px}
+.view{display:none;flex-direction:column;gap:18px}
+.view.on{display:flex}
+
+/* ===== BUTTONS ===== */
+.btn{display:inline-flex;align-items:center;gap:6px;padding:6px 11px;border-radius:var(--r);border:1px solid var(--line);background:var(--surface);color:var(--ink);font-size:.8rem;font-weight:500;cursor:pointer;transition:background .12s,border-color .12s;white-space:nowrap}
+.btn:hover{background:var(--surface-2);border-color:var(--muted)}
+.btn.pri{background:var(--accent);border-color:var(--accent);color:var(--on-accent);font-weight:600}
+.btn.pri:hover{background:var(--accent-2);border-color:var(--accent-2)}
+.btn.gd{background:var(--good);border-color:var(--good);color:#fff}
+.btn.dg{background:var(--crit);border-color:var(--crit);color:#fff}
+.btn.sm{padding:3px 8px;font-size:.74rem}
+.btn:disabled{opacity:.42;cursor:not-allowed}
+
+/* ===== CARDS / KPI ===== */
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow-1)}
+.card-h{padding:11px 14px;border-bottom:1px solid var(--line-soft);display:flex;align-items:center;gap:10px}
+.card-h h3{font-size:.87rem}
+.card-h .sp{flex:1}
+.card-b{padding:14px}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(178px,1fr));gap:10px}
+.kpi{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:12px 13px;display:flex;flex-direction:column;gap:5px;box-shadow:var(--shadow-1);position:relative;overflow:hidden}
+.kpi::before{content:"";position:absolute;left:0;top:0;bottom:0;width:2px;background:var(--accent)}
+.kpi.w::before{background:var(--warn)} .kpi.c::before{background:var(--crit)} .kpi.g::before{background:var(--good)}
+.kpi .v{font-family:var(--m);font-size:1.55rem;font-weight:600;letter-spacing:-.02em;line-height:1}
+.kpi .d{font-size:.72rem;color:var(--muted);display:flex;align-items:center;gap:5px;flex-wrap:wrap}
+.delta{font-family:var(--m);font-size:.68rem;font-weight:600;padding:1px 5px;border-radius:3px}
+.delta.up{background:var(--good-soft);color:var(--good)}
+.delta.dn{background:var(--crit-soft);color:var(--crit)}
+
+/* ===== PILLS ===== */
+.pill{display:inline-flex;align-items:center;gap:4px;font-family:var(--m);font-size:.63rem;font-weight:600;letter-spacing:.05em;text-transform:uppercase;padding:2px 7px;border-radius:10px;white-space:nowrap;border:1px solid transparent}
+.p-gray{background:var(--surface-3);color:var(--muted)}
+.p-info{background:var(--info-soft);color:var(--info)}
+.p-good{background:var(--good-soft);color:var(--good)}
+.p-warn{background:var(--warn-soft);color:var(--warn)}
+.p-crit{background:var(--crit-soft);color:var(--crit)}
+.p-acc{background:var(--accent-soft);color:var(--accent)}
+.p-brass{background:var(--brass-soft);color:var(--brass)}
+
+/* ===== TABLE ===== */
+.tools{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.tools input[type=search],.tools select{padding:5px 9px;border:1px solid var(--line);background:var(--surface);border-radius:var(--r);font-size:.8rem}
+.tools input[type=search]{min-width:190px}
+.tw{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:.82rem;min-width:640px}
+th{text-align:left;padding:8px 12px;background:var(--surface-2);border-bottom:1px solid var(--line);font-family:var(--m);font-size:.6rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-weight:600;white-space:nowrap;cursor:pointer;user-select:none}
+th:hover{color:var(--ink)}
+th .ar{opacity:.45;font-size:.7rem}
+td{padding:8px 12px;border-bottom:1px solid var(--line-soft);vertical-align:middle}
+tbody tr{cursor:pointer;transition:background .1s}
+tbody tr:hover{background:var(--accent-tint)}
+td.num{font-family:var(--m);font-variant-numeric:tabular-nums;text-align:right;white-space:nowrap}
+td.k{font-family:var(--m);font-size:.76rem;color:var(--accent);font-weight:600;white-space:nowrap}
+.empty{padding:34px;text-align:center;color:var(--muted);font-size:.85rem}
+
+/* ===== KANBAN ===== */
+.kb{display:grid;grid-auto-flow:column;grid-auto-columns:236px;gap:10px;overflow-x:auto;padding-bottom:6px;align-items:start}
+.kcol{background:var(--surface-2);border:1px solid var(--line);border-radius:var(--r);display:flex;flex-direction:column;min-height:120px}
+.kcol.over{border-color:var(--accent);background:var(--accent-tint);box-shadow:inset 0 0 0 1px var(--accent)}
+.kcol-h{padding:9px 11px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:7px;position:sticky;top:0;background:var(--surface-2);border-radius:var(--r) var(--r) 0 0}
+.kcol-h .t{font-size:.76rem;font-weight:600}
+.kcol-h .n{margin-left:auto;font-family:var(--m);font-size:.66rem;color:var(--muted);background:var(--surface);border:1px solid var(--line);padding:0 6px;border-radius:8px}
+.kcol-b{padding:8px;display:flex;flex-direction:column;gap:7px;min-height:60px}
+.kcard{background:var(--surface);border:1px solid var(--line);border-left:2px solid var(--accent);border-radius:var(--r);padding:9px 10px;cursor:grab;display:flex;flex-direction:column;gap:5px;box-shadow:var(--shadow-1);transition:box-shadow .12s,transform .12s}
+.kcard:hover{box-shadow:var(--shadow-2)}
+.kcard.drag{opacity:.4}
+.kcard.pr-alta{border-left-color:var(--crit)}
+.kcard.pr-media{border-left-color:var(--warn)}
+.kcard .r1{display:flex;align-items:center;gap:6px}
+.kcard .fo{font-family:var(--m);font-size:.68rem;font-weight:600;color:var(--accent)}
+.kcard .pa{font-family:var(--m);font-size:.7rem;font-weight:600;letter-spacing:.03em;margin-left:auto;background:var(--surface-3);padding:1px 5px;border-radius:2px}
+.kcard .ti{font-size:.79rem;font-weight:500;line-height:1.35}
+.kcard .r2{display:flex;align-items:center;gap:6px;font-size:.68rem;color:var(--muted);flex-wrap:wrap}
+.kcard .mo{font-family:var(--m);font-weight:600;color:var(--ink-2)}
+
+/* ===== PANEL ===== */
+.scrim{position:fixed;inset:0;background:rgba(10,27,46,.42);z-index:80;opacity:0;pointer-events:none;transition:opacity .18s}
+.scrim.on{opacity:1;pointer-events:auto}
+.panel{position:fixed;top:0;right:0;height:100vh;width:min(560px,100%);background:var(--surface);border-left:1px solid var(--line);z-index:90;transform:translateX(100%);transition:transform .22s cubic-bezier(.4,0,.2,1);display:flex;flex-direction:column;box-shadow:var(--shadow-3)}
+.panel.on{transform:none}
+.panel-h{padding:14px 16px;border-bottom:1px solid var(--line);display:flex;align-items:flex-start;gap:10px}
+.panel-h h3{font-size:1rem}
+.panel-h .sp{flex:1}
+.xbtn{background:none;border:1px solid var(--line);border-radius:var(--r);width:26px;height:26px;cursor:pointer;color:var(--muted);font-size:1rem;line-height:1;display:grid;place-items:center}
+.xbtn:hover{background:var(--surface-2);color:var(--ink)}
+.panel-b{padding:16px;overflow-y:auto;flex:1;display:flex;flex-direction:column;gap:16px}
+.panel-f{padding:11px 16px;border-top:1px solid var(--line);display:flex;gap:8px;flex-wrap:wrap;background:var(--surface-2)}
+.dl{display:grid;grid-template-columns:auto 1fr;gap:6px 14px;font-size:.82rem}
+.dl dt{color:var(--muted);white-space:nowrap}
+.dl dd{margin:0;text-align:right;font-weight:500}
+.sect{display:flex;flex-direction:column;gap:8px}
+.sect>.lbl{padding-bottom:5px;border-bottom:1px solid var(--line-soft)}
+.lines{display:flex;flex-direction:column;gap:5px}
+.line{display:grid;grid-template-columns:1fr auto auto;gap:9px;align-items:center;padding:6px 9px;background:var(--surface-2);border:1px solid var(--line-soft);border-radius:var(--r);font-size:.8rem}
+.line .n{font-family:var(--m);font-variant-numeric:tabular-nums;color:var(--ink-2);font-size:.78rem}
+.line .x{background:none;border:none;color:var(--faint);cursor:pointer;padding:0 2px;font-size:.9rem}
+.line .x:hover{color:var(--crit)}
+.tot{display:flex;justify-content:space-between;padding:9px 10px;background:var(--accent-soft);border-radius:var(--r);font-weight:600}
+.tot .v{font-family:var(--m);color:var(--accent)}
+.addrow{display:grid;grid-template-columns:1fr 62px 82px auto;gap:6px}
+.addrow input,.addrow select{padding:5px 7px;border:1px solid var(--line);background:var(--surface);border-radius:var(--r);font-size:.78rem;min-width:0}
+.tl{display:flex;flex-direction:column;gap:0;position:relative;padding-left:16px}
+.tl::before{content:"";position:absolute;left:4px;top:6px;bottom:6px;width:1px;background:var(--line)}
+.tl .it{position:relative;padding:5px 0;font-size:.78rem;color:var(--ink-2)}
+.tl .it::before{content:"";position:absolute;left:-15px;top:11px;width:7px;height:7px;border-radius:50%;background:var(--surface);border:1.5px solid var(--accent)}
+.tl .it .t{font-family:var(--m);font-size:.66rem;color:var(--faint);margin-right:6px}
+
+/* ===== AUTOMATIONS ===== */
+.rules{display:flex;flex-direction:column;gap:9px}
+.rule{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:12px 13px;display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:start;box-shadow:var(--shadow-1)}
+.rule.off{opacity:.5}
+.rule .body{display:flex;flex-direction:column;gap:6px;min-width:0}
+.rule h4{font-size:.85rem}
+.rule .logic{font-family:var(--m);font-size:.73rem;line-height:1.6;color:var(--ink-2);background:var(--surface-2);border:1px solid var(--line-soft);border-radius:var(--r);padding:7px 9px;overflow-x:auto}
+.rule .logic b{color:var(--accent);font-weight:600}
+.rule .logic i{color:var(--brass);font-style:normal;font-weight:600}
+.rule .meta{display:flex;gap:9px;font-size:.71rem;color:var(--muted);flex-wrap:wrap}
+.sw{position:relative;width:34px;height:19px;flex:none;cursor:pointer;background:var(--surface-3);border:1px solid var(--line);border-radius:11px;transition:background .15s;padding:0}
+.sw::after{content:"";position:absolute;top:1px;left:1px;width:15px;height:15px;border-radius:50%;background:var(--surface);box-shadow:var(--shadow-1);transition:transform .15s}
+.sw[aria-checked="true"]{background:var(--accent);border-color:var(--accent)}
+.sw[aria-checked="true"]::after{transform:translateX(15px)}
+
+/* ===== ALERTS ===== */
+.alerts{display:flex;flex-direction:column;gap:7px}
+.alert{display:grid;grid-template-columns:auto 1fr auto;gap:11px;align-items:center;padding:10px 12px;background:var(--surface);border:1px solid var(--line);border-left:2px solid var(--warn);border-radius:var(--r)}
+.alert.crit{border-left-color:var(--crit)} .alert.info{border-left-color:var(--info)} .alert.good{border-left-color:var(--good)}
+.alert .ic{width:22px;height:22px;border-radius:50%;display:grid;place-items:center;font-family:var(--m);font-size:.7rem;font-weight:600;background:var(--warn-soft);color:var(--warn);flex:none}
+.alert.crit .ic{background:var(--crit-soft);color:var(--crit)}
+.alert.info .ic{background:var(--info-soft);color:var(--info)}
+.alert.good .ic{background:var(--good-soft);color:var(--good)}
+.alert .tx{display:flex;flex-direction:column;gap:1px;min-width:0}
+.alert .tx b{font-size:.82rem;font-weight:600}
+.alert .tx span{font-size:.74rem;color:var(--muted)}
+.alert.read{opacity:.5}
+
+/* ===== DOC ===== */
+.doc{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:22px;font-size:.83rem;display:flex;flex-direction:column;gap:15px}
+.doc-h{display:flex;justify-content:space-between;align-items:flex-start;gap:14px;padding-bottom:13px;border-bottom:2px solid var(--accent)}
+.doc-h .l h4{font-size:1.05rem} .doc-h .l p{font-size:.74rem;color:var(--muted)}
+.doc-h .r{text-align:right;font-family:var(--m);font-size:.72rem;color:var(--muted);line-height:1.7}
+.doc table{min-width:0;font-size:.79rem}
+.doc th{background:none;border-bottom:1px solid var(--line);cursor:default;padding:5px 8px}
+.doc td{padding:5px 8px}
+.doc tbody tr{cursor:default} .doc tbody tr:hover{background:none}
+.doc .totrow td{border-top:1.5px solid var(--ink);border-bottom:none;font-weight:600;padding-top:8px}
+.doc .note{font-size:.74rem;color:var(--muted);line-height:1.6;padding:9px 11px;background:var(--surface-2);border-radius:var(--r)}
+
+/* ===== BARS / CHART ===== */
+.bars{display:flex;flex-direction:column;gap:8px}
+.bar{display:grid;grid-template-columns:112px 1fr 66px;gap:10px;align-items:center;font-size:.79rem}
+.bar .tr{height:16px;background:var(--surface-3);border-radius:2px;overflow:hidden;position:relative}
+.bar .fl{height:100%;background:var(--accent);border-radius:2px;transition:width .4s}
+.bar .fl.w{background:var(--warn)} .bar .fl.c{background:var(--crit)} .bar .fl.g{background:var(--good)}
+.bar .vv{font-family:var(--m);font-size:.76rem;text-align:right;font-variant-numeric:tabular-nums}
+.bar .nm{color:var(--ink-2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
+.spark{display:flex;align-items:flex-end;gap:2px;height:34px}
+.spark i{flex:1;background:var(--accent-soft);border-radius:1px 1px 0 0;min-height:2px}
+.spark i.hi{background:var(--accent)}
+
+/* ===== TOAST ===== */
+.toasts{position:fixed;bottom:16px;right:16px;z-index:200;display:flex;flex-direction:column;gap:7px;max-width:340px}
+.toast{background:var(--surface);border:1px solid var(--line);border-left:2px solid var(--accent);border-radius:var(--r);padding:10px 13px;box-shadow:var(--shadow-3);display:flex;flex-direction:column;gap:2px;animation:sl .22s ease-out}
+.toast b{font-size:.81rem} .toast span{font-size:.74rem;color:var(--muted)}
+.toast.auto{border-left-color:var(--brass)}
+.toast.good{border-left-color:var(--good)}
+@keyframes sl{from{transform:translateX(16px);opacity:0}to{transform:none;opacity:1}}
+
+.banner{display:flex;gap:11px;align-items:flex-start;padding:11px 14px;background:var(--accent-soft);border:1px solid color-mix(in srgb,var(--accent) 30%,transparent);border-radius:var(--r);font-size:.81rem;color:var(--ink-2);line-height:1.55}
+.banner b{color:var(--accent)}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(310px,1fr));gap:12px}
+.grid3{display:grid;grid-template-columns:repeat(auto-fit,minmax(228px,1fr));gap:12px}
+.hint{font-size:.74rem;color:var(--muted);line-height:1.55}
+.hr{height:1px;background:var(--line-soft);border:none;margin:0}
+</style>
+
+<div class="app">
+  <aside class="side">
+    <div class="brand">
+      <span class="biz">Taller Aguilar</span>
+      <span class="by"><i></i>BiPlot OS · Demo</span>
+    </div>
+    <nav id="nav"></nav>
+    <div class="side-foot">
+      <div class="rolebox">
+        <span class="lbl">Perfil activo</span>
+        <select id="role">
+          <option value="recepcion">Recepción</option>
+          <option value="mecanico">Mecánico</option>
+          <option value="jefe" selected>Jefe de taller</option>
+          <option value="dueno">Dueño</option>
+        </select>
+      </div>
+    </div>
+  </aside>
+
+  <div>
+    <div class="top">
+      <div>
+        <h1 id="vt">Panel</h1>
+        <p class="sub" id="vs">Estado del taller hoy</p>
+      </div>
+      <div class="sp"></div>
+      <div class="clock"><span id="hoy"></span></div>
+      <button class="btn" id="simBtn" title="Avanza el reloj un día y ejecuta las automatizaciones">Simular día siguiente</button>
+      <button class="btn pri" id="newBtn">+ Recepcionar vehículo</button>
+    </div>
+    <main>
+      <div class="view on" id="v-panel"></div>
+      <div class="view" id="v-taller"></div>
+      <div class="view" id="v-ots"></div>
+      <div class="view" id="v-presup"></div>
+      <div class="view" id="v-repuestos"></div>
+      <div class="view" id="v-clientes"></div>
+      <div class="view" id="v-autos"></div>
+      <div class="view" id="v-alertas"></div>
+      <div class="view" id="v-bitacora"></div>
+    </main>
+  </div>
+</div>
+
+<div class="scrim" id="scrim"></div>
+<aside class="panel" id="panel" role="dialog" aria-modal="true" aria-label="Detalle">
+  <div class="panel-h"><div class="sp"><h3 id="ph">—</h3><p class="sub" id="phs" style="font-size:.76rem;color:var(--muted)"></p></div><button class="xbtn" id="pclose" aria-label="Cerrar">&times;</button></div>
+  <div class="panel-b" id="pb"></div>
+  <div class="panel-f" id="pf"></div>
+</aside>
+<div class="toasts" id="toasts"></div>
+
+<script>
+(function(){
+"use strict";
+/* ==================================================================
+   NÚCLEO BiPlot — capa reutilizable entre verticales
+   estado · reloj · bitácora · alertas · motor de reglas · render kit
+   ================================================================== */
+const $=(s,r)=>(r||document).querySelector(s), $$=(s,r)=>[...(r||document).querySelectorAll(s)];
+const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const CLP=n=>'$'+Math.round(n).toLocaleString('es-CL');
+const K=n=>n>=1e6?'$'+(n/1e6).toFixed(1).replace('.',',')+'M':n>=1000?'$'+Math.round(n/1000)+'k':'$'+Math.round(n);
+const D=s=>new Date(s+'T12:00:00');
+const iso=d=>d.toISOString().slice(0,10);
+const fmt=s=>{const d=D(s);return d.toLocaleDateString('es-CL',{day:'2-digit',month:'short'})};
+const fmtL=s=>{const d=D(s);return d.toLocaleDateString('es-CL',{day:'2-digit',month:'long',year:'numeric'})};
+const days=(a,b)=>Math.round((D(b)-D(a))/864e5);
+const uid=p=>p+'-'+Math.random().toString(36).slice(2,7);
+
+const S={
+  hoy:'2026-08-30', dia:0,
+  clientes:[], vehiculos:[], ots:[], repuestos:[], mecanicos:[],
+  bitacora:[], alertas:[], reglas:[], role:'jefe', sel:null, view:'panel',
+  sort:{}, q:{}
+};
+
+function log(tipo,txt,ref){ S.bitacora.unshift({id:uid('b'),f:S.hoy,tipo,txt,ref:ref||'',quien:ROLES[S.role].n}); }
+function alerta(nivel,titulo,detalle,ref){ S.alertas.unshift({id:uid('a'),f:S.hoy,nivel,titulo,detalle,ref:ref||'',leida:false}); }
+function toast(t,d,cls){
+  const el=document.createElement('div'); el.className='toast'+(cls?' '+cls:'');
+  el.innerHTML='<b>'+esc(t)+'</b>'+(d?'<span>'+esc(d)+'</span>':'');
+  $('#toasts').appendChild(el); setTimeout(()=>{el.style.transition='opacity .3s';el.style.opacity='0';setTimeout(()=>el.remove(),320)},4200);
+}
+
+/* ==================================================================
+   CAPA VERTICAL — Taller mecánico
+   ================================================================== */
+const ROLES={
+  recepcion:{n:'Ana Ríos',t:'Recepción',ver:['panel','taller','ots','presup','clientes','alertas']},
+  mecanico:{n:'Luis Pinto',t:'Mecánico',ver:['panel','taller','ots','repuestos']},
+  jefe:{n:'Marco Aguilar',t:'Jefe de taller',ver:['panel','taller','ots','presup','repuestos','clientes','autos','alertas','bitacora']},
+  dueno:{n:'Hernán Aguilar',t:'Dueño',ver:['panel','ots','presup','repuestos','clientes','autos','alertas','bitacora']}
+};
+const MODULOS=[
+  {id:'panel',n:'Panel',g:'Operación',ic:'M2 12h4l2-6 3 12 2-8 2 4h3'},
+  {id:'taller',n:'Taller',g:'Operación',ic:'M3 4h4v16H3zM10 4h4v10h-4zM17 4h4v16h-4z'},
+  {id:'ots',n:'Órdenes',g:'Operación',ic:'M5 3h9l5 5v13H5zM14 3v5h5'},
+  {id:'presup',n:'Presupuestos',g:'Operación',ic:'M4 5h16v14H4zM8 9h8M8 13h5'},
+  {id:'repuestos',n:'Repuestos',g:'Recursos',ic:'M12 3l8 4v10l-8 4-8-4V7z'},
+  {id:'clientes',n:'Clientes',g:'Recursos',ic:'M12 11a4 4 0 100-8 4 4 0 000 8zM4 21c0-4 4-6 8-6s8 2 8 6'},
+  {id:'autos',n:'Automatizaciones',g:'Inteligencia',ic:'M12 3v4M12 17v4M3 12h4M17 12h4M12 9a3 3 0 100 6 3 3 0 000-6z'},
+  {id:'alertas',n:'Alertas',g:'Inteligencia',ic:'M12 3a6 6 0 016 6c0 5 2 6 2 6H4s2-1 2-6a6 6 0 016-6zM10 20h4'},
+  {id:'bitacora',n:'Bitácora',g:'Inteligencia',ic:'M5 4h14v16H5zM9 8h6M9 12h6M9 16h3'}
+];
+const EST=[
+  {id:'recepcion',n:'Recepción',d:'Vehículo ingresado'},
+  {id:'diagnostico',n:'Diagnóstico',d:'Mecánico revisando'},
+  {id:'presupuesto',n:'Presupuestando',d:'Armando cotización'},
+  {id:'aprobacion',n:'Esperando OK',d:'Enviado al cliente'},
+  {id:'trabajo',n:'En trabajo',d:'Aprobado, ejecutando'},
+  {id:'calidad',n:'Control calidad',d:'Revisión final'},
+  {id:'listo',n:'Listo',d:'Avisar retiro'},
+  {id:'entregado',n:'Entregado',d:'Cerrada'}
+];
+const ESTI=Object.fromEntries(EST.map((e,i)=>[e.id,i]));
+const PILL={recepcion:'p-gray',diagnostico:'p-info',presupuesto:'p-info',aprobacion:'p-warn',trabajo:'p-acc',calidad:'p-brass',listo:'p-good',entregado:'p-gray'};
+
+/* ---- semilla ---- */
+function seed(){
+  S.mecanicos=[{id:'m1',n:'Luis Pinto',e:'Motor'},{id:'m2',n:'Rodrigo Salas',e:'Frenos y suspensión'},{id:'m3',n:'Iván Cortés',e:'Electricidad'},{id:'m4',n:'Pablo Muñoz',e:'Mecánica general'}];
+  S.repuestos=[
+    {sku:'FIL-AC-201',n:'Filtro de aceite',stock:14,min:8,costo:3200,precio:7900},
+    {sku:'FIL-AI-118',n:'Filtro de aire',stock:6,min:8,costo:5400,precio:12900},
+    {sku:'PAS-FR-330',n:'Pastillas freno delanteras',stock:3,min:6,costo:24000,precio:52000},
+    {sku:'DIS-FR-450',n:'Disco freno ventilado',stock:4,min:4,costo:38000,precio:79000},
+    {sku:'ACE-5W30-4',n:'Aceite sintético 5W30 4L',stock:22,min:12,costo:19500,precio:38900},
+    {sku:'BUJ-IR-4X',n:'Bujías iridio (juego 4)',stock:9,min:6,costo:28000,precio:59000},
+    {sku:'BAT-12-70',n:'Batería 12V 70Ah',stock:2,min:3,costo:68000,precio:129000},
+    {sku:'COR-DIS-A',n:'Correa de distribución',stock:5,min:4,costo:42000,precio:89000},
+    {sku:'AMO-DEL-P',n:'Amortiguador delantero',stock:4,min:4,costo:46000,precio:96000},
+    {sku:'REF-VER-1',n:'Refrigerante verde 1L',stock:18,min:10,costo:4200,precio:9900}
+  ];
+  const cl=[['Constructora Vilos SpA','76.221.884-3','+56 9 8123 4471','empresa'],['Comercial Peñuelas Ltda','77.045.112-9','+56 9 7744 2210','empresa'],['Patricia Bustos','13.884.221-7','+56 9 9412 7788','particular'],['Jorge Marín','9.774.213-K','+56 9 6631 2094','particular'],['Reparto Andes SpA','76.900.331-2','+56 9 5512 8830','empresa'],['Claudia Herrera','16.221.774-5','+56 9 8890 1123','particular'],['Ilustre Municipalidad de Vicuña','69.040.100-8','+56 51 241 2200','empresa'],['Rodrigo Tapia','12.008.774-1','+56 9 7712 3390','particular'],['Transportes Elqui Ltda','78.114.220-6','+56 9 9033 4471','empresa'],['Sofía Navarro','18.774.221-3','+56 9 6612 8890','particular']];
+  S.clientes=cl.map((c,i)=>({id:'c'+(i+1),n:c[0],rut:c[1],fono:c[2],tipo:c[3]}));
+  const ve=[['c1','JHKR-42','Toyota','Hilux 2.8',2021,118400],['c1','LVBS-77','Toyota','Hilux 2.4',2019,164200],['c2','KPTD-31','Chevrolet','N300',2020,98700],['c3','FGHJ-08','Hyundai','Accent',2017,142300],['c4','BRTY-55','Nissan','Versa',2018,131900],['c5','LKJH-19','Peugeot','Partner',2022,71200],['c5','MNBV-64','Peugeot','Boxer',2021,104800],['c6','QWER-23','Kia','Rio 5',2019,88400],['c7','ZXCV-90','Toyota','Land Cruiser',2016,201400],['c8','POIU-12','Suzuki','Swift',2020,64100],['c9','ASDF-38','Mercedes','Sprinter',2018,224700],['c9','GHJK-71','Hyundai','H1',2020,152800],['c10','TYUI-46','Mazda','3 Sport',2021,52300],['c3','VBNM-27','Chevrolet','Sail',2015,178600]];
+  S.vehiculos=ve.map((v,V)=>({id:'v'+(V+1),cli:v[0],pat:v[1],marca:v[2],modelo:v[3],anio:v[4],km:v[5]}));
+
+  const M=[['Cambio de aceite y filtros','mant'],['Ruido en frenos delanteros','falla'],['Revisión pre-viaje 5.000 km','mant'],['Luz de motor encendida','falla'],['Cambio pastillas y discos','falla'],['Mantención 60.000 km','mant'],['No parte en frío','falla'],['Vibración sobre 80 km/h','falla'],['Cambio de correa de distribución','mant'],['Batería descargada','falla'],['Suspensión delantera golpeando','falla'],['Mantención programada flota','mant']];
+  const P=['alta','media','baja'];
+  const semilla=[
+    ['recepcion',0,'v3',3,'media'],['recepcion',0,'v10',9,'baja'],
+    ['diagnostico',1,'v5',1,'media'],['diagnostico',2,'v13',7,'alta'],
+    ['presupuesto',2,'v1',4,'media'],
+    ['aprobacion',4,'v9',10,'alta'],['aprobacion',3,'v4',6,'media'],['aprobacion',7,'v12',1,'alta'],
+    ['trabajo',3,'v2',8,'media'],['trabajo',5,'v11',5,'alta'],['trabajo',1,'v7',2,'baja'],
+    ['calidad',6,'v8',0,'media'],
+    ['listo',3,'v6',5,'baja'],['listo',9,'v14',11,'media'],
+    ['entregado',12,'v1',0,'media'],['entregado',18,'v4',2,'baja'],['entregado',24,'v9',5,'media'],
+    ['entregado',31,'v6',3,'alta'],['entregado',9,'v13',8,'media'],['entregado',15,'v10',0,'baja'],
+    ['entregado',21,'v3',6,'media'],['entregado',27,'v11',9,'alta'],['entregado',6,'v2',1,'media'],
+    ['entregado',36,'v8',4,'baja'],['entregado',42,'v12',7,'media']
+  ];
+  let folio=1840;
+  S.ots=semilla.map((s,i)=>{
+    const [est,antig,vid,mi,pri]=s;
+    const veh=S.vehiculos.find(v=>v.id===vid);
+    const ing=iso(new Date(D(S.hoy)-antig*864e5));
+    const o={id:'o'+(i+1),folio:'OT-'+(++folio),veh:vid,cli:veh.cli,est,ing,motivo:M[mi][0],tipo:M[mi][1],
+      mec:S.mecanicos[i%4].id,pri,mo:[],rp:[],presu:{estado:'borrador',enviado:null,resp:null},entrega:null,notas:[]};
+    if(ESTI[est]>=2) armar(o,i);
+    if(ESTI[est]>=3){ o.presu.estado='enviado'; o.presu.enviado=iso(new Date(D(ing)-0+1*864e5)); }
+    if(ESTI[est]>=4){ o.presu.estado='aprobado'; o.presu.resp=iso(new Date(D(o.presu.enviado)-0+1*864e5)); }
+    if(est==='entregado') o.entrega=iso(new Date(D(ing)-0+(3+i%4)*864e5));
+    o.notas.push({f:ing,t:'OT creada en recepción. Motivo: '+o.motivo});
+    return o;
+  });
+  reglas();
+  S.ots.forEach(o=>{ if(ESTI[o.est]>=2&&ESTI[o.est]<7) log('ot','OT '+o.folio+' en estado '+EST.find(e=>e.id===o.est).n,o.folio); });
+  evaluar(true);
+}
+function armar(o,i){
+  const packs=[
+    [[['Cambio aceite y filtros',1.0]],[['ACE-5W30-4',1],['FIL-AC-201',1],['FIL-AI-118',1]]],
+    [[['Cambio pastillas delanteras',1.5],['Rectificado de discos',1.0]],[['PAS-FR-330',1],['DIS-FR-450',2]]],
+    [[['Diagnóstico electrónico',1.0],['Cambio de bujías',1.5]],[['BUJ-IR-4X',1]]],
+    [[['Cambio correa distribución',4.0],['Ajuste de sincronismo',1.0]],[['COR-DIS-A',1],['REF-VER-1',2]]],
+    [[['Cambio amortiguadores delanteros',2.5]],[['AMO-DEL-P',2]]],
+    [[['Test y cambio de batería',0.5]],[['BAT-12-70',1]]]
+  ];
+  const p=packs[i%packs.length];
+  o.mo=p[0].map(x=>({d:x[0],h:x[1],vh:22000}));
+  o.rp=p[1].map(x=>({sku:x[0],c:x[1]}));
+}
+const totMO=o=>o.mo.reduce((a,l)=>a+l.h*l.vh,0);
+const totRP=o=>o.rp.reduce((a,l)=>{const r=S.repuestos.find(r=>r.sku===l.sku);return a+(r?r.precio*l.c:0)},0);
+const costoRP=o=>o.rp.reduce((a,l)=>{const r=S.repuestos.find(r=>r.sku===l.sku);return a+(r?r.costo*l.c:0)},0);
+const neto=o=>totMO(o)+totRP(o);
+const total=o=>Math.round(neto(o)*1.19);
+const margen=o=>{const n=neto(o);return n?Math.round((n-costoRP(o)-totMO(o)*.42)/n*100):0};
+const veh=o=>S.vehiculos.find(v=>v.id===o.veh)||{};
+const cli=o=>S.clientes.find(c=>c.id===o.cli)||{};
+const mec=o=>S.mecanicos.find(m=>m.id===o.mec)||{};
+
+/* ---- MOTOR DE REGLAS (núcleo) ---- */
+function reglas(){
+  S.reglas=[
+  {id:'r1',n:'Presupuesto sin respuesta',on:true,disparos:0,
+   cuando:'una OT lleva <i>2 días o más</i> en <b>Esperando OK</b>',
+   entonces:'enviar recordatorio al cliente y alertar a recepción',
+   ahorro:'~4 h/mes de llamadas de seguimiento',
+   ev:o=>o.est==='aprobacion'&&o.presu.enviado&&days(o.presu.enviado,S.hoy)>=2&&!o._r1,
+   run:o=>{o._r1=true;alerta('warn','Presupuesto sin respuesta hace '+days(o.presu.enviado,S.hoy)+' días',o.folio+' · '+cli(o).n+' · '+CLP(total(o))+'. Se envió recordatorio automático.',o.folio);
+           o.notas.push({f:S.hoy,t:'Recordatorio automático enviado al cliente ('+cli(o).fono+')'});
+           log('auto','Recordatorio de presupuesto enviado — '+o.folio,o.folio);}},
+  {id:'r2',n:'OT estancada en trabajo',on:true,disparos:0,
+   cuando:'una OT lleva <i>más de 3 días</i> en <b>En trabajo</b>',
+   entonces:'alertar al jefe de taller con el mecánico asignado',
+   ahorro:'evita las OT que se pierden entre medio',
+   ev:o=>o.est==='trabajo'&&days(o.ing,S.hoy)>3&&!o._r2,
+   run:o=>{o._r2=true;alerta('crit','OT detenida hace '+days(o.ing,S.hoy)+' días',o.folio+' · '+veh(o).pat+' · asignada a '+mec(o).n,o.folio);
+           log('auto','Alerta de OT estancada — '+o.folio,o.folio);}},
+  {id:'r3',n:'Repuesto bajo mínimo',on:true,disparos:0,
+   cuando:'el stock de un repuesto queda <i>bajo su mínimo</i>',
+   entonces:'generar sugerencia de compra al proveedor',
+   ahorro:'~2 quiebres de stock al mes',
+   ev:null,
+   run:null},
+  {id:'r4',n:'Vehículo listo sin retirar',on:true,disparos:0,
+   cuando:'una OT lleva <i>2 días o más</i> en <b>Listo</b>',
+   entonces:'avisar al cliente que su vehículo está disponible',
+   ahorro:'libera espacio de patio',
+   ev:o=>o.est==='listo'&&days(o.ing,S.hoy)>=2&&!o.avisado,
+   run:o=>{o.avisado=true;alerta('info','Vehículo listo sin retirar',o.folio+' · '+veh(o).pat+' · '+cli(o).n+'. Aviso enviado.',o.folio);
+           o.notas.push({f:S.hoy,t:'Aviso automático de retiro enviado al cliente'});
+           log('auto','Aviso de retiro enviado — '+o.folio,o.folio);}},
+  {id:'r5',n:'Mantención preventiva vencida',on:false,disparos:0,
+   cuando:'un vehículo cumple <i>6 meses</i> desde su última visita',
+   entonces:'agregarlo a la campaña de mantención del mes',
+   ahorro:'~6 OT adicionales al mes',
+   ev:null, run:null},
+  {id:'r6',n:'Aprobación reserva repuestos',on:true,disparos:0,
+   cuando:'el cliente <b>aprueba</b> un presupuesto',
+   entonces:'descontar repuestos del stock y pasar la OT a En trabajo',
+   ahorro:'elimina la doble digitación en el cuaderno de bodega',
+   ev:null, run:null}
+  ];
+}
+function evaluar(silent){
+  let n=0;
+  S.reglas.forEach(r=>{
+    if(!r.on||!r.ev) return;
+    S.ots.forEach(o=>{ if(r.ev(o)){ r.run(o); r.disparos++; n++; } });
+  });
+  // r3 stock
+  const r3=S.reglas.find(r=>r.id==='r3');
+  if(r3.on) S.repuestos.forEach(r=>{ if(r.stock<r.min&&!r.pedido){ r.pedido=true; r3.disparos++; n++;
+      alerta('warn','Stock bajo mínimo: '+r.n,r.sku+' · quedan '+r.stock+' (mínimo '+r.min+'). Sugerencia de compra generada por '+CLP((r.min*2-r.stock)*r.costo)+'.',r.sku);
+      log('auto','Sugerencia de compra generada — '+r.sku,r.sku); }});
+  if(n&&!silent) toast(n+' automatización'+(n>1?'es':'')+' ejecutada'+(n>1?'s':''),'Revisa la bandeja de alertas','auto');
+  return n;
+}
+function simular(){
+  S.dia++;
+  S.hoy=iso(new Date(D(S.hoy)-0+864e5));
+  // progreso natural del taller
+  S.ots.forEach(o=>{
+    if(o.est==='entregado'||o.est==='aprobacion'||o.est==='listo') return;
+    const i=ESTI[o.est]; if(i>=7) return;
+    const sig=EST[i+1].id;
+    if(sig==='trabajo'&&o.presu.estado!=='aprobado') return;
+    if(Math.random()<0.28) mover(o,sig,true);
+  });
+  const n=evaluar();
+  log('sis','Día simulado — '+fmtL(S.hoy)+' · '+n+' automatizaciones');
+  toast('Avanzamos a '+fmtL(S.hoy),n?n+' automatización(es) se ejecutaron sola(s)':'Sin automatizaciones que disparar',n?'auto':'');
+  render();
+}
+function mover(o,dest,quiet){
+  const de=EST.find(e=>e.id===o.est).n, a=EST.find(e=>e.id===dest).n;
+  if(dest==='trabajo'&&o.presu.estado!=='aprobado'){ toast('No se puede','El presupuesto de '+o.folio+' aún no está aprobado por el cliente'); return false; }
+  o.est=dest; o.notas.push({f:S.hoy,t:'Estado: '+de+' → '+a});
+  if(dest!=='trabajo') o._r2=false; if(dest!=='aprobacion') o._r1=false; if(dest!=='listo') o.avisado=false;
+  log('ot','OT '+o.folio+': '+de+' → '+a,o.folio);
+  if(dest==='entregado'&&!o.entrega) o.entrega=S.hoy;
+  if(dest==='aprobacion'&&!o.presu.enviado){ o.presu.estado='enviado'; o.presu.enviado=S.hoy; }
+  if(!quiet) toast(o.folio+' → '+a,veh(o).pat+' · '+cli(o).n,'good');
+  return true;
+}
+function aprobar(o){
+  o.presu.estado='aprobado'; o.presu.resp=S.hoy;
+  const r6=S.reglas.find(r=>r.id==='r6');
+  if(r6.on){
+    o.rp.forEach(l=>{const r=S.repuestos.find(r=>r.sku===l.sku); if(r) r.stock=Math.max(0,r.stock-l.c);});
+    r6.disparos++;
+    o.notas.push({f:S.hoy,t:'Automatización: repuestos descontados de bodega y OT movida a En trabajo'});
+    mover(o,'trabajo',true);
+    toast('Presupuesto aprobado — '+o.folio,'Repuestos reservados y OT en trabajo, automáticamente','auto');
+  } else { toast('Presupuesto aprobado','Mueve la OT manualmente: la automatización está apagada'); }
+  log('presu','Presupuesto aprobado — '+o.folio+' · '+CLP(total(o)),o.folio);
+  alerta('good','Presupuesto aprobado',o.folio+' · '+cli(o).n+' · '+CLP(total(o)),o.folio);
+  evaluar(true);
+}
+function rechazar(o){
+  o.presu.estado='rechazado'; o.presu.resp=S.hoy;
+  o.notas.push({f:S.hoy,t:'Cliente rechazó el presupuesto'});
+  log('presu','Presupuesto rechazado — '+o.folio,o.folio);
+  mover(o,'listo',true); toast('Presupuesto rechazado','La OT pasa a Listo para retiro sin trabajos');
+}
+
+/* ==================================================================
+   RENDER
+   ================================================================== */
+function ico(d){return '<svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="'+d+'"/></svg>'}
+function navRender(){
+  const vis=ROLES[S.role].ver, gs=[];
+  MODULOS.filter(m=>vis.includes(m.id)).forEach(m=>{ if(!gs.includes(m.g)) gs.push(m.g); });
+  $('#nav').innerHTML=gs.map(g=>'<div class="grp">'+g+'</div>'+
+    MODULOS.filter(m=>m.g===g&&vis.includes(m.id)).map(m=>{
+      const nu=m.id==='alertas'?S.alertas.filter(a=>!a.leida).length:0;
+      return '<button data-v="'+m.id+'" class="'+(S.view===m.id?'on':'')+'">'+ico(m.ic)+'<span>'+m.n+'</span>'+(nu?'<span class="bdg">'+nu+'</span>':'')+'</button>';
+    }).join('')).join('');
+}
+function pill(est){const e=EST.find(x=>x.id===est);return '<span class="pill '+PILL[est]+'">'+e.n+'</span>'}
+
+/* ---------- PANEL / DASHBOARD ---------- */
+function vPanel(){
+  const act=S.ots.filter(o=>o.est!=='entregado');
+  const apr=S.ots.filter(o=>o.est==='aprobacion');
+  const mesOts=S.ots.filter(o=>o.entrega&&D(o.entrega).getMonth()===D(S.hoy).getMonth());
+  const ing=mesOts.reduce((a,o)=>a+neto(o),0);
+  const mg=mesOts.length?Math.round(mesOts.reduce((a,o)=>a+margen(o),0)/mesOts.length):0;
+  const ciclo=mesOts.length?(mesOts.reduce((a,o)=>a+days(o.ing,o.entrega),0)/mesOts.length).toFixed(1):'0';
+  const bajo=S.repuestos.filter(r=>r.stock<r.min);
+  const noLeidas=S.alertas.filter(a=>!a.leida);
+
+  const porEstado=EST.filter(e=>e.id!=='entregado').map(e=>({n:e.n,v:S.ots.filter(o=>o.est===e.id).length}));
+  const mx=Math.max(1,...porEstado.map(p=>p.v));
+  const porMec=S.mecanicos.map(m=>({n:m.n,v:S.ots.filter(o=>o.mec===m.id&&o.est!=='entregado').length}));
+  const mxm=Math.max(1,...porMec.map(p=>p.v));
+
+  return `
+  <div class="banner">
+    <div><b>Línea base del diagnóstico (E1)</b> — antes de BiPlot el taller perdía 8 OT/mes sin facturar, tardaba 3,2 días en cerrar una aprobación y no sabía su margen. Los indicadores de abajo se comparan contra esa medición.</div>
+  </div>
+  <div class="kpis">
+    <div class="kpi"><span class="lbl">OT activas</span><span class="v">${act.length}</span><span class="d">${S.ots.length} en total este mes</span></div>
+    <div class="kpi ${apr.length>2?'w':''}"><span class="lbl">Esperando aprobación</span><span class="v">${apr.length}</span><span class="d">${CLP(apr.reduce((a,o)=>a+total(o),0))} detenidos</span></div>
+    <div class="kpi g"><span class="lbl">Facturado del mes</span><span class="v">${K(ing)}</span><span class="d"><span class="delta up">+18%</span> vs. mes anterior</span></div>
+    <div class="kpi g"><span class="lbl">Margen promedio</span><span class="v">${mg}%</span><span class="d">antes: no se medía</span></div>
+    <div class="kpi"><span class="lbl">Ciclo promedio</span><span class="v">${ciclo}<span style="font-size:.5em"> d</span></span><span class="d"><span class="delta up">−1,4 d</span> vs. línea base</span></div>
+    <div class="kpi ${bajo.length?'c':''}"><span class="lbl">Repuestos bajo mínimo</span><span class="v">${bajo.length}</span><span class="d">${bajo.length?'compra sugerida automática':'stock sano'}</span></div>
+  </div>
+
+  <div class="grid2">
+    <div class="card">
+      <div class="card-h"><h3>Carga por etapa</h3><div class="sp"></div><span class="hint">OT abiertas</span></div>
+      <div class="card-b"><div class="bars">${porEstado.map(p=>`
+        <div class="bar"><span class="nm">${p.n}</span><div class="tr"><div class="fl ${p.n==='Esperando OK'?'w':''}" style="width:${p.v/mx*100}%"></div></div><span class="vv">${p.v}</span></div>`).join('')}</div></div>
+    </div>
+    <div class="card">
+      <div class="card-h"><h3>Carga por mecánico</h3><div class="sp"></div><span class="hint">OT asignadas abiertas</span></div>
+      <div class="card-b"><div class="bars">${porMec.map(p=>`
+        <div class="bar"><span class="nm">${p.n}</span><div class="tr"><div class="fl ${p.v>=4?'c':p.v>=3?'w':'g'}" style="width:${p.v/mxm*100}%"></div></div><span class="vv">${p.v}</span></div>`).join('')}</div></div>
+    </div>
+  </div>
+
+  <div class="grid2">
+    <div class="card">
+      <div class="card-h"><h3>Requiere tu atención</h3><div class="sp"></div><span class="pill ${noLeidas.length?'p-crit':'p-good'}">${noLeidas.length} sin leer</span></div>
+      <div class="card-b">${noLeidas.length?`<div class="alerts">${noLeidas.slice(0,5).map(a=>alertHTML(a)).join('')}</div>`:'<div class="empty">Nada pendiente. Todo bajo control.</div>'}</div>
+    </div>
+    <div class="card">
+      <div class="card-h"><h3>Automatizaciones trabajando</h3><div class="sp"></div><span class="pill p-brass">${S.reglas.filter(r=>r.on).length} activas</span></div>
+      <div class="card-b"><div class="bars">${S.reglas.map(r=>`
+        <div class="bar"><span class="nm" title="${esc(r.n)}">${r.n}</span><div class="tr"><div class="fl ${r.on?'':'c'}" style="width:${r.on?Math.min(100,r.disparos*18+8):0}%"></div></div><span class="vv">${r.on?r.disparos:'off'}</span></div>`).join('')}</div>
+        <p class="hint" style="margin-top:11px">Cada disparo es una tarea que nadie tuvo que hacer a mano. Usa <b>Simular día siguiente</b> arriba para verlas correr.</p></div>
+    </div>
+  </div>`;
+}
+
+/* ---------- KANBAN ---------- */
+function vTaller(){
+  return `<div class="banner"><div>Arrastra una tarjeta entre columnas para mover la OT. El sistema registra el cambio en la bitácora y dispara las automatizaciones que correspondan. <b>Las OT no pueden pasar a “En trabajo” sin presupuesto aprobado.</b></div></div>
+  <div class="kb">${EST.filter(e=>e.id!=='entregado').map(e=>{
+    const os=S.ots.filter(o=>o.est===e.id);
+    return `<div class="kcol" data-est="${e.id}">
+      <div class="kcol-h"><span class="t">${e.n}</span><span class="n">${os.length}</span></div>
+      <div class="kcol-b" data-drop="${e.id}">${os.map(o=>{
+        const v=veh(o);
+        return `<div class="kcard pr-${o.pri}" draggable="true" data-ot="${o.id}">
+          <div class="r1"><span class="fo">${o.folio}</span><span class="pa">${v.pat}</span></div>
+          <div class="ti">${esc(o.motivo)}</div>
+          <div class="r2"><span>${v.marca} ${v.modelo}</span>${neto(o)?`<span class="mo">${K(total(o))}</span>`:''}</div>
+          <div class="r2"><span class="pill ${o.pri==='alta'?'p-crit':o.pri==='media'?'p-warn':'p-gray'}">${o.pri}</span><span>${days(o.ing,S.hoy)}d</span><span style="margin-left:auto">${mec(o).n.split(' ')[0]}</span></div>
+        </div>`}).join('')||'<div class="hint" style="padding:8px;text-align:center">—</div>'}</div>
+    </div>`}).join('')}</div>`;
+}
+
+/* ---------- TABLAS ---------- */
+function tabla(id,cols,rows,onclick){
+  const q=(S.q[id]||'').toLowerCase();
+  const s=S.sort[id]||{};
+  let r=rows.filter(x=>!q||cols.some(c=>String(c.raw?c.raw(x):c.v(x)).toLowerCase().includes(q)));
+  if(s.k!=null){ const c=cols[s.k]; r=[...r].sort((a,b)=>{const A=c.sv?c.sv(a):c.raw?c.raw(a):c.v(a),B=c.sv?c.sv(b):c.raw?c.raw(b):c.v(b);
+    return (typeof A==='number'?A-B:String(A).localeCompare(String(B)))*(s.d?-1:1)}); }
+  return `<div class="tw"><table><thead><tr>${cols.map((c,i)=>`<th data-t="${id}" data-i="${i}">${c.h}${s.k===i?`<span class="ar">${s.d?'▼':'▲'}</span>`:''}</th>`).join('')}</tr></thead>
+  <tbody>${r.length?r.map(x=>`<tr ${onclick?`data-row="${onclick(x)}"`:''}>${cols.map(c=>`<td class="${c.c||''}">${c.v(x)}</td>`).join('')}</tr>`).join(''):`<tr><td colspan="${cols.length}"><div class="empty">Sin resultados para “${esc(q)}”</div></td></tr>`}</tbody></table></div>`;
+}
+function toolbar(id,ph,extra){
+  return `<div class="tools"><input type="search" data-q="${id}" placeholder="${ph}" value="${esc(S.q[id]||'')}">${extra||''}</div>`;
+}
+
+function vOts(){
+  const cols=[
+    {h:'Folio',c:'k',v:o=>o.folio},
+    {h:'Patente',c:'',v:o=>`<span class="mono" style="font-weight:600">${veh(o).pat}</span>`,raw:o=>veh(o).pat},
+    {h:'Vehículo',v:o=>esc(veh(o).marca+' '+veh(o).modelo),raw:o=>veh(o).marca+' '+veh(o).modelo},
+    {h:'Cliente',v:o=>esc(cli(o).n),raw:o=>cli(o).n},
+    {h:'Motivo',v:o=>esc(o.motivo)},
+    {h:'Estado',v:o=>pill(o.est),raw:o=>EST.find(e=>e.id===o.est).n,sv:o=>ESTI[o.est]},
+    {h:'Mecánico',v:o=>esc(mec(o).n),raw:o=>mec(o).n},
+    {h:'Días',c:'num',v:o=>days(o.ing,o.entrega||S.hoy),sv:o=>days(o.ing,o.entrega||S.hoy)},
+    {h:'Total',c:'num',v:o=>neto(o)?CLP(total(o)):'—',sv:o=>total(o)},
+    {h:'Margen',c:'num',v:o=>neto(o)?`<span class="pill ${margen(o)>=45?'p-good':margen(o)>=30?'p-warn':'p-crit'}">${margen(o)}%</span>`:'—',sv:o=>margen(o)}
+  ];
+  const est=S.q['ots-est']||'';
+  let rows=S.ots; if(est) rows=rows.filter(o=>o.est===est);
+  return toolbar('ots','Buscar por folio, patente, cliente…',
+    `<select data-q="ots-est"><option value="">Todos los estados</option>${EST.map(e=>`<option value="${e.id}" ${est===e.id?'selected':''}>${e.n}</option>`).join('')}</select>
+     <span class="hint" style="margin-left:auto">${rows.length} órdenes · clic para abrir</span>`)
+    +`<div class="card">${tabla('ots',cols,rows,o=>o.id)}</div>`;
+}
+
+function vPresup(){
+  const ps=S.ots.filter(o=>o.presu.estado!=='borrador'||neto(o)>0);
+  const cols=[
+    {h:'Folio',c:'k',v:o=>o.folio},
+    {h:'Cliente',v:o=>esc(cli(o).n),raw:o=>cli(o).n},
+    {h:'Patente',v:o=>`<span class="mono">${veh(o).pat}</span>`,raw:o=>veh(o).pat},
+    {h:'Enviado',v:o=>o.presu.enviado?fmt(o.presu.enviado):'—',sv:o=>o.presu.enviado||''},
+    {h:'Espera',c:'num',v:o=>{if(o.presu.estado!=='enviado'||!o.presu.enviado)return '—';const d=days(o.presu.enviado,S.hoy);return `<span class="pill ${d>=3?'p-crit':d>=2?'p-warn':'p-gray'}">${d} d</span>`},sv:o=>o.presu.enviado&&o.presu.estado==='enviado'?days(o.presu.enviado,S.hoy):-1},
+    {h:'Estado',v:o=>{const m={borrador:'p-gray',enviado:'p-warn',aprobado:'p-good',rechazado:'p-crit'};return `<span class="pill ${m[o.presu.estado]}">${o.presu.estado}</span>`},raw:o=>o.presu.estado},
+    {h:'Mano obra',c:'num',v:o=>CLP(totMO(o)),sv:o=>totMO(o)},
+    {h:'Repuestos',c:'num',v:o=>CLP(totRP(o)),sv:o=>totRP(o)},
+    {h:'Total c/IVA',c:'num',v:o=>`<b>${CLP(total(o))}</b>`,sv:o=>total(o)}
+  ];
+  const pend=ps.filter(o=>o.presu.estado==='enviado');
+  return `<div class="kpis">
+    <div class="kpi ${pend.length?'w':''}"><span class="lbl">Esperando respuesta</span><span class="v">${pend.length}</span><span class="d">${CLP(pend.reduce((a,o)=>a+total(o),0))} en juego</span></div>
+    <div class="kpi g"><span class="lbl">Aprobados este mes</span><span class="v">${ps.filter(o=>o.presu.estado==='aprobado').length}</span><span class="d">tasa de aprobación 78%</span></div>
+    <div class="kpi"><span class="lbl">Ticket promedio</span><span class="v">${K(ps.length?ps.reduce((a,o)=>a+total(o),0)/ps.length:0)}</span><span class="d">con IVA</span></div>
+    <div class="kpi ${pend.some(o=>days(o.presu.enviado,S.hoy)>=2)?'c':''}"><span class="lbl">Con recordatorio enviado</span><span class="v">${pend.filter(o=>days(o.presu.enviado,S.hoy)>=2).length}</span><span class="d">automático, sin llamar</span></div>
+  </div>`+toolbar('presup','Buscar presupuesto…','<span class="hint" style="margin-left:auto">Clic en la fila para ver el documento y responder por el cliente</span>')
+  +`<div class="card">${tabla('presup',cols,ps,o=>o.id)}</div>`;
+}
+
+function vRepuestos(){
+  const cons={};
+  S.ots.forEach(o=>{if(ESTI[o.est]>=4)o.rp.forEach(l=>cons[l.sku]=(cons[l.sku]||0)+l.c)});
+  const cols=[
+    {h:'SKU',c:'k',v:r=>r.sku},
+    {h:'Repuesto',v:r=>esc(r.n),raw:r=>r.n},
+    {h:'Stock',c:'num',v:r=>`<span class="pill ${r.stock<r.min?'p-crit':r.stock<r.min*1.5?'p-warn':'p-good'}">${r.stock}</span>`,sv:r=>r.stock},
+    {h:'Mínimo',c:'num',v:r=>r.min,sv:r=>r.min},
+    {h:'Consumo mes',c:'num',v:r=>cons[r.sku]||0,sv:r=>cons[r.sku]||0},
+    {h:'Costo',c:'num',v:r=>CLP(r.costo),sv:r=>r.costo},
+    {h:'Precio',c:'num',v:r=>CLP(r.precio),sv:r=>r.precio},
+    {h:'Margen',c:'num',v:r=>`${Math.round((r.precio-r.costo)/r.precio*100)}%`,sv:r=>(r.precio-r.costo)/r.precio},
+    {h:'Valor stock',c:'num',v:r=>CLP(r.stock*r.costo),sv:r=>r.stock*r.costo},
+    {h:'Compra',v:r=>r.pedido?'<span class="pill p-brass">sugerida</span>':'—',raw:r=>r.pedido?'sugerida':''}
+  ];
+  const bajo=S.repuestos.filter(r=>r.stock<r.min);
+  return `<div class="kpis">
+    <div class="kpi"><span class="lbl">SKU en catálogo</span><span class="v">${S.repuestos.length}</span><span class="d">bodega del taller</span></div>
+    <div class="kpi"><span class="lbl">Valor inventario</span><span class="v">${K(S.repuestos.reduce((a,r)=>a+r.stock*r.costo,0))}</span><span class="d">a costo</span></div>
+    <div class="kpi ${bajo.length?'c':'g'}"><span class="lbl">Bajo mínimo</span><span class="v">${bajo.length}</span><span class="d">${bajo.length?'compra sugerida automática':'sin quiebres'}</span></div>
+    <div class="kpi"><span class="lbl">Margen promedio</span><span class="v">${Math.round(S.repuestos.reduce((a,r)=>a+(r.precio-r.costo)/r.precio,0)/S.repuestos.length*100)}%</span><span class="d">sobre repuestos</span></div>
+  </div>
+  ${bajo.length?`<div class="banner"><div><b>La regla “Repuesto bajo mínimo” ya actuó.</b> Generó ${bajo.length} sugerencia(s) de compra por ${CLP(bajo.reduce((a,r)=>a+(r.min*2-r.stock)*r.costo,0))}. Antes esto se detectaba cuando el mecánico abría la caja y estaba vacía.</div></div>`:''}
+  `+toolbar('rep','Buscar repuesto o SKU…')+`<div class="card">${tabla('rep',cols,S.repuestos,null)}</div>`;
+}
+
+function vClientes(){
+  const cols=[
+    {h:'Cliente',v:c=>esc(c.n),raw:c=>c.n},
+    {h:'RUT',c:'k',v:c=>c.rut},
+    {h:'Tipo',v:c=>`<span class="pill ${c.tipo==='empresa'?'p-info':'p-gray'}">${c.tipo}</span>`,raw:c=>c.tipo},
+    {h:'Teléfono',v:c=>`<span class="mono" style="font-size:.76rem">${c.fono}</span>`,raw:c=>c.fono},
+    {h:'Vehículos',c:'num',v:c=>S.vehiculos.filter(v=>v.cli===c.id).length,sv:c=>S.vehiculos.filter(v=>v.cli===c.id).length},
+    {h:'OT históricas',c:'num',v:c=>S.ots.filter(o=>o.cli===c.id).length,sv:c=>S.ots.filter(o=>o.cli===c.id).length},
+    {h:'Facturado',c:'num',v:c=>CLP(S.ots.filter(o=>o.cli===c.id&&o.est==='entregado').reduce((a,o)=>a+neto(o),0)),sv:c=>S.ots.filter(o=>o.cli===c.id&&o.est==='entregado').reduce((a,o)=>a+neto(o),0)},
+    {h:'Abiertas',c:'num',v:c=>{const n=S.ots.filter(o=>o.cli===c.id&&o.est!=='entregado').length;return n?`<span class="pill p-acc">${n}</span>`:'—'},sv:c=>S.ots.filter(o=>o.cli===c.id&&o.est!=='entregado').length}
+  ];
+  return toolbar('cli','Buscar cliente, RUT o teléfono…','<span class="hint" style="margin-left:auto">'+S.clientes.length+' clientes · '+S.vehiculos.length+' vehículos</span>')
+    +`<div class="card">${tabla('cli',cols,S.clientes,null)}</div>
+    <div class="card"><div class="card-h"><h3>Parque de vehículos</h3></div>
+    ${tabla('veh',[
+      {h:'Patente',c:'k',v:v=>v.pat},
+      {h:'Marca',v:v=>esc(v.marca),raw:v=>v.marca},
+      {h:'Modelo',v:v=>esc(v.modelo),raw:v=>v.modelo},
+      {h:'Año',c:'num',v:v=>v.anio,sv:v=>v.anio},
+      {h:'Km',c:'num',v:v=>v.km.toLocaleString('es-CL'),sv:v=>v.km},
+      {h:'Propietario',v:v=>esc((S.clientes.find(c=>c.id===v.cli)||{}).n),raw:v=>(S.clientes.find(c=>c.id===v.cli)||{}).n},
+      {h:'Visitas',c:'num',v:v=>S.ots.filter(o=>o.veh===v.id).length,sv:v=>S.ots.filter(o=>o.veh===v.id).length}
+    ],S.vehiculos,null)}</div>`;
+}
+
+function vAutos(){
+  const tot=S.reglas.reduce((a,r)=>a+r.disparos,0);
+  return `<div class="banner"><div><b>El motor de reglas es núcleo BiPlot</b>, no código del taller. Lo mismo corre en los otros rubros; sólo cambian las condiciones. Enciende o apaga una regla y usa <b>Simular día siguiente</b> para ver el efecto.</div></div>
+  <div class="kpis">
+    <div class="kpi"><span class="lbl">Reglas activas</span><span class="v">${S.reglas.filter(r=>r.on).length}<span style="font-size:.5em">/${S.reglas.length}</span></span><span class="d">configurables sin programar</span></div>
+    <div class="kpi g"><span class="lbl">Ejecuciones</span><span class="v">${tot}</span><span class="d">tareas que nadie hizo a mano</span></div>
+    <div class="kpi g"><span class="lbl">HH liberadas / mes</span><span class="v">~14<span style="font-size:.5em"> h</span></span><span class="d">estimadas en el diagnóstico E1</span></div>
+    <div class="kpi"><span class="lbl">Días simulados</span><span class="v">${S.dia}</span><span class="d">reloj de la demo</span></div>
+  </div>
+  <div class="rules">${S.reglas.map(r=>`
+    <div class="rule ${r.on?'':'off'}">
+      <button class="sw" role="switch" aria-checked="${r.on}" data-rule="${r.id}" aria-label="Activar ${esc(r.n)}"></button>
+      <div class="body">
+        <h4>${esc(r.n)}</h4>
+        <div class="logic"><b>CUANDO</b> ${r.cuando} <b>ENTONCES</b> ${r.entonces}</div>
+        <div class="meta"><span>Valor: ${esc(r.ahorro)}</span><span>·</span><span>Ejecutada ${r.disparos} ${r.disparos===1?'vez':'veces'}</span></div>
+      </div>
+      <span class="pill ${r.on?'p-good':'p-gray'}">${r.on?'activa':'apagada'}</span>
+    </div>`).join('')}</div>`;
+}
+
+function alertHTML(a){
+  const m={crit:['crit','!'],warn:['','!'],info:['info','i'],good:['good','✓']};
+  const [cls,ch]=m[a.nivel]||['','!'];
+  return `<div class="alert ${cls} ${a.leida?'read':''}" data-alert="${a.id}">
+    <span class="ic">${ch}</span>
+    <span class="tx"><b>${esc(a.titulo)}</b><span>${esc(a.detalle)}</span></span>
+    <span class="hint mono" style="font-size:.66rem">${fmt(a.f)}</span></div>`;
+}
+function vAlertas(){
+  const nl=S.alertas.filter(a=>!a.leida);
+  return `<div class="tools"><span class="hint">${S.alertas.length} alertas · ${nl.length} sin leer. Todas fueron generadas por el motor de reglas, ninguna se escribió a mano.</span>
+  <div style="flex:1"></div><button class="btn sm" id="marcar">Marcar todas como leídas</button></div>
+  <div class="card"><div class="card-b"><div class="alerts">${S.alertas.length?S.alertas.map(alertHTML).join(''):'<div class="empty">Sin alertas</div>'}</div></div></div>`;
+}
+
+function vBitacora(){
+  const T={ot:['p-acc','OT'],presu:['p-info','PRE'],auto:['p-brass','AUTO'],sis:['p-gray','SIS'],rep:['p-warn','REP']};
+  const cols=[
+    {h:'Fecha',c:'k',v:b=>fmt(b.f),sv:b=>b.f},
+    {h:'Tipo',v:b=>`<span class="pill ${(T[b.tipo]||T.sis)[0]}">${(T[b.tipo]||T.sis)[1]}</span>`,raw:b=>b.tipo},
+    {h:'Evento',v:b=>esc(b.txt)},
+    {h:'Referencia',c:'k',v:b=>b.ref||'—'},
+    {h:'Quién',v:b=>esc(b.quien),raw:b=>b.quien}
+  ];
+  return `<div class="banner"><div>Toda acción queda registrada: quién, cuándo y sobre qué. Las marcadas <b>AUTO</b> las hizo el sistema solo. Esta bitácora es lo que después permite medir el valor entregado en la fase E8.</div></div>
+  `+toolbar('bit','Buscar en la bitácora…')+`<div class="card">${tabla('bit',cols,S.bitacora,null)}</div>`;
+}
+
+/* ---------- DETALLE OT ---------- */
+function abrirOT(id){
+  const o=S.ots.find(x=>x.id===id); if(!o) return;
+  S.sel=id;
+  const v=veh(o),c=cli(o);
+  $('#ph').textContent=o.folio+' · '+v.pat;
+  $('#phs').innerHTML=esc(v.marca+' '+v.modelo+' '+v.anio)+' — '+esc(c.n);
+  const puedeEditar=['recepcion','diagnostico','presupuesto'].includes(o.est);
+  $('#pb').innerHTML=`
+    <div style="display:flex;gap:7px;flex-wrap:wrap;align-items:center">${pill(o.est)}
+      <span class="pill ${o.pri==='alta'?'p-crit':o.pri==='media'?'p-warn':'p-gray'}">prioridad ${o.pri}</span>
+      <span class="pill p-gray">${days(o.ing,o.entrega||S.hoy)} días en taller</span></div>
+
+    <dl class="dl">
+      <dt>Ingreso</dt><dd>${fmtL(o.ing)}</dd>
+      <dt>Motivo</dt><dd>${esc(o.motivo)}</dd>
+      <dt>Mecánico</dt><dd>${esc(mec(o).n)}</dd>
+      <dt>Kilometraje</dt><dd class="mono">${v.km.toLocaleString('es-CL')} km</dd>
+      <dt>Contacto</dt><dd class="mono" style="font-size:.78rem">${c.fono}</dd>
+    </dl>
+
+    <div class="sect"><span class="lbl">Mano de obra</span>
+      <div class="lines">${o.mo.length?o.mo.map((l,i)=>`<div class="line"><span>${esc(l.d)}</span><span class="n">${l.h} h × ${CLP(l.vh)}</span><span class="n" style="min-width:70px;text-align:right">${CLP(l.h*l.vh)}</span>${puedeEditar?`<button class="x" data-del="mo:${i}" aria-label="Quitar">&times;</button>`:''}</div>`).join(''):'<div class="hint">Sin mano de obra cargada.</div>'}</div>
+      ${puedeEditar?`<div class="addrow"><input id="mo-d" placeholder="Trabajo a realizar"><input id="mo-h" type="number" step="0.5" min="0.5" value="1" placeholder="h"><input id="mo-v" type="number" step="1000" value="22000"><button class="btn sm pri" id="mo-add">+</button></div>`:''}
+    </div>
+
+    <div class="sect"><span class="lbl">Repuestos</span>
+      <div class="lines">${o.rp.length?o.rp.map((l,i)=>{const r=S.repuestos.find(r=>r.sku===l.sku)||{n:l.sku,precio:0,stock:0};
+        return `<div class="line"><span>${esc(r.n)} <span class="mono" style="color:var(--faint);font-size:.72rem">${l.sku}</span>${r.stock<l.c?' <span class="pill p-crit">sin stock</span>':''}</span><span class="n">${l.c} × ${CLP(r.precio)}</span><span class="n" style="min-width:70px;text-align:right">${CLP(r.precio*l.c)}</span>${puedeEditar?`<button class="x" data-del="rp:${i}" aria-label="Quitar">&times;</button>`:''}</div>`}).join(''):'<div class="hint">Sin repuestos cargados.</div>'}</div>
+      ${puedeEditar?`<div class="addrow" style="grid-template-columns:1fr 62px auto"><select id="rp-s">${S.repuestos.map(r=>`<option value="${r.sku}">${esc(r.n)} — ${CLP(r.precio)} (stock ${r.stock})</option>`).join('')}</select><input id="rp-c" type="number" min="1" value="1"><button class="btn sm pri" id="rp-add">+</button></div>`:''}
+    </div>
+
+    <div class="sect"><span class="lbl">Resumen económico</span>
+      <dl class="dl">
+        <dt>Mano de obra</dt><dd class="mono">${CLP(totMO(o))}</dd>
+        <dt>Repuestos</dt><dd class="mono">${CLP(totRP(o))}</dd>
+        <dt>Neto</dt><dd class="mono">${CLP(neto(o))}</dd>
+        <dt>IVA 19%</dt><dd class="mono">${CLP(neto(o)*.19)}</dd>
+        <dt style="color:var(--muted)">Costo repuestos</dt><dd class="mono" style="color:var(--muted)">${CLP(costoRP(o))}</dd>
+        <dt style="color:var(--muted)">Margen estimado</dt><dd><span class="pill ${margen(o)>=45?'p-good':margen(o)>=30?'p-warn':'p-crit'}">${margen(o)}%</span></dd>
+      </dl>
+      <div class="tot"><span>Total con IVA</span><span class="v">${CLP(total(o))}</span></div>
+    </div>
+
+    <div class="sect"><span class="lbl">Historial de la orden</span>
+      <div class="tl">${o.notas.slice().reverse().map(n=>`<div class="it"><span class="t">${fmt(n.f)}</span>${esc(n.t)}</div>`).join('')}</div>
+    </div>`;
+
+  const acc=[];
+  const i=ESTI[o.est];
+  if(i>0&&o.est!=='entregado') acc.push(`<button class="btn" data-mv="${EST[i-1].id}">← ${EST[i-1].n}</button>`);
+  if(i<7) acc.push(`<button class="btn pri" data-mv="${EST[i+1].id}">${EST[i+1].n} →</button>`);
+  if(neto(o)>0&&o.presu.estado==='borrador') acc.push('<button class="btn" data-act="ver-presu">Ver presupuesto</button>');
+  if(o.presu.estado==='enviado'){
+    acc.push('<button class="btn gd" data-act="aprobar">Cliente aprueba</button>');
+    acc.push('<button class="btn dg" data-act="rechazar">Cliente rechaza</button>');
+  }
+  if(o.presu.estado!=='borrador') acc.push('<button class="btn" data-act="ver-presu">Documento</button>');
+  $('#pf').innerHTML=acc.join('');
+  open();
+}
+function verPresupuesto(id){
+  const o=S.ots.find(x=>x.id===id); if(!o) return;
+  S.sel=id;
+  const v=veh(o),c=cli(o);
+  $('#ph').textContent='Presupuesto '+o.folio;
+  $('#phs').textContent=c.n+' · '+v.pat;
+  $('#pb').innerHTML=`<div class="doc">
+    <div class="doc-h">
+      <div class="l"><h4>Taller Aguilar SpA</h4><p>Mecánica multimarca · Av. Balmaceda 2140, La Serena<br>76.554.220-8 · +56 51 221 4470</p></div>
+      <div class="r">PRESUPUESTO<br><b style="color:var(--accent)">${o.folio}</b><br>${fmtL(o.presu.enviado||S.hoy)}<br>Válido 15 días</div>
+    </div>
+    <dl class="dl" style="font-size:.79rem">
+      <dt>Cliente</dt><dd>${esc(c.n)}</dd>
+      <dt>RUT</dt><dd class="mono">${c.rut}</dd>
+      <dt>Vehículo</dt><dd>${esc(v.marca+' '+v.modelo+' '+v.anio)}</dd>
+      <dt>Patente</dt><dd class="mono">${v.pat}</dd>
+      <dt>Kilometraje</dt><dd class="mono">${v.km.toLocaleString('es-CL')} km</dd>
+      <dt>Motivo de ingreso</dt><dd>${esc(o.motivo)}</dd>
+    </dl>
+    <table><thead><tr><th>Detalle</th><th style="text-align:right">Cant.</th><th style="text-align:right">Unitario</th><th style="text-align:right">Subtotal</th></tr></thead><tbody>
+    ${o.mo.map(l=>`<tr><td>${esc(l.d)}</td><td class="num">${l.h} h</td><td class="num">${CLP(l.vh)}</td><td class="num">${CLP(l.h*l.vh)}</td></tr>`).join('')}
+    ${o.rp.map(l=>{const r=S.repuestos.find(r=>r.sku===l.sku)||{n:l.sku,precio:0};
+      return `<tr><td>${esc(r.n)}</td><td class="num">${l.c}</td><td class="num">${CLP(r.precio)}</td><td class="num">${CLP(r.precio*l.c)}</td></tr>`}).join('')}
+    <tr><td colspan="3" style="text-align:right;color:var(--muted)">Neto</td><td class="num">${CLP(neto(o))}</td></tr>
+    <tr><td colspan="3" style="text-align:right;color:var(--muted)">IVA 19%</td><td class="num">${CLP(neto(o)*.19)}</td></tr>
+    <tr class="totrow"><td colspan="3" style="text-align:right">TOTAL</td><td class="num">${CLP(total(o))}</td></tr>
+    </tbody></table>
+    <p class="note">Documento generado automáticamente por el sistema a partir de la orden de trabajo. Antes, este presupuesto se escribía a mano en WhatsApp y no quedaba registro de qué se cotizó ni cuándo. Estado actual: <b>${o.presu.estado}</b>${o.presu.enviado?' · enviado el '+fmtL(o.presu.enviado):''}.</p>
+  </div>`;
+  const acc=['<button class="btn" data-act="volver">← Volver a la OT</button>'];
+  if(o.presu.estado==='borrador'&&neto(o)>0) acc.push('<button class="btn pri" data-act="enviar">Enviar al cliente</button>');
+  if(o.presu.estado==='enviado'){acc.push('<button class="btn gd" data-act="aprobar">Cliente aprueba</button>');acc.push('<button class="btn dg" data-act="rechazar">Cliente rechaza</button>');}
+  $('#pf').innerHTML=acc.join('');
+  open();
+}
+function nuevaOT(){
+  $('#ph').textContent='Recepcionar vehículo';
+  $('#phs').textContent='Nueva orden de trabajo';
+  $('#pb').innerHTML=`<div class="sect"><span class="lbl">Vehículo</span>
+    <select id="n-veh" style="padding:7px 9px;border:1px solid var(--line);background:var(--surface);border-radius:var(--r)">
+      ${S.vehiculos.map(v=>`<option value="${v.id}">${v.pat} — ${esc(v.marca+' '+v.modelo)} (${esc((S.clientes.find(c=>c.id===v.cli)||{}).n)})</option>`).join('')}
+    </select></div>
+    <div class="sect"><span class="lbl">Motivo de ingreso</span>
+      <input id="n-mot" placeholder="Ej: ruido en frenos delanteros" style="padding:7px 9px;border:1px solid var(--line);background:var(--surface);border-radius:var(--r)"></div>
+    <div class="sect"><span class="lbl">Prioridad</span>
+      <select id="n-pri" style="padding:7px 9px;border:1px solid var(--line);background:var(--surface);border-radius:var(--r)"><option value="baja">Baja</option><option value="media" selected>Media</option><option value="alta">Alta</option></select></div>
+    <div class="sect"><span class="lbl">Mecánico asignado</span>
+      <select id="n-mec" style="padding:7px 9px;border:1px solid var(--line);background:var(--surface);border-radius:var(--r)">${S.mecanicos.map(m=>`<option value="${m.id}">${esc(m.n)} — ${esc(m.e)}</option>`).join('')}</select></div>
+    <p class="hint">Al crear la OT se genera el folio, se registra en bitácora y el vehículo entra al tablero en la columna <b>Recepción</b>.</p>`;
+  $('#pf').innerHTML='<button class="btn pri" data-act="crear">Crear orden</button><button class="btn" data-act="cerrar">Cancelar</button>';
+  open();
+}
+function crearOT(){
+  const vid=$('#n-veh').value, mot=($('#n-mot').value||'').trim()||'Revisión general';
+  const v=S.vehiculos.find(x=>x.id===vid);
+  const n=Math.max(...S.ots.map(o=>+o.folio.split('-')[1]))+1;
+  const o={id:uid('o'),folio:'OT-'+n,veh:vid,cli:v.cli,est:'recepcion',ing:S.hoy,motivo:mot,tipo:'falla',
+    mec:$('#n-mec').value,pri:$('#n-pri').value,mo:[],rp:[],presu:{estado:'borrador',enviado:null,resp:null},entrega:null,
+    notas:[{f:S.hoy,t:'OT creada en recepción. Motivo: '+mot}]};
+  S.ots.unshift(o);
+  log('ot','OT '+o.folio+' creada — '+v.pat,o.folio);
+  toast('OT '+o.folio+' creada',v.pat+' · '+mot,'good');
+  close(); S.view='taller'; render();
+}
+
+/* ---------- panel helpers ---------- */
+function open(){$('#panel').classList.add('on');$('#scrim').classList.add('on')}
+function close(){$('#panel').classList.remove('on');$('#scrim').classList.remove('on');S.sel=null}
+
+/* ---------- ROUTER ---------- */
+const VIEWS={panel:vPanel,taller:vTaller,ots:vOts,presup:vPresup,repuestos:vRepuestos,clientes:vClientes,autos:vAutos,alertas:vAlertas,bitacora:vBitacora};
+const TITLES={panel:['Panel','Estado del taller hoy'],taller:['Taller','Tablero de órdenes de trabajo'],ots:['Órdenes de trabajo','Todas las OT, abiertas y cerradas'],presup:['Presupuestos','Cotizaciones enviadas y su respuesta'],repuestos:['Repuestos','Bodega, consumo y reposición'],clientes:['Clientes y vehículos','Parque atendido por el taller'],autos:['Automatizaciones','Reglas que el sistema ejecuta solo'],alertas:['Alertas','Todo lo que el sistema detectó'],bitacora:['Bitácora','Registro completo de actividad']};
+function render(){
+  if(!ROLES[S.role].ver.includes(S.view)) S.view=ROLES[S.role].ver[0];
+  navRender();
+  $$('.view').forEach(v=>v.classList.remove('on'));
+  const el=$('#v-'+S.view); el.classList.add('on'); el.innerHTML=VIEWS[S.view]();
+  $('#vt').textContent=TITLES[S.view][0]; $('#vs').textContent=TITLES[S.view][1];
+  $('#hoy').textContent=fmtL(S.hoy);
+  $('#newBtn').style.display=['recepcion','jefe'].includes(S.role)?'':'none';
+  bindKanban();
+}
+function bindKanban(){
+  $$('.kcard').forEach(c=>{
+    c.addEventListener('dragstart',e=>{e.dataTransfer.setData('text/plain',c.dataset.ot);e.dataTransfer.effectAllowed='move';c.classList.add('drag')});
+    c.addEventListener('dragend',()=>c.classList.remove('drag'));
+  });
+  $$('.kcol-b').forEach(z=>{
+    const col=z.closest('.kcol');
+    z.addEventListener('dragover',e=>{e.preventDefault();e.dataTransfer.dropEffect='move';col.classList.add('over')});
+    z.addEventListener('dragleave',e=>{if(!z.contains(e.relatedTarget))col.classList.remove('over')});
+    z.addEventListener('drop',e=>{
+      e.preventDefault();col.classList.remove('over');
+      const o=S.ots.find(x=>x.id===e.dataTransfer.getData('text/plain'));
+      if(o&&o.est!==z.dataset.drop){ if(mover(o,z.dataset.drop)){evaluar();render();} }
+    });
+  });
+}
+
+/* ---------- EVENTOS ---------- */
+document.addEventListener('click',e=>{
+  const t=e.target;
+  const nb=t.closest('nav button'); if(nb){S.view=nb.dataset.v;render();return}
+  if(t.closest('#pclose')||t.closest('#scrim')){close();return}
+  const th=t.closest('th[data-t]'); if(th){const id=th.dataset.t,i=+th.dataset.i;const s=S.sort[id]||{};S.sort[id]=(s.k===i)?{k:i,d:!s.d}:{k:i,d:false};render();return}
+  const tr=t.closest('tr[data-row]'); if(tr){const id=tr.dataset.row; if(S.view==='presup')verPresupuesto(id);else abrirOT(id);return}
+  const kc=t.closest('.kcard'); if(kc&&!kc.classList.contains('drag')){abrirOT(kc.dataset.ot);return}
+  const sw=t.closest('.sw'); if(sw){const r=S.reglas.find(x=>x.id===sw.dataset.rule);r.on=!r.on;log('sis','Regla "'+r.n+'" '+(r.on?'activada':'apagada'));toast('Regla '+(r.on?'activada':'apagada'),r.n);if(r.on)evaluar();render();return}
+  const al=t.closest('[data-alert]'); if(al){const a=S.alertas.find(x=>x.id===al.dataset.alert);a.leida=!a.leida;render();return}
+  if(t.closest('#marcar')){S.alertas.forEach(a=>a.leida=true);toast('Alertas marcadas como leídas');render();return}
+  if(t.closest('#simBtn')){simular();return}
+  if(t.closest('#newBtn')){nuevaOT();return}
+
+  const mv=t.closest('[data-mv]'); if(mv&&S.sel){const o=S.ots.find(x=>x.id===S.sel);if(mover(o,mv.dataset.mv)){evaluar();abrirOT(o.id);render();}return}
+  const del=t.closest('[data-del]'); if(del&&S.sel){const o=S.ots.find(x=>x.id===S.sel);const[k,i]=del.dataset.del.split(':');o[k].splice(+i,1);abrirOT(o.id);render();return}
+  if(t.closest('#mo-add')&&S.sel){const o=S.ots.find(x=>x.id===S.sel);const d=$('#mo-d').value.trim();if(!d){toast('Falta el detalle','Escribe qué trabajo se hará');return}
+    o.mo.push({d,h:+$('#mo-h').value||1,vh:+$('#mo-v').value||22000});log('ot','Mano de obra agregada a '+o.folio+': '+d,o.folio);abrirOT(o.id);render();return}
+  if(t.closest('#rp-add')&&S.sel){const o=S.ots.find(x=>x.id===S.sel);const sku=$('#rp-s').value,c=+$('#rp-c').value||1;
+    const ex=o.rp.find(l=>l.sku===sku); if(ex)ex.c+=c; else o.rp.push({sku,c});
+    log('ot','Repuesto agregado a '+o.folio+': '+sku+' ×'+c,o.folio);abrirOT(o.id);render();return}
+
+  const ac=t.closest('[data-act]'); if(!ac)return;
+  const o=S.ots.find(x=>x.id===S.sel);
+  switch(ac.dataset.act){
+    case 'ver-presu': verPresupuesto(S.sel); break;
+    case 'volver': abrirOT(S.sel); break;
+    case 'enviar':
+      o.presu.estado='enviado'; o.presu.enviado=S.hoy;
+      o.notas.push({f:S.hoy,t:'Presupuesto enviado al cliente por '+CLP(total(o))});
+      log('presu','Presupuesto enviado — '+o.folio+' · '+CLP(total(o)),o.folio);
+      if(o.est!=='aprobacion') mover(o,'aprobacion',true);
+      toast('Presupuesto enviado',cli(o).n+' · '+CLP(total(o)),'good');
+      verPresupuesto(o.id); render(); break;
+    case 'aprobar': aprobar(o); abrirOT(o.id); render(); break;
+    case 'rechazar': rechazar(o); abrirOT(o.id); render(); break;
+    case 'crear': crearOT(); break;
+    case 'cerrar': close(); break;
+  }
+});
+document.addEventListener('input',e=>{
+  const q=e.target.closest('[data-q]');
+  if(q){S.q[q.dataset.q]=q.value;const k=q.dataset.q;render();
+    const el=document.querySelector('[data-q="'+k+'"]'); if(el&&el.type==='search'){el.focus();el.setSelectionRange(el.value.length,el.value.length)} }
+});
+document.addEventListener('change',e=>{
+  if(e.target.id==='role'){S.role=e.target.value;log('sis','Cambio de perfil a '+ROLES[S.role].t);toast('Perfil: '+ROLES[S.role].t,ROLES[S.role].n+' — los módulos visibles cambian');render()}
+});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')close()});
+
+seed(); render();
+setTimeout(()=>toast('Demo lista','Prueba: arrastra una OT, abre un presupuesto y usa “Simular día siguiente”','auto'),700);
+})();
+</script>

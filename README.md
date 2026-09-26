@@ -6,6 +6,7 @@ Sitio estático (HTML, CSS y JavaScript, sin build). Se sirve tal cual:
 
 - `index.html` — sitio principal.
 - `plotline.html` — recorrido "Cómo pensamos la automatización".
+- `oficina/` — la oficina virtual de BiPlot (personal, salas por proyecto y kit para Instagram). Ver `oficina/README.md`.
 - `assets/` — video, imágenes y scripts.
 - `propuestas/fundos-inmobiliaria/` — propuesta de sitio para Fundos Inmobiliaria (no indexada; ver su README).
 

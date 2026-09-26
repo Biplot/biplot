@@ -24,7 +24,7 @@ Sitio estático (HTML, CSS y JavaScript, sin build ni dependencias). Funciona ab
 | **Simulador** | Contado o financiamiento, con reparto visual de la compra y envío de la simulación por WhatsApp. |
 | **Quiénes somos, valores y equipo** | Textos y valores del sitio actual, foto real del río y el equipo con foto en arco y botón de WhatsApp para cada persona. |
 | **Preguntas frecuentes** | Rol propio, construcción, reserva, gastos, plazos, financiamiento, visitas. |
-| **Agenda tu visita** | Formulario validado que abre WhatsApp con el mensaje listo: nombre, proyecto, fecha, horario y lote. |
+| **Agenda tu visita** | Formulario validado que abre WhatsApp con el mensaje listo: nombre, proyecto, fecha y horario. Desde "Reservar este lote" llega con la reserva a la vista ("Reserva: lote 18 de Malalcahuello") y el mensaje pide reservar ese lote. |
 
 Además: barra de acción fija en móvil (WhatsApp + Agendar visita), botón flotante de WhatsApp en escritorio y sitio legible sin JavaScript. Accesibilidad revisada con lector de pantalla y teclado: plano recorrible con flechas (Inicio/Fin saltan al lote más barato y al más caro), foco visible en fondos claros y oscuros, objetivos táctiles de 44 px, contraste AA y ningún control tapado por la barra móvil.
 

@@ -63,7 +63,7 @@
 html {
   -webkit-text-size-adjust: 100%;
   scroll-behavior: smooth;
-  scroll-padding-top: calc(var(--nav-h) + 8px);
+  scroll-padding-top: 74px;
   overflow-x: clip;
 }
 body {
@@ -193,7 +193,7 @@ h2 em, h1 em, .footer-claim em { font-style: italic; color: var(--gold-ink); }
 /* --- Formularios --- */
 .field { display: grid; gap: .45rem; min-width: 0; }
 .field label, .field .label { font-size: .86rem; font-weight: 700; color: var(--g900); display: flex; justify-content: space-between; gap: 1rem; }
-.field label small { font-weight: 400; color: var(--n600); }
+.field label small, .field .label small { font-weight: 400; color: var(--n600); }
 .field output { font-weight: 700; color: var(--g900); font-variant-numeric: tabular-nums; }
 .field-head, .range-head { display: flex; justify-content: space-between; align-items: baseline; gap: 1rem; }
 .field-head output { font-size: .86rem; }
@@ -230,7 +230,7 @@ select {
 .seg-4 { display: grid; grid-template-columns: repeat(4, 1fr); width: 100%; }
 .seg-4 span { text-align: center; padding-inline: .4rem; }
 .visit-form .seg { flex-wrap: nowrap; width: 100%; }
-.visit-form .seg label { flex: 1 1 0; min-width: 0; }
+.visit-form .seg label { flex: 1 1 auto; min-width: 0; }
 .visit-form .seg span { padding-inline: .5rem; text-align: center; }
 
 /* Rango personalizado */
@@ -634,10 +634,10 @@ html:not(.js) .plan-zoom { display: none; }
 /* Formato estándar de planos: mismas piezas en todos los proyectos */
 .pl-predio { fill: #A2A3A1; }
 .pl-limite { fill: none; stroke: rgba(255, 255, 255, .75); stroke-width: 1.6; vector-effect: non-scaling-stroke; }
-.pl-servidumbre { fill: #F3D3AE; stroke: #5E4E3C; stroke-width: .9; stroke-dasharray: 2 2; }
-.pl-via-borde { fill: none; stroke: #5E4E3C; stroke-width: 9; stroke-dasharray: 2 2; stroke-linejoin: round; }
+.pl-servidumbre { fill: #F3D3AE; stroke: #5E4E3C; stroke-width: 1; stroke-dasharray: 3 2; vector-effect: non-scaling-stroke; }
+.pl-via-borde { fill: none; stroke: #5E4E3C; stroke-width: 9; stroke-dasharray: calc(var(--u, 1) * 4) calc(var(--u, 1) * 3); stroke-linejoin: round; }
 .pl-via { fill: none; stroke: #F3D3AE; stroke-width: 7; stroke-linejoin: round; stroke-linecap: square; }
-.pl-principal-borde { fill: none; stroke: #5E4E3C; stroke-width: 15; stroke-dasharray: 3 2; }
+.pl-principal-borde { fill: none; stroke: #5E4E3C; stroke-width: 15; stroke-dasharray: calc(var(--u, 1) * 5) calc(var(--u, 1) * 3); }
 .pl-principal { fill: none; stroke: #EFE6D2; stroke-width: 12.5; }
 .pl-agua { stroke: rgba(255, 255, 255, .55); stroke-width: .8; }
 
@@ -778,7 +778,7 @@ html:not(.js) .plan-zoom { display: none; }
   .view-toggle button { min-width: 44px; min-height: 44px; justify-content: center; padding: .5rem .8rem; }
   .plan-list { max-height: none; overflow: visible; }
   .lot-table th { top: var(--nav-h); }
-  body.sheet-open { overflow: hidden; }
+  body.sheet-open, html.sheet-lock { overflow: hidden; }
 }
 @media (max-width: 1279px) {
   .plan-cats { -webkit-mask-image: linear-gradient(90deg, #000 88%, transparent); mask-image: linear-gradient(90deg, #000 88%, transparent); padding-right: 2rem; }
@@ -806,7 +806,7 @@ html:not(.js) .plan-zoom { display: none; }
   .lot-panel:not(.is-expanded) .lot-sim { display: inline-flex; }
   .plan-body { grid-template-columns: minmax(0, 1fr) 330px; align-items: start; }
   .lot-panel {
-    position: sticky; top: calc(var(--nav-h) + 1rem); inset: auto; z-index: auto; max-height: calc(100vh - var(--nav-h) - 2rem);
+    position: sticky; inset: auto; top: calc(var(--nav-h) + 1rem); z-index: auto; max-height: calc(100vh - var(--nav-h) - 2rem);
     transform: none; visibility: visible; border: 1px solid var(--line-dark); border-radius: var(--r-md); box-shadow: none; padding: 1.5rem;
     transition: none;
   }
@@ -1445,12 +1445,20 @@ body.tour-lock { overflow: hidden; }
 @media (min-width: 960px) {
   .project-meta { min-height: 2.4em; align-items: flex-start; }
   .project-desc { min-height: calc(1.6em * 4); }
-  .finder { grid-template-columns: minmax(0, 1fr) minmax(0, .9fr) minmax(220px, auto) auto; }
-  .finder-result { max-width: none; }
+  /* Los selectores nunca se achican bajo su texto; el resultado tiene un ancho tope y su desglose se reparte en líneas */
+  .finder { grid-template-columns: minmax(11rem, 1fr) minmax(12.5rem, 1fr) minmax(190px, 16.5rem) auto; }
+  .finder-result { max-width: none; min-width: 0; }
+  .finder-result span { white-space: normal; }
   .plan.is-wide .lot-empty { grid-template-rows: auto auto auto 1fr; align-content: start; }
   .plan.is-wide .lot-empty .lot-stats { align-self: start; }
 }
 .finder-by { text-wrap: balance; }
+/* Laptops chicos: buscador en dos filas (campos arriba, resultado y botón abajo), como en tablet */
+@media (min-width: 960px) and (max-width: 1199px) {
+  .finder { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+  .finder-result { border-left: 0; padding-inline: .7rem; }
+  .finder-btn { width: 100%; }
+}
 .lot-facts div { display: grid; grid-template-rows: 1fr auto; align-items: end; }
 .about-photo img, .member-photo { filter: saturate(.8) contrast(1.03) sepia(.08); }
 .member-photo { box-shadow: 0 0 0 6px var(--n050), 0 0 0 7px rgba(200, 161, 101, .55); }
@@ -1510,6 +1518,33 @@ html:not(.js) .sim-controls, html:not(.js) .sim-bar, html:not(.js) .sim-result d
 html:not(.js) .plan-body { grid-template-columns: minmax(0, 1fr); }
 @media (max-width: 1279px) { html:not(.js) .hero-inner { padding-top: 3rem; } html:not(.js) { scroll-padding-top: calc(var(--nav-h) + 3.2rem); } }
 .sim-noscript { padding: 1.4rem 1.2rem; border-radius: var(--r-md); background: var(--n100); color: var(--g900); font-weight: 600; }
+
+/* ---------------- QA final ---------------- */
+main > section[id], #buscador { scroll-margin-top: -8px; }
+@media (max-width: 719px) {
+  /* Resumen y "Filtros" comparten la primera fila; "También en tu presupuesto" baja a una fila propia */
+  .plan-filters-head { flex-wrap: wrap; }
+  .plan-summary { flex: 1 1 12rem; min-width: 0; }
+  .plan-others { flex: 1 0 100%; order: 3; }
+}
+@media (max-width: 340px) { .lot-table th, .lot-table td { padding-inline: .4rem; } }
+.footer-col { gap: 0; }
+.footer-col h2 { margin-bottom: .6rem; }
+.footer-col p { min-height: 44px; display: flex; align-items: center; }
+.footer-bottom { align-items: baseline; }
+.member-wa { transition: color .2s, border-color .2s; }
+.member-wa:hover { color: var(--gold-ink); border-bottom-color: var(--gold-ink); }
+html:not(.js) [data-tour-share] { display: none; }
+/* Pines apiñados (plano completo en pantallas chicas): puntos de color en vez de números que se pisan */
+.is-crowded .pin:not(.is-active) .pin-t, .is-crowded .pin .pin-p, .is-crowded .pin:not(.is-active) .pin-sh, .is-crowded .pin-vendida { display: none; }
+.is-crowded .pin:not(.is-active) .pin-b { transform: scale(.42); }
+/* Reserva en curso en el formulario de visita */
+.visit-intent { grid-column: 1 / -1; display: flex; align-items: center; flex-wrap: wrap; gap: .5rem .7rem; padding: .75rem .9rem; border-radius: var(--r-md); background: rgba(200, 161, 101, .16); border: 1px solid rgba(200, 161, 101, .45); color: var(--g900); font-weight: 700; font-size: .92rem; }
+.visit-intent[hidden] { display: none; }
+.visit-intent .i { color: var(--gold-ink); flex: none; }
+.visit-intent span { flex: 1 1 12rem; }
+.visit-intent .link-btn { color: var(--gold-ink); }
+.noscript a, .sim-noscript a { color: inherit; text-decoration: underline; text-underline-offset: 3px; }
 
 /* ---------------- Anchos límite (QA) ---------------- */
 .finder-field { grid-template-columns: minmax(0, 1fr); }
@@ -1583,6 +1618,7 @@ h2 em { text-wrap: balance; }
   .hero-title { font-size: clamp(2.4rem, 12vh, 4rem); }
   .hero-sub, .hero-tour, .hero-scroll { display: none; }
   .tour-stage { min-height: 0; height: calc(100svh - var(--nav-h) - 1.5rem); }
+  .finder { margin-top: -2rem; }
 }
 @media (max-height: 700px) {
   .menu-links a { font-size: clamp(1.45rem, 5.2vh, 2rem); line-height: 1.15; }
@@ -1621,3 +1657,6 @@ h2 em { text-wrap: balance; }
   .hero .furrow, .js .visit.is-drawn .furrow, .ok-check circle, .ok-check path { animation: none; stroke-dashoffset: 0; }
   .js .reveal:not(.is-visible) { transform: none; }
 }
+
+/* Teléfono horizontal: los botones del menú van al final de la lista, no encima de los enlaces */
+@media (max-height: 500px) { .menu .menu-cta { position: static; background: none; } }

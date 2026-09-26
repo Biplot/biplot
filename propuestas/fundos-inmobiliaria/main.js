@@ -331,7 +331,7 @@
           otros: r.todos ? r.rows.filter(function (x) { return x.n; }).map(function (x) { return { id: x.p.id, nombre: x.p.nombre, n: x.n }; }) : []
         });
       }
-      scrollToEl($("#plano"));
+      Plan.land();
     });
     update();
   }
@@ -562,11 +562,14 @@
         if (isSmall()) {
           // lotes de ~36 px: se pueden tocar sin errar
           Z.k = clamp((20 / Z.r20) * Z.fitW / W, 1, MAXK);
-          var pts = disponibles(P()).map(function (l) { return pt(l.n); }).filter(Boolean);
+          var hits = disponibles(P()).filter(passes);
+          var pts = (hits.length ? hits : disponibles(P())).map(function (l) { return pt(l.n); }).filter(Boolean);
           if (pts.length) {
             Z.cx = pts.reduce(function (t, q) { return t + q[0]; }, 0) / pts.length;
             Z.cy = pts.reduce(function (t, q) { return t + q[1]; }, 0) / pts.length;
           }
+          // los botones de zoom ocupan la esquina inferior: el encuadre se corre para no tapar lotes
+          if (zoomUi) Z.cy += (zoomUi.offsetHeight + 16) / H * (Z.fitH / Z.k) / 2;
         }
         var qs = S.sel != null && pt(S.sel);   // si hay un lote elegido, sigue a la vista
         if (qs) { Z.cx = qs[0]; Z.cy = qs[1]; }
@@ -590,6 +593,8 @@
       svg.style.setProperty("--u", (upp * clamp(clearPx / 15, 0.62, 1)).toFixed(4));
       svg.classList.toggle("is-dense", clearPx < 11);
       svg.classList.toggle("is-roomy", clearPx >= 30);
+      svg.classList.toggle("is-crowded", clearPx < 7.5);   // los números ya no caben: puntos de color
+      if (!tip.hidden && !Z.tipKeep) tip.hidden = true;     // un tooltip no queda apuntando a otro lugar tras mover el plano
       canvas.classList.toggle("is-zoomed", Z.k > 1.01);
       if (zoomUi) {
         $('[data-zoom="in"]', zoomUi).disabled = Z.k >= MAXK - 0.01;
@@ -623,11 +628,31 @@
         if (u < 1) Z.anim = window.requestAnimationFrame(step); else if (done) done();
       })(t0);
     }
-    function zoomBy(f, px, py) {
+    function zoomBy(f, px, py, done) {
       var k = clamp(Z.k * f, 1, MAXK), k0 = Z.k;
       if (px == null) { px = Z.cx; py = Z.cy; }
-      animateTo(k, px - (px - Z.cx) * k0 / k, py - (py - Z.cy) * k0 / k);
+      animateTo(k, px - (px - Z.cx) * k0 / k, py - (py - Z.cy) * k0 / k, done);
       hideHint();
+    }
+    // Encuadra los lotes que calzan con un filtro si alguno quedó fuera de la vista (se aleja solo lo necesario)
+    function frameLots(ns) {
+      if (!Z.base || canvas.hidden || !ns.length) return;
+      var pts = ns.map(pt).filter(Boolean);
+      if (!pts.length) return;
+      var vw = Z.fitW / Z.k, vh = Z.fitH / Z.k, safe = zoomUi ? (zoomUi.offsetHeight + 16) / Z.H : 0;
+      var all = pts.every(function (q) {
+        return q[0] > Z.cx - vw / 2 && q[0] < Z.cx + vw / 2 && q[1] > Z.cy - vh / 2 && q[1] < Z.cy + vh / 2 - safe * vh;
+      });
+      if (all) return;
+      var x0 = Infinity, x1 = -Infinity, y0 = Infinity, y1 = -Infinity;
+      pts.forEach(function (q) { x0 = Math.min(x0, q[0]); x1 = Math.max(x1, q[0]); y0 = Math.min(y0, q[1]); y1 = Math.max(y1, q[1]); });
+      var pad = Z.r20 * 2.2, bw = x1 - x0 + 2 * pad, bh = y1 - y0 + 2 * pad;
+      var k = clamp(Math.min(Z.k, Z.fitW / bw, Z.fitH * (1 - safe) / bh), 1, MAXK);
+      animateTo(k, (x0 + x1) / 2, (y0 + y1) / 2 + safe * (Z.fitH / k) / 2);
+    }
+    function frameMatches() {
+      if (S.view !== "plano") return;
+      frameLots(disponibles(P()).filter(passes).map(function (l) { return l.n; }));
     }
     // Lleva un lote a la vista si quedó fuera o bajo los controles (lista, teclado, enlaces, alternativas)
     function reveal(n, done) {
@@ -666,6 +691,7 @@
     var ptrs = {}, drag = null, moved = false;
     canvas.addEventListener("pointerdown", function (e) {
       lastPtr = e.pointerType;
+      window.cancelAnimationFrame(Z.anim);
       if (e.pointerType === "mouse" && e.button !== 0) return;
       ptrs[e.pointerId] = { x: e.clientX, y: e.clientY };
       moved = false;
@@ -975,7 +1001,15 @@
         try { history.replaceState(null, "", "#lote-" + p.id + "-" + n); } catch (e) { /* marco sin historial */ }
       }
       if (!desktop.matches && opts.sheet !== false) openSheet(n);
-      else reveal(n);
+      else {
+        reveal(n);
+        if (root.classList.contains("is-wide")) showWidePanel();
+      }
+    }
+    function showWidePanel() {
+      var r = panel.getBoundingClientRect(), bar = $(".mbar"), bh = bar && bar.classList.contains("is-visible") ? bar.offsetHeight : 0;
+      var need = r.top + Math.min(r.height, 280) - (window.innerHeight - bh - 16);   // título, precio y botones
+      if (need > 0) window.scrollBy({ top: need, behavior: reduced ? "auto" : "smooth" });
     }
 
     /* ---- Hoja inferior (móvil): vista compacta, fondo, bloqueo de scroll, foco y deslizar para cerrar ---- */
@@ -1001,6 +1035,7 @@
       panel.setAttribute("aria-labelledby", "lot-title");
       if (backdrop) backdrop.hidden = false;
       document.body.classList.add("sheet-open");
+      document.documentElement.classList.add("sheet-lock");
       document.dispatchEvent(new CustomEvent("fundos:sheet"));
       reveal(n, function () { window.setTimeout(function () { keepVisible(n); }, was ? 0 : 380); });
       if (!was) window.setTimeout(function () { if (d.close) d.close.focus({ preventScroll: true }); }, 80);
@@ -1014,6 +1049,7 @@
       panel.removeAttribute("aria-labelledby");
       if (backdrop) backdrop.hidden = true;
       document.body.classList.remove("sheet-open");
+      document.documentElement.classList.remove("sheet-lock");
       document.dispatchEvent(new CustomEvent("fundos:sheet"));
       var sh = shapes[S.sel];
       if (!silent && sh && document.activeElement && panel.contains(document.activeElement)) sh.path.focus({ preventScroll: true });
@@ -1187,7 +1223,9 @@
       var k = b.getAttribute("data-cat");
       S.sector = S.sector === k ? "" : k;
       applyFilters();
+      frameMatches();
     });
+    price.addEventListener("change", frameMatches);
     root.addEventListener("click", function (e) {
       if (e.target.closest("[data-clear-filters]")) clearFilters();
       var ot = e.target.closest("[data-other]");
@@ -1209,8 +1247,12 @@
       if (!el) return;
       var n = +el.getAttribute("data-n"), nx = null;
       if (e.key === "Enter" || e.key === " ") { e.preventDefault(); select(n); return; }
-      if (e.key === "+" || e.key === "=") { e.preventDefault(); zoomBy(1.6); return; }
-      if (e.key === "-") { e.preventDefault(); zoomBy(1 / 1.6); return; }
+      if (e.key === "+" || e.key === "=" || e.key === "-") {
+        e.preventDefault();
+        var q = pt(n);
+        zoomBy(e.key === "-" ? 1 / 1.6 : 1.6, q && q[0], q && q[1], function () { if (document.activeElement === el) tipAt(el); });
+        return;
+      }
       if (/^Arrow/.test(e.key)) nx = spatialNext(n, e.key);
       else if (e.key === "Home" || e.key === "End") {
         var av = disponibles(P()).filter(passes).sort(function (a, b) { return a.precio - b.precio; });
@@ -1220,9 +1262,10 @@
       if (nx != null && shapes[nx]) { rover(nx); shapes[nx].path.focus({ preventScroll: true }); }
     });
     // Tooltip siempre dentro del plano (se da vuelta arriba/abajo y se corre en los bordes)
+    function tipBox() { return tip.parentNode; }   // .plan-view: el tooltip se posiciona respecto de ella
     function placeTip(x, y) {
-      var sw = stage.clientWidth, tw = tip.offsetWidth, th = tip.offsetHeight;
-      var cx = clamp(x, tw / 2 + 8, sw - tw / 2 - 8), below = y - th - 18 < 8;
+      var box = tipBox(), sw = box.clientWidth, shh = box.clientHeight, tw = tip.offsetWidth, th = tip.offsetHeight;
+      var cx = clamp(x, tw / 2 + 8, sw - tw / 2 - 8), below = y - th - 18 < 8 && y + 20 + th < shh - 8;
       tip.classList.toggle("is-below", below);
       tip.style.left = cx + "px";
       tip.style.top = (below ? y + 20 : y) + "px";
@@ -1240,8 +1283,10 @@
     function tipAt(el) {
       if (!fineHover) return;
       var sh = shapes[el.getAttribute("data-n")], t = (sh && sh.pin) || el;
-      var r = t.getBoundingClientRect(), s = stage.getBoundingClientRect();
+      var r = t.getBoundingClientRect(), s = tipBox().getBoundingClientRect();
+      Z.tipKeep = true;
       showTip(el, r.left + r.width / 2 - s.left, r.top - s.top - 2);
+      Z.tipKeep = false;
     }
     canvas.addEventListener("mouseover", function (e) {
       var el = e.target.closest && e.target.closest(".lot");
@@ -1250,7 +1295,7 @@
     canvas.addEventListener("mousemove", function (e) {
       var el = e.target.closest && e.target.closest(".lot");
       if (!el || tip.hidden) return;
-      var s = stage.getBoundingClientRect();
+      var s = tipBox().getBoundingClientRect();
       placeTip(e.clientX - s.left, e.clientY - s.top);
     });
     canvas.addEventListener("mouseout", function (e) {
@@ -1266,7 +1311,8 @@
       var el = e.target.closest && e.target.closest(".lot");
       if (!el) return;
       var n = +el.getAttribute("data-n");
-      if (el.matches(":focus-visible")) focusRing(el);
+      if (!el.matches(":focus-visible")) return;     // con mouse o dedo, select() ya lo muestra
+      focusRing(el);
       reveal(n, function () { if (document.activeElement === el) { tipAt(el); document.dispatchEvent(new CustomEvent("fundos:focusvisible", { detail: el })); } });
     });
     canvas.addEventListener("focusout", function () { tip.hidden = true; focusRing(null); });
@@ -1302,12 +1348,9 @@
     d.reserve.addEventListener("click", function () {
       var p = P(), l = lotOf(p, S.sel);
       if (!l) return;
-      Visit.prefill({
-        proyecto: p.nombre,
-        mensaje: l.estado === "disponible"
-          ? "Quiero reservar el lote " + l.n + " de " + p.nombre + " (" + m2(l.m2) + ", " + precioTxt(l) + ")."
-          : "Me interesa el lote " + l.n + " de " + p.nombre + ". Avísenme si se libera."
-      });
+      Visit.prefill(l.estado === "disponible"
+        ? { proyecto: p.nombre, mensaje: "", reserva: { n: l.n, proyecto: p.nombre, detalle: m2(l.m2) + ", " + precioTxt(l) }, scroll: true }
+        : { proyecto: p.nombre, mensaje: "Me interesa el lote " + l.n + " de " + p.nombre + ". Avísenme si se libera.", scroll: true });
       closeSheet(true);
     });
     d.fav.addEventListener("click", function () { if (S.sel != null) toggleFav(S.id, S.sel); });
@@ -1349,7 +1392,20 @@
       refreshFavs();
     });
 
+    function landPlan() {
+      var y = window.scrollY + root.getBoundingClientRect().top - navBottom() - 8;
+      window.scrollTo({ top: y, behavior: reduced ? "auto" : "smooth" });
+    }
+    document.addEventListener("click", function (e) {
+      if (desktop.matches || e.defaultPrevented) return;
+      var a = e.target.closest && e.target.closest('a[href="#plano"]');
+      if (!a || a.hasAttribute("data-open-project") || a.closest(".nav, .menu")) return;
+      e.preventDefault();
+      landPlan();
+    });
+
     /* ---- API para otros módulos ---- */
+    Plan.land = function () { if (desktop.matches) scrollToEl($("#plano")); else landPlan(); };
     Plan.show = function (id) { if (id !== S.id || !built) setProject(id); };
     Plan.current = function () { return S.id; };
     Plan.apply = function (o) {
@@ -1360,6 +1416,7 @@
       S.otros = o.otros || [];
       if (S.view !== "plano") setView("plano");
       setProject(o.id || S.id, { keepFilters: true });
+      frameMatches();
     };
 
     // Enlace directo a un lote: #lote-malalcahuello-12 (al cargar y al hacer clic en enlaces internos)
@@ -1371,7 +1428,7 @@
       if (S.view !== "plano") setView("plano");
       var n = +m[2], ok = !!lotOf(p, n);
       window.setTimeout(function () {
-        var r = stage.getBoundingClientRect();
+        var r = (ok ? stage : filtersBox || stage).getBoundingClientRect();
         jumpTo(window.scrollY + r.top - navBottom() - 12);
         if (ok) select(n, { hash: false });
         else summary.textContent = "No encontramos el lote " + m[2] + " de " + p.nombre + ". Elige otro en el plano.";
@@ -1520,8 +1577,17 @@
     var form = $("[data-visit]");
     if (!form) return;
     var ok = $("[data-visit-ok]", form), fb = $("[data-visit-fallback]", form), again = $("[data-visit-again]", form);
-    var okMsg = $("[data-visit-msg]", form);
+    var okMsg = $("[data-visit-msg]", form), okNote = $("[data-visit-note]", form);
+    var intentBox = $("[data-visit-intent]", form), reserva = null;
+    function setReserva(r) {
+      reserva = r;
+      if (!intentBox) return;
+      intentBox.hidden = !r;
+      if (r) $("[data-visit-intent-txt]", intentBox).textContent = "Reserva: lote " + r.n + " de " + r.proyecto + " · " + r.detalle;
+    }
+    if (intentBox) $("[data-visit-intent-clear]", intentBox).addEventListener("click", function () { setReserva(null); el.nombre.focus(); });
     var el = form.elements;
+    if (el.proyecto) el.proyecto.addEventListener("change", function () { if (reserva && el.proyecto.value !== reserva.proyecto) setReserva(null); });
     var today = new Date();
     var pad = function (n) { return (n < 10 ? "0" : "") + n; };
     if (el.fecha) el.fecha.min = today.getFullYear() + "-" + pad(today.getMonth() + 1) + "-" + pad(today.getDate());
@@ -1579,6 +1645,13 @@
         ? "Quiero agendar una videollamada para conocer " + (nada ? "sus proyectos" : proyectoTxt)
         : (nada ? "Quiero agendar una visita para conocer sus proyectos" : "Quiero agendar una visita a " + proyectoTxt);
       var cuando = (fecha ? " el " + fecha : "") + (horario === "mañana" ? " en la mañana" : horario === "tarde" ? " en la tarde" : "");
+      var res = reserva && reserva.proyecto === proyectoTxt ? reserva : null;
+      if (res) {
+        // Reserva: el lote va primero; la visita solo si eligió fecha u horario
+        que = "Quiero reservar el lote " + res.n + " de " + res.proyecto + " (" + res.detalle + ")";
+        cuando = horario === "videollamada" ? " y conversarlo por videollamada" + (fecha ? " el " + fecha : "") : (cuando ? " y visitarlo" + cuando : "");
+      }
+      if (okNote) okNote.textContent = res ? "Se abrirá WhatsApp con este texto. Un ejecutivo te confirma la reserva y los pasos a seguir." : "Se abrirá WhatsApp con este texto. Un ejecutivo te confirma la visita.";
       var extra = el.mensaje.value.trim();
       if (extra && !/[.!?…]$/.test(extra)) extra += ".";
       var msg = "Hola Fundos, soy " + el.nombre.value.trim() + ". " + que + cuando + "." +
@@ -1597,6 +1670,14 @@
 
     var lastAuto = "";
     Visit.prefill = function (o) {
+      setReserva(o.reserva || null);
+      if (o.scroll && !desktop.matches) {
+        // En el celular se llega al formulario, no al título de la sección
+        window.setTimeout(function () {
+          var nb = $(".nav"), top = nb ? Math.max(0, nb.getBoundingClientRect().bottom) : 0;
+          window.scrollTo({ top: window.scrollY + form.getBoundingClientRect().top - top - 12, behavior: reduced ? "auto" : "smooth" });
+        }, 0);
+      }
       if (o.proyecto) {
         var opt = Array.prototype.filter.call(el.proyecto.options, function (x) { return x.value === o.proyecto; })[0];
         if (opt) el.proyecto.value = o.proyecto;
@@ -1702,6 +1783,7 @@
     var first = proyectos.filter(function (p) { return p.tour; })[0];
     if (!stage || !first) return;
     var cur = "", blocked = false, iframe = null, timer = 0, token = 0;
+    var seen = {};   // proyectos cuyo recorrido sí se abrió
 
     function T() { return proyecto(cur); }
     function state(v) { if (v) stage.setAttribute("data-state", v); return stage.getAttribute("data-state"); }
@@ -1782,6 +1864,7 @@
       if (my !== token || blocked || state() !== "loading") return;
       window.clearTimeout(timer);
       state("live");
+      seen[cur] = true;
       setText("[data-tour-cta]", "Entrar");
       setText("[data-tour-dock-q]", "¿Te gustó");
       status.textContent = "Recorrido de " + T().nombre + " abierto. Arrastra para mirar alrededor.";
@@ -1878,7 +1961,7 @@
     var plan = $("[data-tour-plan]", root), visit = $("[data-tour-visit]", root);
     if (plan) plan.addEventListener("click", function () { Plan.show(cur); });
     if (visit) visit.addEventListener("click", function () {
-      Visit.prefill({ proyecto: T().nombre, mensaje: "Vi el recorrido 360° de " + T().nombre + " y me gustaría visitarlo." });
+      Visit.prefill({ proyecto: T().nombre, mensaje: seen[cur] ? "Vi el recorrido 360° de " + T().nombre + "." : "" });
     });
 
     // Conexión anticipada a los recorridos cuando la sección se acerca
@@ -2055,8 +2138,12 @@
     window.addEventListener("scroll", function () { if (window.innerHeight < 600) update(); }, { passive: true });
     function unobscure(t) {
       if (!t || !bar.classList.contains("is-visible") || bar.contains(t) || !t.getBoundingClientRect) return;
-      var r = t.getBoundingClientRect(), top = bar.getBoundingClientRect().top;
-      if (r.bottom > top - 8) window.scrollBy(0, r.bottom - top + 16);
+      var br = bar.getBoundingClientRect();
+      if (!br.height || br.top >= window.innerHeight) return;        // barra no dibujada (escritorio, pantalla baja)
+      if (t.matches && !t.matches(":focus-visible")) return;         // solo foco de teclado: clics y foco por código no mueven la página
+      var r = t.getBoundingClientRect();
+      if (r.top >= window.innerHeight || r.bottom <= 0) return;      // fuera de pantalla: lo acomoda quien lo enfoca
+      if (r.bottom > br.top - 8) window.scrollBy(0, r.bottom - br.top + 16);
     }
     document.addEventListener("focusin", function (e) { if (!e.target.closest || !e.target.closest(".plan-canvas")) unobscure(e.target); });
     document.addEventListener("fundos:focusvisible", function (e) { unobscure(e.detail); });

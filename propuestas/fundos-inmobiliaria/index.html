@@ -25,10 +25,10 @@
 <link rel="preload" href="assets/fonts/cormorant-garamond.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="assets/fonts/cormorant-garamond-italic.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="assets/fonts/mulish.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="styles.css?v=20260925p">
-<script defer src="lib/manifest.js?v=20260925p"></script>
-<script defer src="lib/planos.js?v=20260925p"></script>
-<script defer src="main.js?v=20260925p"></script>
+<link rel="stylesheet" href="styles.css?v=20260926a">
+<script defer src="lib/manifest.js?v=20260926a"></script>
+<script defer src="lib/planos.js?v=20260926a"></script>
+<script defer src="main.js?v=20260926a"></script>
 </head>
 <body>
 <a class="skip-link" href="#contenido">Saltar al contenido</a>
@@ -642,7 +642,7 @@
           <a class="skip-plan" href="#plan-panel">Saltar el plano</a>
           <div class="plan-view">
             <div class="plan-canvas" data-canvas>
-              <noscript><p class="noscript">Activa JavaScript para recorrer el plano interactivo, o escríbenos por WhatsApp y te enviamos el plano comercial.</p></noscript>
+              <noscript><p class="noscript">Activa JavaScript para recorrer el plano interactivo, o <a href="https://wa.me/56900000000?text=Hola%20Fundos%2C%20quiero%20el%20plano%20comercial%20con%20los%20lotes%20disponibles." target="_blank" rel="noopener">escríbenos por WhatsApp</a> y te enviamos el plano comercial.</p></noscript>
             </div>
             <div class="plan-zoom" data-zoom-ui>
               <button type="button" data-zoom="out" aria-label="Alejar el plano" title="Alejar"><svg class="i" aria-hidden="true"><use href="#i-minus"/></svg></button>
@@ -784,7 +784,7 @@
     <div class="portal-copy reveal">
       <p class="kicker">Fundos 360° · Mi compra</p>
       <h2 id="portal-title">Tu compra, <em>en tiempo real.</em></h2>
-      <p class="lead">Gestionamos cada venta en Fundos 360°, nuestra propia plataforma. Desde tu reserva verás el avance de tu compra, tus documentos y los próximos hitos desde el celular: lo mismo que ve tu ejecutivo, lo ves tú.</p>
+      <p class="lead">Gestionamos cada venta en Fundos 360°, nuestra propia plataforma. Desde tu reserva verás el avance de tu compra, tus documentos y los próximos hitos en tu celular: lo mismo que ve tu ejecutivo, lo ves tú.</p>
       <ul class="ticks">
         <li><svg class="i" aria-hidden="true"><use href="#i-check"/></svg>El estado de cada etapa, de la reserva a la inscripción</li>
         <li><svg class="i" aria-hidden="true"><use href="#i-check"/></svg>Comprobantes y documentos siempre disponibles</li>
@@ -837,7 +837,7 @@
     </header>
 
     <div class="sim reveal" role="group" aria-labelledby="sim-title" data-sim>
-      <noscript><p class="sim-noscript">Activa JavaScript para simular tu compra, o escríbenos por WhatsApp y te enviamos una simulación a tu medida.</p></noscript>
+      <noscript><p class="sim-noscript">Activa JavaScript para simular tu compra, o <a href="https://wa.me/56900000000?text=Hola%20Fundos%2C%20quiero%20una%20simulaci%C3%B3n%20de%20compra." target="_blank" rel="noopener">escríbenos por WhatsApp</a> y te enviamos una simulación a tu medida.</p></noscript>
       <div class="sim-controls">
         <div class="field">
           <label for="s-proyecto">Proyecto</label>
@@ -1039,6 +1039,7 @@
     </div>
 
     <form class="visit-form reveal" data-visit novalidate>
+      <p class="visit-intent" data-visit-intent hidden><svg class="i" aria-hidden="true"><use href="#i-pin"/></svg><span data-visit-intent-txt></span><button type="button" class="link-btn" data-visit-intent-clear>Quitar</button></p>
       <div class="form-row">
         <div class="field">
           <label for="v-nombre">Nombre</label>
@@ -1096,7 +1097,7 @@
         <h3>Último paso: envíanos tu mensaje</h3>
         <blockquote class="ok-msg" data-visit-msg></blockquote>
         <a class="btn btn-gold" href="https://wa.me/56900000000" target="_blank" rel="noopener" data-visit-fallback><svg class="i" aria-hidden="true"><use href="#i-whatsapp"/></svg>Enviar por WhatsApp</a>
-        <p>Se abrirá WhatsApp con este texto. Un ejecutivo te confirma la visita.</p>
+        <p data-visit-note>Se abrirá WhatsApp con este texto. Un ejecutivo te confirma la visita.</p>
         <button class="btn btn-line btn-sm" type="button" data-visit-again>Editar mi solicitud</button>
       </div>
     </form>
